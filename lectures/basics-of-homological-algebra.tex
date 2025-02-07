@@ -1,0 +1,394 @@
+%!TEX root = ../lectures.tex
+
+\section{Basics of homological algebra}
+\subsection{Chain complexes \& exact sequences}\label{subsection:chain-complexes-and-exact-sequences}
+\begin{definition}
+	Let \(\calC\) be a pre-additive category. A \emph{chain complex} \(x^\bullet\) in \(\calC\) is a sequence of morphisms
+	\[ \cdots \to x^{i-1}\xrightarrow{d^{i-1}} x^{i} \xrightarrow{d^{i}} x^{i+1} \to \cdots  \]
+	such that \(d^{i+1}\circ d^i = 0\) for all \(i\in\Z\). We denote this by either \(x^\bullet\) or \((x^\bullet,d_x)\).
+\end{definition}
+\begin{remark}
+	Let \(\calC\) be some category, and regard the set \(\Z\) as a discrete category. A \emph{graded object} in \(\calC\) is a functor
+	\[ \Z\to\calC. \]
+	Consider the functor \(s\!:\Z\to\Z\) given by sending \(n\) to \(n+1\). This induces a \emph{shift} functor
+	\[ (1)\!:\Fun(\Z,\calC)\to\Fun(\Z,\calC),\quad x^\bullet \mapsto x^\bullet\circ s, \]
+	which concretely sends a graded object \(x^\bullet\) in \(\calC\) to the graded object given by \(x(1)^i = x^{i+1}\).
+
+	Now, suppose \(\calC\) is pre-additive. A \emph{chain complex} in \(\calC\) can be regarded as a graded object \(x^\bullet\!:\Z\to\calC\) together with a morphism
+	\[ d_x\!:x^\bullet \to x(1)^\bullet \]
+	satisfying \(d_x(1)\circ d_x = 0\).
+\end{remark}
+
+Our first goal is to define the \emph{cohomology} of a chain complex. There are two obvious ways of doing this (accepting that one is aware of the ``classical'' hands-on definition),
+and we want to ensure the two are the same in our formalism.
+\begin{construction}\label{construction:chain-complex-induced-maps}
+	Consider a chain complex \(x^\bullet\), and in particular zoom in around a fixed index \(i\in\Z\),
+	\[ x^{i-1}\xrightarrow{d^{i-1}} x^i \xrightarrow{d^i} x^{i+1}. \]
+	Forming kernels, cokernels, and images, we can produce the diagram
+	\begin{diagram*}
+		 & \img{d^{i-1}}\ar[rr,dashed,"\phi^i"]\ar[dr,hook] & & \ker{d^i}\ar[dr,"0"]\ar[dl,hook] & \\
+		x^{i-1}\ar[ur,two heads]\ar[rr,"d^{i-1}"]\ar[dr,"0"'] & & x^i\ar[rr,"d^i"]\ar[dr,two heads]\ar[dl,two heads] & & x^{i+1} \\
+		 & \coker{d^{i-1}}\ar[rr,dashed,"\psi^i"] & & \img{d^i}\ar[ur,hook] & 
+	\end{diagram*}
+	where the induced maps \(\img{d^{i-1}}\to\ker{d^i}\) and \(\coker{d^{i-1}}\to\img{d^i}\) come from \(d^2=0\) and various arrows being monic/epic.
+\end{construction}
+\begin{proposition}\label{prop:chain-complex-induced-maps-monic-epic}
+	Let \(\phi^i\) and \(\psi^i\) be as in Construction \ref{construction:chain-complex-induced-maps}. Then
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\phi^i\) is monic, and
+	\item \(\psi^i\) is epic.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+Statement (2) is dual to (1). To prove (1), note that
+\[ (z\to\img{d^{i-1}}\xrightarrow{\phi^i}\ker{d^i}) = 0 \]
+if and only if
+\[ (z\to\img{d^{i-1}}\xrightarrow{\phi^i}\ker{d^i} \inj x^i) = 0 \]
+if and only if
+\[ (z\to\img{d^{i-1}} \inj x^i) = 0 \]
+if and only if \(z\to\img{d^{i-1}}\) is zero.
+\end{proof}
+\begin{exercise}
+	Spell out the proof of (2) in Proposition \ref{prop:chain-complex-induced-maps-monic-epic}.
+\end{exercise}
+\begin{construction}\label{construction:chain-complex-induced-maps-2}
+	Let \(u^i\) be the composition \(\ker{d^i}\inj x^i\sur\coker{d^{i-1}}\). Forming the kernel and cokernel of \(u^i\), we can enlarge our previous diagram to
+	\begin{diagram*}[row sep=small]
+		& & \ker{u^i} \ar[dr,hook]\ar[dl,hook,dashed,shift left] & &\\
+		 & \img{d^{i-1}}\ar[rr,hook,"\phi^i"]\ar[ur,hook,dashed,shift left]\ar[dr,hook] & & \ker{d^i}\ar[dr,"0"]\ar[dl,hook] & \\
+		x^{i-1}\ar[ur,two heads]\ar[rr,"d^{i-1}"]\ar[dr,"0"'] & & x^i\ar[rr,"d^i"]\ar[dr,two heads]\ar[dl,two heads] & & x^{i+1} \\
+		 & \coker{d^{i-1}}\ar[rr,two heads,"\psi^i"]\ar[dr,two heads] & & \img{d^i}\ar[ur,hook]\ar[dl,two heads,dashed, shift right] & \\
+		& & \coker{u^i}\ar[ur,two heads,dashed,shift right] & &
+	\end{diagram*}
+	where the dashed maps are induced by the universal properties of the image, kernel, and cokernel.
+\end{construction}
+\begin{exercise}
+	Show that the dashed arrows in Construction \ref{construction:chain-complex-induced-maps-2} define isomorphsisms
+	\[ \ker{u^i}\iso \img{d^{i-1}} \quad\text{and}\quad \img{d^i}\iso\coker{u^i}. \]
+\end{exercise}
+Thus, in particular, we finally have the diagram
+\begin{diagram*}
+	& & \ker{u^i} \ar[dr,hook]\ar[dl,"\sim"'] & &\\
+	 & \img{d^{i-1}}\ar[rr,hook,"\phi^i"]\ar[dr,hook] & & \ker{d^i}\ar[dr,"0"]\ar[dl,hook] & \\
+	x^{i-1}\ar[ur,two heads]\ar[rr,"d^{i-1}"]\ar[dr,"0"'] & & x^i\ar[rr,"d^i"]\ar[dr,two heads]\ar[dl,two heads] & & x^{i+1} \\
+	 & \coker{d^{i-1}}\ar[rr,two heads,"\psi^i"]\ar[dr,two heads] & & \img{d^i}\ar[ur,hook]\ar[dl,"\sim"'] & \\
+	& & \coker{u^i} & &
+\end{diagram*}
+and using this, we define cohomology. In particular, we compute the image
+\begin{align*}
+	\img{u^i} &\cong \ker(\coker{d^{i-1}}\sur\coker{u^i}) \\
+	&\cong \ker(\coker{d^{i-1}}\sur\img{d^{i-1}})
+\end{align*}
+and the coimage
+\begin{align*}
+	\coimg{u^i} &\cong \coker(\ker{u^i}\inj\ker{d^i}) \\
+	&\cong \coker(\img{d^{i-1}}\inj\ker{d^i}) \\
+	&\cong \ker(\coker{d^{i-1}}\to x^{i+1}) \\
+	&\cong \coker(x^{i-1}\to\ker{d^{i-1}}).
+\end{align*}
+\begin{definition}
+	Let \((x^\bullet,d)\) be a chain complex in an Abelian category. The \emph{cohomology} of \(x^\bullet\) at \(i\in\Z\) is
+	\[ \HH^i(x^\bullet) := \coker(\img{d^{i-1}}\inj\ker{d^{i}}) \]
+	or any one of the other canonically isomorphic choices from above. We say \(x^\bullet\) is \emph{exact} at \(i\in\Z\) if \(\HH^i(x^\bullet) = 0\).
+\end{definition}
+\begin{remark}
+	Explicitly, \(\HH^i(x^\bullet) = 0\) is the same as
+	\[ u^i = 0 \iff \coker{d^{i-1}} \iso \img{d^i} \iff \img{d^{i-1}}\iso\ker{d^i} \]
+	which are the conditions one expect from exactness.
+\end{remark}
+\begin{definition}
+	Let \(\calA\) be an Abelian category. A \emph{short exact sequence} is an exact sequence of the form
+	\[ 0 \to x \to y \to z \to 0. \]
+\end{definition}
+\begin{lemma}\label{lemma:left-exact-sequence-implies-monic}
+	A sequence \(0 \to x \overset{f}\to y\) is exact if and only if \(f\) is a monomorphism.
+\end{lemma}
+\begin{proof}
+The sequence is exact if and only if \(\ker{f} = 0\), since the image of \(0\to x\) is \(0\). Since \(\ker{f}=0\) if and only if \(f\) is
+monic, this completes the proof.
+\end{proof}
+\begin{remark}
+	It follows that in any short exact sequence
+	\[ 0\to x\overset{f}\to y\overset{g}\to z\to 0 \]
+	the morphism \(f\) is monic and the morphism \(g\) is epic (by the dual of Lemma \ref{lemma:left-exact-sequence-implies-monic}).
+\end{remark}
+\begin{theorem}[First isomorphism theorem]
+	Consider a short exact sequence
+	\[ 0\to x\overset{f}\inj y\overset{g}\sur z\to 0 \]
+	in an Abelian category. Then
+	\[ x\iso\img{f}\quad\text{and}\quad\coker{f}\iso z. \]
+\end{theorem}
+\begin{proof}
+Lemma \ref{lemma:left-exact-sequence-implies-monic} tells us that \(f\) is a monomorphism, in which case Exercise \ref{exercise:monic-epic-image} tells us that
+\(x\iso\img{f}\). For the second isomorphism, we use that Exercise \ref{exercise:monic-epic-image} provides \(\img{g}\cong z\), and that exactness provides us a canonical isomorphism \(\ker{g}\cong\img{f}\).
+Thus, compute
+\begin{align*}
+	z &\cong \img{g} \\
+	&\cong \coker(\ker{g}\inj y) \\
+	&\cong \coker(\img{f}\inj y) \cong \coker{f}
+\end{align*}
+which completes the proof.
+\end{proof}
+
+\subsection{Exactness properties of functors}
+\begin{definition}
+	Let \(F\!:\calA\to\calB\) be an additive functor between Abelian categories. We say \(F\) is \emph{left exact} if for any short exact sequence
+	\[ 0 \to x \to y \to z \to 0 \]
+	in \(\calA\), the sequence
+	\[ 0\to Fx \to Fy \to Fz \]
+	in \(\calB\) is exact. We say \(F\) is \emph{right exact} if \(F^\op\!:\calA^\op\to\calB^\op\) is left exact. We say \(F\) is \emph{exact} if
+	it is both left exact and right exact.
+\end{definition}
+\begin{theorem}
+	Let \(\calA\) be an Abelian category, and let \(a\in\calA\). Then
+	\[ \calA(a,-)\quad\text{and}\quad\calA(-,a) \]
+	are left exact.
+\end{theorem}
+\begin{proof}
+Consider an exact sequence
+\[ 0 \to x \overset{i}\to y \overset{p}\to z \to 0 \]
+in \(\calA\). Applying \(\calA(a,-)\), we must show that
+\[ 0 \to \calA(a,x)\overset{i_*}\to \calA(a,y)\overset{p_*}\to\calA(a,z) \]
+is exact. Since \(i\) is a monomorphism, it follows (by definition!) that \(i_*\) is a monomorphism. For exactness in the middle, consider
+a morphism \(f\in\ker{p_*}\). Since \(x\cong\img{i}\cong\ker{p}\), we then have the diagram
+\begin{diagram*}
+	& & a\ar[d,"f"']\ar[dr,"0"]\ar[dl,dashed,"f'"'] & & \\
+	0 \ar[r] & x \ar[r,"i"] & y\ar[r,"p"] & z\ar[r] & 0
+\end{diagram*}
+so that \(f = i\circ f'\) and \(\img{i_*} = \ker{p_*}\). The other functor is dual, since \(\calA(-,a) = \calA^\op(a,-)\).
+\end{proof}
+\begin{exercise}
+	Prove that \(\calA(-,a)\) is left exact explicitly.
+\end{exercise}
+\begin{theorem}
+	A functor \(F\!:\calA\to\calB\) between Abelian categories is left exact if and only if it preserves finite limits.
+\end{theorem}
+\begin{proof}
+If \(F\) is left exact, then it is additive and preserves left exact sequences. In particular, it preserves finite products and kernels, and therefore
+equalizers. Since finite limits are built out of these, it preserves finite limits. Conversely, if it preserves finite limits, then it is additive since it
+preserves finite products, and left exact because it preserves kernels. In particular, we use that
+\[ 0\to Fx \to Fy\to Fz \]
+is exact if and only if \(Fx\to Fy\) is the kernel of \(Fy\to Fz\).
+\end{proof}
+\begin{corollary}
+	A functor \(F\!:\calA\to\calB\) is right exact if and only if it preserves finite colimits, and it is exact if and only if it preserves both
+	finite limits and finite colimits.
+\end{corollary}
+
+\begin{example}
+	Let \(X\) be a topological space, and let \(x\in X\). The stalk functor
+	\[ (-)_x\!:\Sh(X,\Ab)\to\Ab \]
+	is exact. In particular, \((-)_x\) is a left adjoint and hence commutes with all colimits. Furthermore, it is defined by a filtered colimit, and since the
+	forgetful functor \(\Ab\to\Set\) preserves filtered colimits, this means \((-)_x\) commutes with finite limits (since filtered colimits commute with finite limits in \(\Set\)).
+
+	In fact, more is true: a sequence of sheaves
+	\[ 0 \to\scrF\to\scrG\to\scrH\to 0 \]
+	is exact if and only if for all \(x\in X\),
+	\[ 0\to\scrF_x\to\scrG_x\to\scrH_x\to0 \]
+	is exact.
+\end{example}
+
+\begin{example}
+	Let \(X\) be a topological space. The global sections functor
+	\[ \Gamma(X,-)\!:\Sh(X,\Ab)\to\Ab \]
+	is left exact. This is because it is right adjoint to the constant sheaf functor, hence commutes with all limits.
+
+	More generally, given a continuous map \(f\!:X\to Y\), the functor
+	\[ f_*\!:\Sh(X,\Ab)\to\Sh(Y,\Ab) \]
+	is left exact since it has a right adjoint given by \(f^{-1}\). This specializes to the previous case when one sets \(Y = *\). The observation
+	that these functors are only left exact is the start of the cohomology theory of sheaves, wherein one studies e.g.\ the right derived functor
+	\[ \sfR f_*\!:\sfD(X)\to\sfD(Y). \]
+	Sheaf cohomology is defined by the right derived functor \(\sfR\Gamma(X,-)\).
+\end{example}
+\begin{example}
+	Sheafification is an exact functor. This is because on one hand, it is a left adjoint functor, and on the other hand, it is actually defined by
+	a filtered colimit (if handled appropriately).
+\end{example}
+\begin{remark}
+	We saw that \(\calA(x,-)\) and \(\calA(-,x)\) are left exact. One says \(x\in\calA\) is \emph{projective} if \(\calA(x,-)\) is exact, and dually,
+	that \(x\) is \emph{injective} if \(\calA(-,x)\) is exact.
+\end{remark}
+\begin{exercise}
+	Let \(X\) be a topological space, let \(x\in X\), and consider the stalk functor
+	\[ (-)_x\!:\Sh(X,\calD)\to\calD. \]
+	Using these, we will show, by hand, that under certain conditions, the sheafification functor is exact.
+	\begin{enumerate}[label=(\arabic*)]
+	\item Suppose we have a functor \(F\!:\calD\to\Set\) which preserves finite limits. Show that the functor
+	\[ F_*\!:\Sh(X,\calD)\to\Sh(X),\quad \scrF\mapsto F\circ\scrF \]
+	preserves finite limits.
+	\item Suppose that \(F\) in addition preserves filtered colimits and reflects isomorphisms. Show that the stalk functor commutes with finite limits.
+	\item Show that the sheafification functor \((-)^\dagger\!:\PSh(X,\calD)\to\Sh(X,\calD)\) preserves finite limits. \emph{Hint:} it suffices to show
+	that it commutes with kernels and binary products; show this by checking it on stalks.
+	\item Check that \(\Mod_R\) satisfies the above conditions.
+	\end{enumerate}
+\end{exercise}
+
+
+\subsection{Appendix: Quillen exact categories}\label{appendix:quillen-exact-categories}
+There are interesting additive categories, particularly in areas like functional analysis, where only some kernels and cokernels make sense, but not all of them. In
+situations like this, one would still like access to some kind of theory. One possible approach to situations of this type is given by Quillen's exact categories. Roughly speaking,
+they are additive categories wherein certain distinguished maps lie in kernel/cokernel pairs.
+\begin{definition}
+	Let \(\calA\) be an additive category. A \emph{kernel/cokernel pair} in \(\calA\) is a pair of morphisms
+	\[ x\overset{f}\to y\overset{g}\to z \]
+	such that \(f\) defines a kernel of \(g\) and \(g\) a cokernel of \(f\).
+\end{definition}
+\begin{example}
+	In an Abelian category \(\calA\), the short exact sequences
+	\[ 0\to x\to y \to z \to 0 \]
+	define all kernel/cokernel pairs.
+\end{example}
+\begin{definition}
+	An \emph{exact category} is a pair \((\calC,\calE)\) where \(\calC\) is additive and \(\calE\) is a class of \emph{admissible} kernel/cokernel pairs in \(\calC\); we
+	call \(f\) (resp.\ \(g\)) in an admissible kernel/cokernel pair
+	\[ x\overset{f}\to y\overset{g}\to z \]
+	an \emph{admissible monomorphism} (resp. \emph{admissible epimorphism}) or an \emph{inflation} (resp.\ \emph{deflation}). The pair \((\calC,\calE)\) is required
+	to satisfy the following conditions:
+	\begin{enumerate}[label=(\arabic*)]
+	\item The class \(\calE\) is closed under isomorphism, meaning that if we have a diagram
+	\begin{diagram*}
+		x\ar[r]\ar[d,"\sim" labl] & y\ar[r]\ar[d, "\sim" labl] & z\ar[d, "\sim" labl] \\
+		x'\ar[r] & y'\ar[r] & z'
+	\end{diagram*}
+	where one row is in \(\calE\) then the other row is in \(\calE\).
+	\item For each \(x\in X\), the identity map \(\id_x\) is an inflation and a deflation.
+	\item The class of inflations is closed under composition. Dually, the class of deflations is closed under composition.
+	\item The class of inflations is stable under pushouts. Dually, the class of deflations is closed under pullbacks.
+	\end{enumerate}
+\end{definition}
+We provide a few arguments to give a taste of the kinds of proofs that are involved when working with exact categories.
+\begin{remark}
+	The axioms imply that all isomorphisms \(f\!:x\to x\) are both inflations and deflations. In particular, we have isomorphisms
+	\begin{diagram*}
+		x\ar[r,"f"]\ar[d,equal] & x\ar[r]\ar[d,"f^{-1}"] & 0\ar[d] \\
+		x\ar[r,equal] & x\ar[r] & 0
+	\end{diagram*}
+	and
+	\begin{diagram*}
+		0 \ar[r]\ar[d] & x\ar[r,"f"]\ar[d,equal] & x\ar[d,"f^{-1}"] & \\
+		0 \ar[r] & x\ar[r,equal] & x
+	\end{diagram*}
+	and by the closure of \(\calE\) under isomorphism, we conclude.
+\end{remark}
+\begin{remark}
+	It also follows that the zero map \(0\to x\) is an inflation, and the zero map \(x\to 0\) is a deflation.
+\end{remark}
+\begin{remark}
+	The data of the inflations or the deflations both determine the class \(\calE\). Indeed, supposing
+	we have
+	\[ x\overset{i}\to y\overset{p}\to z \]
+	where \(i\) is an inflation and \(p\) is a cokernel of \(i\), we may find a deflation \(p'\!:y\to z'\) so that we have an isomorphism
+	\begin{diagram*}
+		x\ar[r,"i"]\ar[d,"\sim" labl] & y\ar[r,"p"]\ar[d,"\sim" labl] & z\ar[d,"\sim" labl] \\
+		x\ar[r,"i"] & y\ar[r,"p'"] & z'
+	\end{diagram*}
+	where the bottom row is in \(\calE\), and so the original pair of maps was already in \(\calE\). Notably, a morphism is a deflation if and only if it appears as the cokernel of an inflation. A
+	dual argument shows that a morphism is an inflation if and only if it appears as the kernel of a deflation.
+\end{remark}
+\begin{proposition}
+	Let \((\calC,\calE)\) be an exact category, and let \(x,y\in\calC\). Then
+	\begin{diagram*}
+		x\ar[r,"\iota"] & x \oplus y\ar[r,"\pi"] & y
+	\end{diagram*}
+	is an admissible kernel/cokernel pair.
+\end{proposition}
+\begin{proof}
+We have a pushout square
+\begin{diagram*}
+	0 \ar[r]\ar[d] & y\ar[d] \\
+	x \ar[r,"\iota"] & x\oplus y\ar[ul,pushout]
+\end{diagram*}
+and since \(0\to y\) is an inflation, it follows that \(\iota\) is an inflation. Since \(\pi\) is the cokernel of \(\iota\), it is a deflation and
+\begin{diagram*}
+	x\ar[r,"\iota"] & x \oplus y\ar[r,"\pi"] & y
+\end{diagram*}
+is an admissible kernel/cokernel pair, as desired.
+\end{proof}
+\begin{corollary}
+	Let \((\calC,\calE)\) be an exact category. Then \(\calE\) contains all split exact sequences.
+\end{corollary}
+
+One can prove various additional results, but since we do not aim to give an actual introduction here, we leave it for the references. A possible resource is \cite{frerick2010exact}.
+
+
+
+\subsection{Appendix: An aside on stable \(\infty\)-categories}
+Abelian categories form a convenient setting to formalize the properties of categories like \(\Ab\), and with which to develop homological algebra. However,
+it has certain deficiencies. The most natural way to formalize homological algebra is through the use of \emph{derived categories} \(\sfD(\calA)\) of Abelian
+categories \(\calA\). The way to understand these is as follows: in homological algebra, one studies properties of chain complexes that only depend on the cohomologies
+of the chain complexes. In particular, we would like to think of maps between chain complexes which induce isomorphisms on the level of cohomology as being
+``genuine'' isomorphisms; we call such maps \emph{quasi-isomorphisms.} The derived category \(\sfD(\calA)\) is obtained by taking the category of chain
+complexes \(\Ch(\calA)\) and formally inverting the quasi-isomorphisms; the process of doing this is called \emph{localization.}
+
+Localizations of categories, which we will study later, are very hard to control. For example, given a small category \(\calC\) and some class of morphisms \(\calS\) in \(\calC\),
+the localization \(\calC[\calS^{-1}]\) need not be locally small. This is already a sign that localizations are badly behaved in general. The issue that comes up in homological algebra
+is that while the localization of an additive category does turn out to be additive, the localization of an \emph{Abelian} category, such as \(\Ch(\calA)\), need not be Abelian.
+This is bad! After all, we would like to understand their behaviour in terms of things we already know.
+
+Historically, a proposed solution came in the development of \emph{triangulated categories,} which we will also study. Triangulated categories were the invention of Alexander Grothendieck
+together with his PhD student Jean-Louis Verdier, and they capture the notion of ``homotopy'' Abelian categories. They can be thought of as an analogue of Quillen exact categories, in that
+one specifies as part of additional structure a collection of \emph{distinguished} sequences of maps to be considered the ``homotopy short exact sequences.''
+
+A more systematic proposal came later in the form of stable model categories. However, the most recent and sophisticated upgrade to the concept is provided by \emph{stable} \(\infty\)\emph{-categories.}
+We give a heuristic explanation of these now.
+\begin{definition}
+	A \emph{pointed} \(\infty\)-category is an \(\infty\)-category which admits a zero element, namely an element which is both initial and terminal.
+\end{definition}
+\begin{remark}
+	As an aside, any pointed \(\infty\)-category \(A\) which admits finite limits and finite colimits also admits two functors \(\Sigma\!:A\to A\) and \(\Omega\!:A\to A\) given on objects by the diagrams
+	\begin{center}
+	\begin{tikzcd}
+		x\ar[r]\ar[d] & *\ar[d] \\
+		*\ar[r] & \Sigma x\ar[ul,pushout]
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		\Omega x\ar[r]\ar[d]\ar[dr,pullback] & * \ar[d] \\
+		*\ar[r] & x
+	\end{tikzcd}
+	\end{center}
+	and furthermore, it turns out that \(\Sigma\ladj\Omega\). These functors themselves can be used, along with some other things, to define stability. This is how it is handled
+	in the context of stable model categories.
+\end{remark}
+
+\begin{definition}
+	Let \(A\) be a pointed \(\infty\)-category, and let \(f\!:x\to y\) be a morphism in \(A\). The \emph{fiber} and \emph{cofiber} of \(f\) are defined by
+	the diagrams
+	\begin{center}
+	\begin{tikzcd}
+		\fib(f)\ar[r]\ar[d]\ar[dr,pullback] & x\ar[d,"f"] \\
+		*\ar[r] & y
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		x\ar[r,"f"]\ar[d] & y\ar[d] \\
+		*\ar[r] & \cofib(f)\ar[ul,pushout]
+	\end{tikzcd}
+	\end{center}
+	in \(A\) whenever they exist. The square above left is called a \emph{fiber sequence,} and the square above right is called a \emph{cofiber sequence.}
+\end{definition}
+
+With the above definition available, we can make a very simple definition.
+\begin{definition}
+	Let \(A\) be a pointed \(\infty\)-category. We say \(A\) is \emph{stable} if
+	\begin{enumerate}[label=(\arabic*)]
+	\item every morphism in \(A\) has a fiber and a cofiber, and
+	\item every fiber sequence is a cofiber sequence, and vice versa.
+	\end{enumerate}
+\end{definition}
+
+To any \(\infty\)-category \(X\), one can associate a 1-category \(\ho(X)\), called its \emph{homotopy category.} The functor \(X\mapsto\ho(X)\) is left adjoint to the inclusion of 1-categories
+into \(\infty\)-categories. Stable \(\infty\)-categories \(A\) have the property that their homotopy categories \(\ho(A)\) have a canonical triangulated structure, induced by the functor
+\(\Sigma\!:A\to A\) and with distinguished triangles
+\[ x\to y\to z \to \Sigma x \]
+in \(\ho(A)\) defined by being those sequences of morphisms which fit into
+\begin{diagram*}
+	x \ar[r]\ar[d] & y\ar[d]\ar[r] & *\ar[d] \\
+	* \ar[r] & z \ar[r] & \Sigma x
+\end{diagram*}
+where both squares are (co)fiber sequences in \(A\). In this way, stable \(\infty\)-categories are a natural enrichment of triangulated categories.
+
+Triangulated categories have a deficiency in that their distinguished triangles do not yield any universal properties, so there is no good way to characterize the ``homotopy (co)kernels''
+that arise from them. Stable \(\infty\)-categories fix this as the \(\infty\)-categorical framework allows a genuine ``homotopy-theoretic'' universal property. Due to the framework
+being so well-behaved, they come along with a number of other theoretical benefits, such as cofibers of exact functors between stable \(\infty\)-categories being stable. Furthermore,
+there is a natural way to promote derived categories into stable \(\infty\)-categories in a way which recovers the classical ones after applying \(\ho(-)\).

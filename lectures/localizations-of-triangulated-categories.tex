@@ -1,0 +1,351 @@
+%!TEX root = ../lectures.tex
+
+\section{Localizations of triangulated categories}
+We have discussed the topic of localizing a category at some collection of arrows. In the Abelian/stable case, one can usually pass from working with an ordinary category to working with
+a triangulated category, and in many cases, working with the localization of this other category is more convenient. Thus, we are compelled to explain what localization looks like in the
+context of triangulated categories.
+
+While much of the theory is the same, the additive nature of triangulated categories allows one to encode the weak equivalences in a system of objects one wishes to equate to zero,
+making the theory of localizations of triangulated categories very similar to the theory of quotients in ordinary algebra. There are more general settings in which one may localize
+triangulated categories in a nice way, but we will not discuss them.
+
+\subsection{Triangulated subcategories \& null systems}
+\begin{definition}
+	Let \(\calT\) be a pre-triangulated category with shift denoted \(\Sigma\). A \emph{pre-triangulated subcategory} of \(\calT\) consists of an additive subcategory \(\calT'\subseteq\calT\)
+	such that \(\Sigma\calT' = \calT'\), along with a pre-triangulated structure on \(\calT\) with shift given by the restriction of \(\Sigma\) and for which the inclusion
+	\[ \calT'\inj\calT \]
+	is a triangulated functor.
+\end{definition}
+\begin{definition}
+	Let \(\calT\) be a pre-triangulated category. A replete full subcategory \(\calN\) of \(\calT\) is a \emph{null system} if:
+	\begin{enumerate}[label=(N\arabic*)]
+	\item \(0\in \calN\).
+	\item \(\calN\) is closed under shifts: \(\Sigma\calN = \calN\).
+	\item \(\calN\) is closed under extensions: for any d.t.\ \(x\to y\to z \to \Sigma x\) in \(\calT\), if \(x,z\in\calN\) then \(y\in\calN\).
+	\end{enumerate}
+\end{definition}
+\begin{exercise}\label{exercise:null-system-N3}
+	Let \(\calT\) be a pre-triangulated category, and let \(\calN\) be a null system in \(\calT\). Show that \(\calN\) satisfies the following stronger version of (N3): for any
+	distinguished triangle
+	\[ x\to y \to z\to \Sigma x \]
+	in \(\calT\), if any two of \(x,y,z\) are in \(\calN\) then so is the third.
+
+	In fact, prove that these are both equivalent to the following a priori different statement:
+	\begin{itemize}[label=(N3')]
+	\item \(\calN\) is closed under cones: for any d.t.\ \(x\to y\to z\to \Sigma x\) in \(\calT\), if \(x,y\in\calN\) then \(z\in\calN\).
+	\end{itemize}
+\end{exercise}
+\begin{proposition}\label{prop:null-system-subcategory-characterization}
+	Let \(\calT\) be a pre-triangulated category, and let \(\calN\) be a replete full subcategory. Then the following statements are equivalent.
+	\begin{enumerate}
+	\item \(\calN\) is a null system.
+	\item \(\calN\) is non-empty and can be endowed with the structure of a pre-triangulated category making it into a pre-triangulated full subcategory of \(\calT\).
+	\end{enumerate}
+	Furthermore, the same statements hold with ``pre-triangulated'' replaced by ``triangulated''.
+\end{proposition}
+\begin{proof}
+(1) implies (2). First, note that \(\calN\) is an additive subcategory of \(\calT\). Indeed, it is clearly pre-additive, and furthermore, contains \(0\) by (N1), and is closed
+under finite direct sums by (N3) together with Corollary \ref{corollary:direct-sum-triangle}. In particular, the inclusion \(\calN\inj\calT\) is an additive functor. Since \(\Sigma\calN = \calN\),
+the shift on \(\calT\) restricts to a functor \(\Sigma|_{\calN}\!:\calN\to\calN\). Now, let a triangle in \(\calN\) be distinguished if and only if it is distinguished in \(\calT\). Then \(\calN\)
+is pre-triangulated: indeed, (TR1) and (TR2) are clear, and (TR3) follows from \(\calN\) being a full subcategory. When \(\calT\) is in addition triangulated, (TR4) follows for \(\calN\) similarly.
+
+It is clear that \(\calN\inj\calT\) is a triangulated functor, so we are done.
+
+(2) implies (1). Since \(\calN\inj\calT\) is triangulated, it is additive, hence \(0\in\calN\) agrees with \(0\in\calT\). That is, (N1) is satisfied. Since \(\calN\) is a pre-triangulated subcategory,
+\(\Sigma\calN = \calN\) is satisfied by definition, so (N2) holds. To see that (N3) holds, we use that it is equivalent to (N3') by Exercise \ref{exercise:null-system-N3}, and note that if we have a diagram of solid arrows
+\begin{diagram*}
+	x\ar[r]\ar[d,equal] & y\ar[r]\ar[d,equal] & z\ar[r]\ar[d,dashed,"\sim" labl] & \Sigma x\ar[d,equal] \\
+	x\ar[r] & y\ar[r] & z'\ar[r] & \Sigma x
+\end{diagram*}
+where the top row is distinguished in \(\calN\) and the bottom row is distinguished in \(\calT\), then by Proposition \ref{prop:triangulated-five-lemma} we have an induced isomorphism \(z\cong z'\).
+Therefore, \(z'\in\calN\) since \(\calN\) is replete.
+\end{proof}
+\begin{remark}
+	As a slogan, we can say that null systems are exactly replete full triangulated subcategories.
+\end{remark}
+
+\subsection{The Verdier quotient}
+Let \(\calN\) be a null system in a pre-triangulated category \(\calT\). We want to make sense of what it would mean to take the quotient \(\calT/\calN\). The idea we want to utilize now is based
+on the following basic fact about pre-triangulated categories: a morphism \(f\!:x\to y\) is an isomorphism if and only if
+\[ x\overset{f}\to y\to 0 \to \Sigma x \]
+is a distinguished triangle. This gives us a way to conceptualize which morphisms should be sent to isomorphism in \(\calT/\calN\). It should be exactly those \(f\!:x\to y\) for which there
+is a distinguished triangle
+\[ x\overset{f}\to y\to z \to \Sigma x \]
+where \(z\in\calN\).
+\begin{notation}
+	Let \(\calT\) be a pre-triangulated category, and let \(\calN\) be a null system. We form the collection of morphism
+	\[ \calS(\calN) := \{ f\!:x\to y\mid \exists\text{d.t.\ } x\overset{f}\to y\to z \to \Sigma x\text{ such that }z\in\calN \}. \]
+\end{notation}
+\begin{definition}
+	Let \(\calT\) be a pre-triangulated category, and let \(\calN\) be a null system. Then the \emph{Verdier quotient} of \(\calT\) by \(\calN\) is the localization
+	\[ \calT/\calN := \calT[\calS(\calN)^{-1}]. \]
+\end{definition}
+
+The rest of this subsection is dedicated to giving a well-chosen triangulated structure on \(\calT/\calN\) whenever \(\calT\) is triangulated, and showing it is well-behaved.
+\begin{proposition}
+	Let \(\calT\) be a triangulated category, and let \(\calN\) be a null system in \(\calT\). Then \(\calS(\calN)\) is a multiplicative system.
+\end{proposition}
+\begin{proof}
+Note that \(\calN\) is a null system in \(\calT\) if and only if \(\calN^\op\) is a null system in \(\calT^\op\), so it suffices to check that \(\calN\) is
+a right multiplicative system.
+\begin{enumerate}[label=(\arabic*)]
+\item \(\calS(\calN)\) contains the identities: since \(0\in\calN\), in fact every isomorphism is contained in \(\calS(\calN)\).
+\item \(\calS(\calN)\) is closed under composition: given morphisms \(x\overset{f}\to y\overset{g}\to z\), let \(c_f\) (resp.\ \(c_g\), \(c_{g\circ f}\)) be a cone of \(f\) (resp.\ \(g\), \(g\circ f\)).
+Applying (TR4), we have a distinguished triangle
+\[ c_f \to c_{g\circ f}\to c_g\to \Sigma c_f. \]
+Since \(c_f\) and \(c_g\) are in \(\calN\) and \(\calN\) is closed under extension, it follows that \(c_{g\circ f}\) is in \(\calN\), so \(g\circ f\in\calS(\calN)\).
+\item \(\calS(\calN)\) satisfies (M1): consider \(x'\overset{s}\ot x\overset{f}\to y\), where \(s\in\calS(\calN)\). Using (N2) and (TR2), we deduce the existence of a \(z\in\calN\) and a distinguished triangle
+\[ z\overset{h}\to x\overset{s}\to x' \to \Sigma z. \]
+Taking the cone of \(f\circ h\) and applying (TR3), we get
+\begin{diagram*}
+	z\ar[d,equal]\ar[r,"h"] & x\ar[d,"f"]\ar[r,"s"] & x'\ar[d,dashed,"g"]\ar[r] & \Sigma z \ar[d,equal] \\
+	z\ar[r,"f\circ h"] & y\ar[r,dashed,"t"] & y'\ar[r] & \Sigma z
+\end{diagram*}
+and one notes that \(t\in\calS(\calN)\) since \(z\in\calN\).
+\item \(\calS(\calN)\) satisfies (M2): it suffices to show that given a solid diagram
+\begin{diagram*}
+	z\ar[r,"s"] & x\ar[r,"f"] & y\ar[r,dashed,"t"] & z'
+\end{diagram*}
+where \(f\circ s = 0\), a dashed arrow \(t\) exists such that \(t\circ f = 0\). Suppose we are given the solid diagram. Taking a cone \(g\!:y\to c_f\) of \(f\), weak cokernel property of
+Corollary \ref{corollary:weak-kernel-property-of-cocones} yields a map \(h\!:c_f\to y\) such that \(h\circ g = f\), and we may take a cone \(t\!:y\to z'\) of \(h\). All in all, we have
+\begin{diagram*}
+	z\ar[r,"s"] & x\ar[r,"g"]\ar[dr,"f"'] & c_f\ar[r]\ar[d,"h"] & \Sigma z \\
+	& & y\ar[d,"t"] & \\
+	& & z' &
+\end{diagram*}
+such that \(t\circ f = t\circ h \circ g = 0\).
+\end{enumerate}
+This completes the proof.
+\end{proof}
+
+The above lets us apply the non-functorial derived functor machinery later, which is beneficial in many cases, as functoriality even on the level of homotopy categories can
+be slightly tricky to arrange.
+
+Before we can place a triangulated structure on \(\calT/\calN\), we have to find a shift functor on it. For this, consider the localization functor \(\gamma\!:\calT\to\calT/\calN\) and note that
+the composition \(\gamma\circ\Sigma\) is homotopical: we have that \(\Sigma\calS(\calN) = \calS(\calN)\), so for all \(f\in\calS(\calN)\) the morphism \(\gamma\Sigma f\) is an isomorphism.
+By universal property of the localization, this means we have an induced functor
+\begin{diagram*}
+	\calT\ar[r,"\Sigma"]\ar[d,"\gamma"'] & \calT\ar[d,"\gamma"] \\
+	\calT/\calN\ar[r,dashed,"\Sigma"] & \calT/\calN
+\end{diagram*}
+which is our prospective shift. Note that \(\gamma\Sigma = \Sigma\gamma\).
+
+\begin{exercise}
+	Show that the above functor \(\Sigma\!:\calT/\calN\to\calT/\calN\) is an automorphism, with inverse induced from the inverse of \(\Sigma\!:\calT\to\calT\). Hint: use the uniquenss in the universal property.
+\end{exercise}
+
+\begin{theorem}\label{thm:verdier-quotient-is-triangulated}
+	Let \(\calT\) be a triangulated category, and let \(\calN\) be a null system. Then the following statements hold,
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\calT/\calN\) is an additive category, and the localization functor \(\gamma\!:\calT\to\calT/\calN\) is additive.
+	\item Let a triangle \(x\to y\to z\to \Sigma x\) in \(\calT/\calN\) be distinguished if it is isomorphic to the image under \(\gamma\) of a distinguished triangle in \(\calT\). Then
+	this endows \(\calT\) with the structure of a triangulated category.
+	\item With the triangulated structure from (2), the functor \(\gamma\!:\calT\to\calT/\calN\) is triangulated.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) This is an immediate corollary of Theorem \ref{thm:localization-of-additive-is-additive}, given that \(\calS(\calN)\) is a multiplicative system.
+
+(2) We sketch how to show that (TR1)--(TR4) hold. The only non-trivial one is (TR1). Consider a morphism \(fs^{-}\!:\gamma(x)\to\gamma(y)\), i.e.\ maps \(x\overset{s}\ot x'\overset{f}\to y\) in \(\calT/\calN\), which we note is the same
+as \(\gamma(f)\circ\gamma(s)^{-1}\). Take a cone \(c_f\) of \(f\) in \(\calT\); we then have an isomorphism of triangles
+\begin{diagram*}
+	\gamma(x')\ar[d,"\gamma(s)"', "\sim" labl]\ar[r,"\gamma(f)"] & \gamma(y)\ar[d,equal]\ar[r] & \gamma(c_f)\ar[d,equal]\ar[r] & \Sigma\gamma(x')\ar[d,"\sim" labl] \\
+	\gamma(x)\ar[r,"fs^{-1}"] & \gamma(y) \ar[r] & \gamma(c_f)\ar[r] & \Sigma\gamma(x')
+\end{diagram*}
+where the upper triangle is distinguished, hence so is the lower one. For (TR2), just lift the required distinguished triangles to ones in \(\calT\) and apply (TR2) there.
+The strategies for (TR3) and (TR4) are very similar.
+
+(3) We have that \(\gamma\Sigma = \Sigma\gamma\), and by definition, \(\gamma\) sends distinguished triangles to distinguished triangles.
+\end{proof}
+\begin{exercise}
+	Complete the proof of (2) in Theorem \ref{thm:verdier-quotient-is-triangulated}.
+\end{exercise}
+
+From now on, we tacitly endow \(\calT/\calN\) with the triangulated structure provided above. In this context, one can restate the universal property of the localization
+in terms of triangulated categories.
+
+\begin{theorem}\label{thm:Verdier-quotient-universal-property}
+	Let \(\calT\) be a triangulated category, let \(\calN\) be a null system, and let \(\gamma\!:\calT\to\calT/\calN\) be the localization functor. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item For all \(x\in\calN\), we have \(\gamma(x)\cong 0\).
+	\item \(\calT/\calN\) is the universal pre-triangulated category satisfying (1): for any triangulated functor \(F\!:\calT\to\calD\) such that \(Fx\cong 0\) for all \(x\in\calN\),
+	there is a unique triangulated functor \(F'\!:\calT/\calN\to\calE\) such that \(F = \gamma\circ F\).
+	\item \(\calT/\calN\) is the universal source of cohomological functors out of \(\calT\) sending \(\calN\) to zero: for any cohomological functor \(H\!:\calT\to\calA\) such that
+	\(Hx\cong 0\) for all \(x\in\calN\), there is a unique cohomological functor \(H'\!:\calT/\calN\to\calA\) such that \(H = \gamma\circ H'\).
+	\end{enumerate}
+\end{theorem}
+\begin{proofsketch}
+(1) For any \(x\in\calN\), the distinguished triangle \(0\to x \to x\to \Sigma 0\) shows that \(0\to x\) is in \(\calS(\calN)\). In particular, \(0\cong\gamma(0)\cong\gamma(x)\).
+
+(2) If \(F\) sends everything in \(\calN\) to zero, then for any \(s\!:x\to y\) in \(\calS(\calN)\), taking a cone and applying \(F\) yields
+\[ Fx\overset{Fs}\longto Fy\longto 0 \longto \Sigma Fx. \]
+Therefore, \(Fs\) is an isomorphism. In particular, the universal property of localizations then guarantees a unique functor \(F'\!:\calT/\calN\to\calD\). To see that it is triangulated,
+one needs two things: that it commutes with the shift (up to a specified natural isomorphism), and that it sends distinguished triangles to distinguished triangles. For the former, use
+the natural commutation isomorphism for \(F\) along with the universal property of localizations. For the latter, use the defining properties of \(F'\) and distinguished triangles in \(\calT/\calN\).
+
+(3) The details of this are similar to (2).
+\end{proofsketch}
+
+\subsection{Thick subcategories}
+\begin{definition}
+	Let \(F\!:\calC\to\calD\) be a functor between categories with zero objects. We define the \emph{kernel} of \(F\) to be the full category of \(\calC\) spanned by objects sent
+	to zero by \(F\), i.e.
+	\[ \ker{F} := \{ x\in\calC\mid Fx\cong 0 \}. \]
+\end{definition}
+
+The kernel of a functor is by definition a replete full subcategory. Consider the localization functor \(\gamma\!:\calT\to\calT/\calN\) of a Verdier quotient. As explained,
+we have \(\calN\subseteq\ker{\gamma}\). Is this an equality? In general, the answer is no, and for a very simple reason: the kernel \(\ker\gamma\) is closed under taking direct summands.
+Indeed, consider the general situation of the definition, and assume that \(F\) is an additive functor between additive categories. If we have \(F(x\oplus y) \cong 0\), then
+we have \(Fx\oplus Fy \cong 0\), and this can only happen if \(Fx\cong Fy\cong 0\).
+\begin{definition}
+	Let \(\calT\) be a pre-triangulated category. A \emph{thick} (pre-)triangulated subcategory \(\calT'\) of \(\calT\) is a full (pre-)triangulated subcategory which is closed under summands.
+	That is, if \(x\oplus y\in\calT'\), then \(x,y\in\calT'\).
+\end{definition}
+
+What we have observed is that \(\ker\gamma\) is a thick triangulated subcategory of \(\calT\). This is not necessarily true of \(\calN\), so clearly it is not necessary that it is equal to \(\ker\gamma\).
+\begin{notation}
+	Let \(\calT\) be a triangulated category, and let \(\calC\) be a subcategory. We denote by \(\thick(\calC)\) the smallest thick triangulated subcategory of \(\calT\) containing \(\calC\).
+\end{notation}
+
+Our goal for this subsection is to prove that \(\ker\gamma = \thick(\calN)\). As a result, we will also be able to deduce that there is a canonical isomorphism of triangulated categories
+\(\calT/\calN \cong \calT/\ker\gamma\). Fix a triangulated category \(\calT\) and a null system \(\calN\), and denote the localization functor by \(\gamma\!:\calT\to\calT/\calN\).
+
+\begin{exercise}\label{exercise:S(N)-2-out-of-3-property}
+	Show that \((\calT,\calS(\calN))\) is a pseudo-homotopical category, i.e.\ show that \(\calS(\calN)\) satisfies the 2-out-of-3 property.
+\end{exercise}
+
+\begin{exercise}
+	Let \(F\!:\calT\to\calT'\) be a triangulated functor between triangulated categories. Check that \(\ker{F}\) inherits a triangulated structure from \(\calT\).
+\end{exercise}
+
+\begin{lemma}\label{lemma:equivalence-class-of-identity-in-Verdier-quotient}
+	If a morphism
+	\[ x\overset{s}\ot x'\overset{f}\to x \]
+	in \(\calT/\calN\) is in the equivalence class of the identity, then \(f\in\calS(\calN)\).
+\end{lemma}
+\begin{proof}
+By assumption, we have a diagram
+\begin{diagram*}
+	& x'\ar[dl,"s"']\ar[dr,"f"] & \\
+	x & x''\ar[l,"t"']\ar[d,"\psi"]\ar[u,"\phi"]\ar[r,"h"] & x \\
+	& x\ar[ul,"\id_x"]\ar[ur,"\id_x"] &
+\end{diagram*}
+where \(t\in\calS(\calN)\). By Exercise \ref{exercise:S(N)-2-out-of-3-property}, \(\phi,\psi\in\calS(\calN)\). But now \(\psi = f\circ\phi\), so the same property yields \(f\in\calS(\calN)\).
+\end{proof}
+\begin{lemma}\label{lemma:equivalence-invertible-map-in-Verdier-quotient}
+	Consider a morphism
+	\[ x\overset{s}\ot x'\overset{g}\to y \]
+	in \(\calT/\calN\). Then the following statements are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item The morphism \(gs^{-1}\) is invertible.
+	\item There are morphisms \(f\!:y'\to x'\), \(h\!:y\to z'\) in \(\calT\) such that \(g\circ f,h\circ g\in\calS(\calN)\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+Assume (2) holds. Then \(\gamma(g\circ f)\) and \(\gamma(h\circ g)\) are invertible, and so see that
+\[ \gamma(g)\circ\gamma(f)\circ\gamma(g\circ f)^{-1} = \id,\quad \gamma(h\circ g)^{-1}\circ\gamma(h)\circ\gamma(g) = \id \]
+so that \(\gamma(g)\) is invertible. Now, \(\gamma(s)\) is invertiblle, and \(gs^{-1} = \gamma(g)\circ\gamma(s)^{-1}\), so \(gs^{-1}\) is invertible.
+
+Assume now that (1) holds. We must find suitable \(f\) and \(h\). To this end, note that we have an inverse \(\gamma(g)^{-1} = ft^{-1}\!:\gamma(y)\to\gamma(x')\) displayed by the zigzag
+\[ y\overset{t}\ot y'\overset{f}\to x' \]
+and composing this with \(\gamma(g)\), we see that
+\[ y\overset{t}\ot y'\overset{g\circ f}\to y \]
+is in the equivalence class of \(\id_y\). By Lemma \ref{lemma:equivalence-class-of-identity-in-Verdier-quotient}, \(g\circ f\in\calS(\calN)\). Performing a dual computation produces the morphism \(h\).
+\end{proof}
+
+\begin{proposition}
+	Consider an object \(x\in\calT\). Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item The unique morphism \(x\to 0\) in \(\calT\) maps to an isomorphism in \(\calT/\calN\).
+	\item \(x\in\ker\gamma\).
+	\item There exists some \(y\in\calT\) such that \(x\oplus y\in\calN\).
+	\end{enumerate}
+	In other words, \(\ker\gamma = \thick(\calN)\).
+\end{proposition}
+\begin{proof}
+The equivalence between (1) and (2) is clear. We show that (1) and (3) are equivalent. Suppose that \(\gamma(x)\to0\) is an isomorphism. By Lemma \ref{lemma:equivalence-invertible-map-in-Verdier-quotient},
+we can find some \(y\in\calT\) and some morphism \(0\to \Sigma y\) such that the zero map \(x\to0\to\Sigma y\) is in \(\calS(\calN)\). On the other hand, we have a distinguished triangle
+\[ y \to x\oplus y\to x \overset{0}\to \Sigma y \]
+so that \(\Sigma(x\oplus y)\) is a cone of \(x\overset{0}\to \Sigma y\), hence is in \(\calN\). We conclude that \(x\oplus y\in\calN\).
+
+Conversely, assume (3). Given \(x\oplus y\in\calN\), the same distinguished triangle as above shows that \(x\overset{0}\to\Sigma y\) is in \(\calS(\calN)\). We finally observe that the maps
+\[ 0 \to x\to 0,\quad x\to 0\to\Sigma y \]
+are thus both in \(\calS(\calN)\), so \(x\to 0\) is sent to an isomorphism in \(\calT/\calN\) by Lemma \ref{lemma:equivalence-invertible-map-in-Verdier-quotient}.
+\end{proof}
+
+\begin{corollary}
+	Let \(f\!:x\to y\) be a morphism in \(\calT\). Then \(f\) is sent to an isomorphism in \(\calT/\calN\) if and only if any cone of \(f\) is a direct summand of an object in \(\calN\).
+\end{corollary}
+\begin{corollary}
+	Let \(\calT\) be a triangulated category, and let \(\calN\) be a null system in \(\calT\). Then there is a canonical isomorphism of categories
+	\[ \calT/\calN \cong \calT/\thick(\calN). \]
+\end{corollary}
+\begin{proof}
+One easily checks that \(\calT/\thick(\calN)\) satisfies the same universal property as \(\calT/\calN\).
+\end{proof}
+
+\subsection{Derived functors for triangulated categories}
+We have provided (at least) two bits of machinery for constructing derived functors in the context of ordinary categories. However, in the context of triangulated categories,
+one naturally wants a slightly different context. Ordinarily, one works in the 2-category \(\underline\Cat\), but here, we really want to work in another 2-category consisting
+just of the triangulated categories.
+\begin{definition}
+	We define a strict 2-category \(\underline{\cat{TCat}}\) as follows.
+	\begin{itemize}[label=\(\star\)]
+	\item For objects, we have triangulated categories.
+	\item For 1-morphisms, we have triangulated functors \((F,\sigma)\) where \(F\!:\calT\to\calT'\) and \(\sigma\!:F\circ\Sigma\To\Sigma'\circ F\) is a specified natural isomorphism.
+	\item For 2-morphisms \((F,\sigma)\To (F',\sigma')\) we have natural transformations \(\eta\!:F\To F'\) compatible with the specified commutation natural isomorphisms, i.e.
+	\begin{diagram*}
+		F\circ\Sigma\ar[r,Rightarrow,"\sigma"]\ar[d,Rightarrow,"\eta\Sigma"'] & \Sigma'\circ F\ar[d,Rightarrow,"\Sigma'\eta"] \\
+		F'\circ\Sigma\ar[r,Rightarrow,"\sigma'"] & \Sigma'\circ F'
+	\end{diagram*}
+	commutes.
+	\end{itemize}
+\end{definition}
+
+One then mimicks the definition of an (absolute) Kan extension in \(\underline\Cat\) to get a definition of (absolute) (total) derived functors in the context of triangulated categories.
+This is straightforward to do, so we do not spell it out. Furthermore, as the proofs involving deformations are in essense purely formal, they naturally extend very easily to the above context,
+though we replace the notion of a relative category \((\calC,W)\) with that of a ``Verdier pair'' \((\calT,\calN)\) of a triangulated category \(\calT\) and a null system \(\calN\) in \(\calT\).
+
+\begin{definition}
+	Let \(F\!:\calT\to\calT'\) be a triangulated functor, and let \(\calN\) (resp.\ \(\calN'\)) be a null system in \(\calT\) (resp.\ \(\calT'\)). Consider a full triangulated subcategory \(\calC\)
+	of \(\calT\). We say that \(\calC\) is \(F\)\emph{-injective} (with respect to \(\calN\) and \(\calN'\)) if the following conditions are satisfied:
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(F(\calN\cap\calC)\subseteq\calN'\).
+	\item For all \(x\in\calT\), there is an object \(x'\in\calC\) and a morphism \(x\to x'\) in \(\calS(\calN)\).
+	\end{enumerate}
+	Dually, we say \(\calC\) is \(F\)\emph{-projective} if it satisfies (1) above, and the following condition:
+	\begin{itemize}[label=(2')]
+	\item For all \(x\in\calT\), there is an object \(x'\in\calC\) and a morphism \(x'\to x\) in \(\calS(\calN)\).
+	\end{itemize}
+	We will say \(\calT\) \emph{has enough} \(F\)\emph{-injectives} (resp.\ \(F\)\emph{-projectives}) if there exists a full triangulated \(F\)-injective (resp.\ \(F\)-projective) category \(\calC\).
+\end{definition}
+\begin{theorem}
+	Let \(F\!:\calT\to\calT'\) be a triangulated functor between triangulated functors equipped with null systems \(\calN\) and \(\calN'\). Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item Suppose that there exists enough \(F\)-injectives. Then \(F\) has an absolute total right derived functor, and it is a triangulated functor.
+	\item Suppose that there exists enough \(F\)-projectives. Then \(F\) has an absolute total left derived functor, and it is a triangulated functor.
+	\end{enumerate}
+	Furthermore, in both of the above situations, the absolute total right/left derived functors are also absolute left/right Kan extensions in \(\underline{\cat{TCat}}\).
+\end{theorem}
+\begin{proof}
+(1) and (2) are dual, so it suffices to prove only one of them. We prove (1). To this end, we wish to apply Theorem \ref{thm:right-multiplicative-system-right-derived-functor-exists}. Let
+\(\calC\) be our promised full triangulated subcategory of \(F\)-injectives with respect to \(\calN\) and \(\calN'\). We see by assumption that (a) in the theorem is certainly satisfied.
+To see that (b) is satisfied, note that the weak equivalences in \(\calC\) are exactly the morphisms which have a cone in \(\calN\cap\calC\), which is sent to \(\calN'\) under \(F\).
+Therefore, we may apply Theorem \ref{thm:right-multiplicative-system-right-derived-functor-exists} to see that an absolute total right derived functor \(\bfR F\!:\calT/\calN\to\calT'/\calN\)
+exists, and furthermore, that it is given by a composition
+\[ \calT/\calN \overset{Q}\to \calC/(\calN\cap\calC)\overset{F'}\to\calT'/\calN'. \]
+To see that \(\bfR F\) can be made into a triangulated functor, it suffices to see that the above functors \(Q\) and \(F'\) are triangulated. However, \(F'\) is induced by
+the universal property Theorem \ref{thm:Verdier-quotient-universal-property}, and \(Q\) is a quasi-inverse of the triangulated equivalence \(\calC/(\calN\cap\calC)\iso\calT/\calN\)
+also induced by this universal property from the inclusion \(\calC\inj\calT\). Therefore, both of them are automatically triangulated functors.
+
+That the resulting functor is also a total left Kan extension in \(\underline{\cat{TCat}}\), it suffices to note that the proof of Theorem \ref{thm:right-multiplicative-system-right-derived-functor-exists}
+(and in partcular Lemma \ref{lemma:kan-extension-criterion}) can be carried out entirely internally to this 2-category.
+\end{proof}
+
+\begin{remark}
+	Of course, an obvious version of pseudofunctoriality also holds in this setting. In particular, given triangulated functors \(\calT\overset{F}\to\calT'\overset{G}\to\calT''\)
+	between triangulated categories with null systems \(\calN\), \(\calN'\), and \(\calN''\), along with distinguished \(F\)-injectives \(\calC\subseteq\calT\) and \(G\)-injectives
+	\(\calC'\subseteq\calT'\), there is a canonical natural transformation of triangulated functors
+	\[ \bfR(G\circ F) \To \bfR G\circ\bfR F \]
+	and this is a natural isomorphism if \(F\calC\subseteq\calC'\).
+\end{remark}

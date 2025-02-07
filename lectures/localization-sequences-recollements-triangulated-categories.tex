@@ -1,0 +1,374 @@
+%!TEX root = ../lectures.tex
+
+\section{Localization sequences \& recollements of triangulated categories}\label{lecture:localization-sequences-of-triangulated-categories}
+In the theory of localizations of categories, there is something called \emph{Bousfield localization.} Essentially, it concerns a way in which one can recognize and recover a localization from
+certain other data. In the ``stable'' setting of triangulated categories, it takes on a particularly simple form, which is the topic of this lecture. It's a useful thing to learn about
+for several reasons:
+\begin{enumerate}[label=(\arabic*)]
+\item Localization sequences, or rather recollements, appear often in nature, and give a nice formalism for explaining ``gluing'' phenomena in many situations, such as in algebraic geometry.
+Often, in topics where one is trying to do geometry abstractly, one will seek recollements as a form of aid, indicating e.g.\ what should be considered open and closed.
+\item Understanding the theory in the special case of triangulated categories is useful in motivating the general theory of Bousfield localizations.
+\item The proofs involved are tremendously helpful in demonstrating how one handles the machinery of a tringulated category, and give useful intuition for topics like t-structures.
+\end{enumerate}
+
+\subsection{Orthogonal complements, \& adjoints arising from them}
+\begin{definition}
+	Let \(\calT\) be a triangulated category, and let \(\calC\subseteq\calT\) be a full subcategory. Define the full subcategories
+	\begin{align*}
+		\calC^\perp := \{ y\in\calT\mid \forall x\in\calC,\, \calT(x,y) \cong 0 \}, \\
+		\bperp\calC := \{ y\in\calT\mid \forall x\in\calC,\, \calT(y,x) \cong 0 \}.
+	\end{align*}
+\end{definition}
+\begin{proposition}\label{prop:basic-triangulated-category-orthogonal-properties}
+	Let \(\calT\) be a triangulated category, and let \(\calT'\) be a triangulated subcategory. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\calT'^\perp\) and \(\bperp{\calT'}\) are thick replete full triangulated subcategories of \(\calT\).
+	\item \(\calT'\cap\calT'^\perp \simeq \{0\}\simeq \calT'\cap\bperp{\calT'}\).
+	\item \(\calT' \subseteq \bperp{(\calT'^\perp)}\) and \(\calT'\subseteq (\bperp{\calT'})^\perp\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) By definition, \(\calT'^\perp\) is full; that it is furthermore replete is trivial. To see that it is closed under direct summands, observe that if \(x,y\in\calT'^\perp\), then for all \(z\in\calT'\)
+\[ 0 \cong \calT(z,x\oplus y) \cong \calT(z,x)\oplus\calT(z,y)\quad\implies\quad \calT(z,x)\cong\calT(z,y)\cong 0.  \]
+It remains to see that \(\calT'^\perp\) is a triangulated subcategory. By Proposition \ref{prop:null-system-subcategory-characterization}, it suffices to check that \(\calT'^\perp\)
+is a null system. Clearly, \(0\in\calT'^\perp\). Next, if \(x\in\calT'^\perp\), then for all \(z\in\calT'\) we have
+\[ \calT(z,\Sigma x) \cong \calT(\Sigma^{-1}z,x) \cong 0 \]
+since \(\Sigma^{-1}z\in\calT'\), on account of \(\calT'\) being a triangulated subcategory of \(\calT\). Finally, we need to check that \(\calT'^\perp\) is closed under extensions. For this,
+consider a distinguished triangle
+\[ x \to x' \to x'' \to \Sigma x \]
+where \(x,x''\in\calT'^\perp\). Applying \(\calT(z,-)\), we have the exact sequence
+\[ 0 = \calT(z,x) \to \calT(z,x')\to\calT(z,x'') = 0 \]
+so that \(\calT(z,x') \cong 0\) as desired.
+
+(2) If \(x\in\calT'\cap\calT'^\perp\), then for all \(z\in\calT'\) we have
+\[ \calT'(z,x) \cong 0 \cong \calT'(z,0) \]
+so by the Yoneda lemma, \(x\cong 0\).
+
+(3) Let \(x\in\calT'\). If \(z\in\calT'^\perp\), then clearly \(\calT(x,z) = 0\), so \(x\in\bperp{(\calT'^\perp)}\).
+
+The remaining statements are dual.
+\end{proof}
+\begin{proposition}\label{prop:adjoint-from-orthogonal-triangle}
+	Let \(\calT\) be a triangulated category, and suppose we have a replete full subcategory \(\calT'\) of \(\calT\) satisfying the following properties.
+	\begin{enumerate}[label=(\alph*)]
+	\item For all \(x\in\calT\), there is a distinguished triangle
+	\[ x'\to x\to x''\to \Sigma x' \]
+	where \(x'\in\calT'\) and \(x''\in(\calT')^\perp\).
+	\item \(\Sigma\calT' \subseteq \calT'\).
+	\end{enumerate}
+	Then the inclusion \(\iota'\!:\calT'\inj\calT\) admits a right adjoint \(\tau'\!:\calT\to\calT'\) given by \(x\mapsto x'\), and for all \(x\in\calT\) the distinguished triangle in (a) has the form
+	\[ \tau'(x) \to x \to x'' \to \Sigma\tau'(x) \]
+	where \(\tau'(x)\to x\) is the counit of the adjunction.
+\end{proposition}
+\begin{proof}
+The idea is that the distinguished triangle in (a) gives us everything.
+
+We produce a right adjoint to \(\iota'\). For \(x\in\calT\), pick a distinguished triangle as in (b) and let \(\tau'(x) := x'\). We show that this object represents the functor \(\calT(\iota'(-),x)\!:\calT'\to\Ab\). For this, just
+apply \(\calT(y',-)\) with \(y'\in\calT'\) to the induced distinguished triangle
+\[ \Sigma^{-1}x''\to \tau'(x) \overset{\varepsilon_x}\to x\to x'' \]
+to get, using Proposition \ref{prop:pre-triangulated-representable-functors-are-cohomological}, the exact sequence
+\[ 0 \overset{(b)}= \calT(y',\Sigma^{-1}x'')\to\calT(y',\tau'(x))\overset{\varepsilon_{x,*}}\to\calT(y',x)\to\calT(y',x'') = 0 \]
+so that we have a natural isomorphism \(\calT(y',\tau'(x))\iso\calT(y',x)\), i.e.\ the natural isomorphism
+\[\varepsilon_{x,*}\!:\calT'(-,\tau'(x))\To\calT(\iota'(-),x).\]
+The rest now follows by abstract nonsense.
+\end{proof}
+
+\subsection{Short exact sequences of triangulated categories}
+We introduce the below terminology, which is not entirely standard.
+\begin{definition}
+	A \emph{(short) exact sequence of triangulated categories} is a pair of functors
+	\[ \calT' \overset{i}\longto \calT \overset{p}\longto \calT'' \]
+	between triangulated categories such that
+	\begin{enumerate}[label=(\arabic*)]
+	\item the functor \(i\) is fully faithful, and has essential image a (definitionally replete) thick triangulated subcategory of \(\calT\),
+	\item the functor \(p\) is essentially surjective, and
+	\item \(p\) exhibits \(\calT''\) as the Verdier quotient \(\calT/i(\calT')\) in the strict sense, i.e.\ \(p\) induces an isomorphism of categories \(\calT/i(\calT')\cong\calT''\).
+	\end{enumerate}
+	We say it is a \emph{weak} exact sequence if the condition in (3) only holds up to equivalence.
+\end{definition}
+\begin{remark}
+	We see that, by definition, any null system (i.e.\ replete full triangulated subcategory) \(\calN\) in \(\calT\) induces a canonical exact sequence
+	\[ \calN\inj\calT\sur\calT/\calN. \]
+	Furthermore, basically also by definition, all exact sequences can be written in this form up to equivalence.
+\end{remark}
+\begin{exercise}
+	Define a suitable notion of morphism of exact sequences of triangulated categories. Show that any exact sequence of triangulated functors can
+	be written in the form indicated in the above remark.
+\end{exercise}
+
+In traditional settings, one has the following intuition: given a short exact sequence of Abelian groups
+\[ 0 \to A \to B \to C \to 0, \]
+we may think of \(B\) as a ``sum'' of \(C\) and \(A\). Of course, it need not be an actual direct sum: indeed, such a sequence exhibits \(B\) as \(A\oplus C\) if and only if it splits.
+On the other hand, it is still useful to think of extensions as describing some potentially non-trivial way to combine \(C\) with \(A\) to get \(B\).
+
+In the non-Abelian setting, such as an exact sequence of \emph{groups}
+\[ 1 \to H \to G \to K \to 1 \]
+one still has this intuition, but one \emph{loses} the ability to detect that \(G = H\times K\) using splitting. More precisely, if it splits on the left, all is as usual; if it splits on the \emph{right,} however,
+one cannot know that \(G\cong H\times K\), as there are examples where this fails. These examples are provided by \emph{semidirect} products.
+
+For triangulated categories, the situation most resembles that of the Abelian case. This is no surprise, as triangulated categories model ``homotopy Abelian'' or ``stable'' phenomena, where we have some form of commutativity.
+For example, we will see that splitting on the left is the same as splitting on the right. On the other hand, the setting of triangulated categories is also more subtle, and in this way has some of the flavour of the non-Abelian case:
+there are several ways in which one side can split (given by having a left or right adjoint), and even in the presence of a splitting, one cannot reconstruct \(\calT\) from \(\calT'\) and \(\calT''\). In a sense,
+this last subtlety is a deficiency of triangulated categories specifically, as in enhanced contexts (such as dg-categories, or stable \(\infty\)-categories) it disappears.
+
+We will be interested in exact sequences with nice properties.
+\begin{definition}
+	An exact sequence
+	\[ \calT' \overset{i}\longto \calT \overset{p}\longto \calT'' \]
+	is called a
+	\begin{enumerate}[label=(\arabic*)]
+	\item \emph{localization sequence} if \(i\) and \(p\) admit right adjoints;
+	\item \emph{colocalization sequence} if \(i\) and \(p\) admit left adjoints.
+	\item \emph{recollement} if it is both a localization sequence and a colocalization sequence.
+	\end{enumerate}
+\end{definition}
+
+\subsection{A recognition theorem for localizations}
+\begin{theorem}\label{thm:fully-faithful-adjoint-gives-localization}
+	Suppose we have an adjunction
+	\begin{tikzcd}[cramped]
+		\calD\ar[from=r,bend right,"L"',""{name=A,below}] & \calC, \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	between categories. Let \(W_L\) (resp.\ \(W_R\)) be the wide subcategory of \(\calC\) (resp.\ \(\calD\)) spanned by those morphisms sent to isomorphisms by \(L\) (resp.\ by \(R\)).
+	Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(R\) is fully faithful if and only if the induced functor \(L'\!:\calC[W_L^{-1}] \to \calD\) is an equivalence.
+	\item \(L\) is fully faithful if and only if the induced functor \(R'\!:\calD[W_R^{-1}] \to \calC\) is an equivalence.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+The statements (1) and (2) are dual, so it suffices to prove (1). By Lemma \ref{lemma:fully-faithful-adjoint}, we know that \(R\) is fully faithful if and only if the counit
+\(\varepsilon\!:LR\To\1_\calD\) is a natural isomorphism, so we must show that this occurs if and only if \(L'\) is an equivalence. Let \(\eta\!:\1_\calC\To RL\) be the unit,
+and let \(\gamma_L\!:\calC\to\calC[W_L^{-1}]\) be the localization functor.
+
+Assume that \(\varepsilon\) is a natural isomorphism. We show that \(\gamma_L R\) is an inverse to \(L'\). One composition is easy:
+\[ L'\gamma_L R \cong LR \cong \1. \]
+Here, we used the definition of \(L'\), and the counit \(\varepsilon\!:LR\cong\1\). For the other direction, we use that, by Lemma \ref{lemma:fully-faithful-adjoint}, the
+natural transformation \(L\eta\) is a natural isomorphism; in particular, every component of \(\eta\) is thus contained in \(W_L\), so \(\eta\) is a weak natural equivalence.
+One deduces that \(\gamma_L\eta\!:\gamma_L\To\gamma_L RL\) is a natural isomorphism, so
+\[ \gamma_L RL'\gamma_L \cong \gamma_L RL \cong \gamma_L \]
+which by universal property implies that \(\gamma_L R L'\cong\1\).
+
+Conversely, assume that \(L'\!:\calC[W_L^{-1}]\simeq\calD\). We show that \(\1_\calD\) is left adjoint to \(LR\) with counit \(\varepsilon\); in that case, the adjunction map \(\calD(x,y)\cong\calD(x,LRy)\)
+tells us that the counit components \(\varepsilon_y\!: LRy\to y\) are isomorphisms. So, to this end, note that for any category \(\calD'\), composition with \(L\)
+gives a fully faithful functor \(L^*\!:\Fun(\calD,\calD')\to\Fun(\calC,\calD')\), as it is naturally isomorphic to the composite
+\begin{diagram*}
+	\Fun(\calD,\calD') \ar[r,"\sim","(\circ L')"'] & \Fun(\calC[W_L^{-1}],\calD') \ar[r,"\sim","(\circ\gamma_L)"'] & \Fun_{W_L}(\calC,\calD') \ar[r,hook] & \Fun(\calC,\calD').
+\end{diagram*}
+Choosing \(\calD' = \calD\), composition with \(L\) gives a fully faithful functor \(\Fun(\calD,\calD)\to\Fun(\calC,\calD)\), and in particular, we may find a natural
+transformation \(\eta'\!:\1_\calD\To LR\) in the preimage of \(L\eta\!:L\To LRL\), so that \(L\eta = \eta'L\). This \(\eta'\) will be our unit. It remains
+to check the triangle identities; from the ones for the adjunction \(L \ladj R\), we have
+\[ \id_L = \varepsilon L\circ L\eta = \varepsilon L \circ \eta'L = (\varepsilon\circ\eta')L \]
+which provides one of the triangle identities. For the other, note that we have
+\[ \id_R = R\varepsilon\circ\eta R \implies \id_{LR} = LR\varepsilon\circ L\eta R = LR\varepsilon\circ\eta'LR. \]
+This completes the proof.
+\end{proof}
+\begin{remark}
+	Note that the above theorem necessarily only holds up to equivalence, i.e.\ in the ``weaker'' sense of localization. Inspecting the proof shows that this is essentially
+	unavoidable.
+\end{remark}
+\begin{corollary}\label{corollary:triangulated-fully-faithful-adjoint-gives-localization}
+	Suppose we have an adjunction
+	\begin{tikzcd}[cramped]
+		\calT'\ar[from=r,bend right,"L"',""{name=A,below}] & \calT, \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	between triangulated categories. Let \(\calN_L = \ker{L}\) and \(\calN_R = \ker{R}\). Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(R\) is fully faithful if and only if \(L\) induces an equivalence of triangulated categories \(\calT/\calN_L \simeq \calT'\).
+	\item \(L\) is fully faithful if and only if \(R\) induces an equivalence of triangulated categories \(\calT'/\calN_R \simeq \calT\).
+	\end{enumerate}
+\end{corollary}
+\begin{proof}
+(2) is dual to (1), so we prove (1). Let \(W_L\) be the morphisms in \(\calT\) sent to isomorphisms by \(L\). By Theorem \ref{thm:fully-faithful-adjoint-gives-localization}, \(R\)
+is fully faithful if and only if \(L\) induces an equivalence \(\calT[W_L^{-1}] \simeq \calT'\). Now, simply note that \(W_L = \calS(\calN_L)\). Indeed, \(Lf\) is an isomorphism
+if and only if its cone is zero, if and only if the cone of \(f\) is in \(\ker{L} = \calN_L\). Furthermore, note that the induced equivalence is triangulated by universal property.
+\end{proof}
+
+\subsection{Properties of the adjoints in localization sequences}
+\begin{lemma}
+	Let \(F\!:\calC\inj\calD\) be a fully faithful functor. If \(F\) has a right adjoint \(F\ladj R\), then \(R\) is essentially surjective.
+\end{lemma}
+\begin{proof}
+By Lemma \ref{lemma:fully-faithful-adjoint}, since \(F\) is fully faithful, we know that the unit \(\eta\!:\1\To RF\) is a natural isomorphism. In particular, for any \(x\in\calC\), we have \(x \cong RFx\).
+\end{proof}
+\begin{theorem}\label{thm:localization-sequence-adjoints-properties}
+	Suppose we have an exact sequence of solid arrows
+	\begin{diagram*}
+		\calT'\ar[r,"i",""{above,name=A}] & \calT \ar[r,"p",""{above,name=C}]\ar[l,bend left,shift left,dashed,"i_R",""{below,name=B}] & \mathmakebox[\widthof{\calT'}][l]{\calT''.} \ar[l,bend left,shift left,dashed,"p_R",""{below,name=D}] \ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+	\end{diagram*}
+	Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item If \(i\) has a right adjoint \(i_R\), then \(i_R\) is essentially surjective.
+	\item If \(p\) has a right adjoint \(p_R\), then \(p_R\) is fully faithful.
+	\item In the situation of (2), \(p_R\) induces an equivalence \(\calT''\simeq i(\calT')^\perp\) with quasi-inverse given by the composite
+	\[ i(\calT')^\perp \inj \calT \overset{p}\to \calT''.  \]
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) Since \(i\) is fully faithful, we are done by the above lemma.
+
+(2) The idea is to explot Theorem \ref{thm:fully-faithful-adjoint-gives-localization}, or rather, Corollary \ref{corollary:triangulated-fully-faithful-adjoint-gives-localization}. We note
+that \(\ker{p} = i(\calT')\), so the requirement that \(p\) induces an equivalence \(\calT/\ker{p}\simeq\calT''\) is satisfied, hence \(p_R\) is fully faithful.
+
+(3) It suffices to check that the essential image of \(p_R\) is \(i(\calT')^\perp\). Let \(z\cong i(z_0)\in i(\calT')\). For any \(y\cong p_R(y_0)\in p_R(\calT'')\), we then have
+\[ \calT(x,y) \cong \calT(i(z_0),p_R(y_0)) \cong \calT''(pi(z_0),y_0) \cong 0 \]
+since \(i(\calT') = \ker{p}\). We deduce that \(p_R(\calT'')\subseteq i(\calT')^\perp\). Conversely, let \(x\cong i(x_0) \in i(\calT')^\perp\), and consider the unit \(\eta\!:\1\To p_Rp\). Taking the cone of \(\eta_x\)
+\[ x \overset{\eta_x}\to (p_Rp)x \to x' \to \Sigma (p_Rp)x, \]
+we note that by (2), \(p_R\) is fully faithful, so \(p\eta\!: p \To pp_Rp\) is a natural isomorphism, and hence \(p(x'') \cong 0\). Therefore, \(x'\in i(\calT')\). Now, both \(x\) and \(p_Rpx\) are in \(i(\calT')^\perp\),
+which is a full triangulated subcategory of \(\calT\) and is thus closed under cones; in particular, \(x' \in i(\calT')\cap i(\calT')^\perp\simeq \{0\}\), so \(x' \cong 0\). We conclude that \(\eta_x\!:x\cong p_Rpx\).
+\end{proof}
+
+\subsection{Splittings of exact sequences}
+\begin{lemma}\label{lemma:orthogonal-complement-is-kernel-of-adjoint}
+	Consider a fully faithful triangulated functor \( i\!:\calT' \inj \calT \) and assume that \(i\) has a right adjoint \(i_R\). Then
+	\[ i(\calT')^\perp = \{ x\in\calT\mid i_R(x) \cong 0 \} = \ker{i_R}. \]
+\end{lemma}
+\begin{proof}
+If \(x\in \calT\), then for all \(z\cong i(z_0)\in i(\calT')\), we have
+\[ \calT(z,x) \cong \calT(i(z_0),x) \cong \calT'(z_0,i_R(x)). \]
+Thus, if \(x\in i(\calT')^\perp\), we see that \(\calT'(-, i_R(x)) \cong 0\), so \(x\in\ker{i_R}\). Conversely, if \(x\in\ker{i_R}\), then the above right Hom-set is zero, hence the above left is too.
+\end{proof}
+
+\begin{lemma}\label{lemma:perp-of-perp-in-presence-of-orthogonal-triangle}
+	Consider a fully faithful triangulated functor \( i\!:\calT' \to \calT \) and assume that for all \(x\in\calT\), there is a distinguished triangle
+	\[ x' \to x \to x'' \to \Sigma x' \]
+	where \(x'\in i(\calT')\) and \(x''\in i(\calT')^\perp\). Then \(\bperp{(i(\calT')^\perp)} = \thick(i(\calT'))\).
+\end{lemma}
+\begin{proof}
+Let \(x\in \bperp{(i(\calT')^\perp)}\). We have a distinguished triangle
+\[ x' \to x \to x'' \to \Sigma x' \]
+by assumption, and by definition of \(x\), we have \(\calT(x,x'') \cong 0\). Shifting around, we thus have
+\[ \Sigma^{-1}x'' \to x' \to x \overset{0}\to x'' \]
+which by Corollary \ref{corollary:direct-sum-triangle} implies that \(x' \cong \Sigma^{-1}x'' \oplus x\). In particular, \(x\) is a direct summand of \(x'\in i(\calT')\),
+so \(x\in\thick(i(\calT'))\). This shows \(\bperp{(i(\calT')^\perp)} \subseteq\thick(i(\calT'))\).
+
+We already know that \(i(\calT')\subseteq\bperp{(i(\calT')^\perp)}\), and since \(\bperp{(i(\calT')^\perp)}\) is thick, this means that \(\thick(i(\calT'))\subseteq\bperp{(i(\calT')^\perp)}\).
+\end{proof}
+
+\begin{theorem}
+	Consider an exact sequence
+	\[ \calT' \overset{i}\longto \calT \overset{p}\longto \calT''. \]
+	Then the following statements are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item The sequence is a localization sequence.
+	\item The functor \(i\) has a right adjoint \(i_R\).
+	\item The functor \(p\) has a right adjoint \(p_R\).
+	\item For all \(x\in\calT\), there are \(x'\in i(\calT')\), \(x''\in i(\calT')^\perp\) sitting in a distinguished triangle
+	\[ x' \to x \to x'' \to \Sigma x'. \]
+	%\item The composite \(i(\calT')^\perp \inj \calT \overset{p}\to \calT''\) is an equivalence of triangulated categories.
+	\end{enumerate}
+	Furthermore, in the above situation, we have an equivalence of triangulated categories and equality
+	\[ \calT/(i(\calT')^\perp) \iso \calT',\quad \bperp{(i(\calT')^\perp)} = i(\calT'). \]
+\end{theorem}
+\begin{proof}
+Clearly, if (2) through (4) are equivalent, then (1) is equivalent to them all. We have already seen in Proposition \ref{prop:adjoint-from-orthogonal-triangle} that (4) implies (2). We will show that
+\((2)\Rightarrow(4)\Rightarrow(3)\Rightarrow(2)\).% and \((3) \Leftrightarrow (5)\).
+
+\((2)\Rightarrow(4)\). Let \(\varepsilon\!:ii_R\To\1\) be the counit. By taking the cone, we then have a distinguished triangle
+\[ i(i_Rx) \to x \to x'' \to \Sigma i(i_Rx) \]
+for all \(x\in\calT\). Since \(i\) is fully faithful, \(i_R\varepsilon\!: i_Rii_R\To i_R\) is a natural isomorphism, so applying \(i_R\) to the above (and noting that adjoints of triangulated
+functors are triangulated), we have the distinguished triangle
+\[ (i_Rii_R)x \iso i_Rx \to i_Rx'' \to \Sigma (i_Rii_R)x \]
+so that \(i_Rx'' \cong 0\). By Lemma \ref{lemma:orthogonal-complement-is-kernel-of-adjoint}, we see that \(x''\in i(\calT')^\perp\).
+
+\((4)\Rightarrow(3)\). Applying the dual of Proposition \ref{prop:adjoint-from-orthogonal-triangle}, we see that the inclusion \(i'\!:i(\calT')^\perp \inj \calT\) admits a \emph{left adjoint} \(L\).
+Since \(L\) has fully faithful right adjoint \(i'\), it induces an equivalence \(F\!:\calT/\ker{L}\simeq i(\calT')^\perp\) by Corollary \ref{corollary:triangulated-fully-faithful-adjoint-gives-localization}.
+Now, by the dual of Lemma \ref{lemma:orthogonal-complement-is-kernel-of-adjoint}, we have \(\ker{L} = \bperp{(i(\calT')^\perp)}\), and since \(i(\calT')\) is thick, Lemma \ref{lemma:perp-of-perp-in-presence-of-orthogonal-triangle}
+tells us that \(\ker{L} = i(\calT')\). Therefore, we get an equivalence \(\calT'' \simeq i(\calT')^\perp\) which we abusively also call \(F\).
+The following computation shows that \(i'F\) is right adjoint to \(p\):
+\[ \calT''(p-,-) \cong i(\calT)^\perp(Fp-,F-) = i(\calT)^\perp(L-,F-) \cong \calT(-,i'F-). \]
+
+\((3)\Rightarrow(2)\). Let \(p\) have a right adjoint \(p_{R}\). By taking the cocone of the components of the unit \(\eta\!:\1\To p_Rp\), we have distinguished triangles
+\[ x' \to x \to p_Rp(x) \to \Sigma x' \]
+By Theorem \ref{thm:localization-sequence-adjoints-properties}, \(p_R\) is fully faithful, hence \(p\eta\!:p \To pp_Rp\) is a natural isomorphism. Therefore, applying \(p\) above yields
+that \(x'\in\ker{p} = i(\calT')\). Furthermore, one trivially sees that \(p_R(\calT'') \subseteq i(\calT')^\perp\), so we may apply Proposition \ref{prop:adjoint-from-orthogonal-triangle}.
+
+% \((3)\Rightarrow(5)\). This is Theorem \ref{thm:localization-sequence-adjoints-properties}. We spell out the missing step: since \(p_R\) is fully faithful, \(pp_R \cong \1\), but on the other hand,
+% since we know what the essential image is, \(p_R\) factors as \(\calT'' \simeq i(\calT')^\perp \inj \calT\), so the proposed composite is automatically a left quasi-inverse, from which it follows formally
+% that it is also a right quasi-inverse.
+
+% \((5)\Rightarrow(3)\). Let \(q\!:\calT''\to i(\calT')^\perp\) be a quasi-inverse of the equivalence \(i(\calT')^\perp\iso\calT''\). Then the composition
+% \[ \calT'' \overset{q}\to i(\calT')^\perp \inj \calT  \]
+% is a right adjoint of \(p\). Indeed, we have
+% \[ \calT''(p(x),y) \cong \calT(q(p(x)),q(y))  \]
+
+For the final statements, note that we already showed that (4) implies the equality
+\[ i(\calT') = \bperp{(i(\calT')^\perp)}\]
+in Lemma \ref{lemma:perp-of-perp-in-presence-of-orthogonal-triangle}; for the equivalence, since \(i\) is fully faithful, by Corollary \ref{corollary:triangulated-fully-faithful-adjoint-gives-localization} the right
+adjoint \(i_R\) induces an equivalence \(\calT/\ker{i_R} \simeq \calT'\). Since \(\ker{i_R} = i(\calT')^\perp\), we are done.
+\end{proof}
+\begin{remark}
+	Observe that, in fact, the implications \((2)\Leftrightarrow(4)\Rightarrow(3)\) hold without assuming that the essential image of \(\calT'\) in \(\calT\) is thick. Indeed,
+	the only step where thickness appears there is in \((4)\Rightarrow(3)\), showing that \(\ker{L} = i(\calT')\); without thickness, however, one has \(\ker{L} = \thick(i(\calT'))\). However,
+	we know that \(\calT/\calN \simeq \calT/\thick(\calN)\), so this actually does not matter.
+
+	The other implications, however, strictly make use of thickness in an essential way, and so may not be naturally generalized.
+\end{remark}
+
+\subsection{Recollements}\label{subsection:recollements}
+Recall that an exact sequence of triangulated categories is a \emph{recollement} if it both a localization sequence and a colocalization sequence, i.e.\ if all adjoints exist.
+In other words, a recollement looks like this:
+\begin{diagram*}[column sep=large]
+	\calT'\ar[r,"i" description,""{below,name=A},""{above,name=AA}] &
+		\calT \ar[r,"p" description,""{below,name=C},""{above,name=CC}]\ar[l,bend left,shift left,"i_R",""{above,name=B}]\ar[l,bend right,shift right,"i_L"',""{below,name=BB}] &
+		\mathmakebox[\widthof{\calT'}][l]{\calT''.} \ar[l,bend left,shift left,"p_R",""{above,name=D}]\ar[l,bend right,shift right,"p_L"',""{below,name=DD}]
+		\ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+		\ar[from=AA,to=BB,symbol=\vdash]\ar[from=CC,to=DD,symbol=\vdash]
+\end{diagram*}
+
+The results we have produced (and their duals) tell us that having a recollement is the same as having distinguished triangles
+\begin{align*}
+	p_Lp(x) \to x \to ii_L(x) \to \Sigma p_Lp(x), \\
+	ii_R(x) \to x \to p_Rp(x) \to \Sigma ii_R(x),
+\end{align*}
+telling us about the adjoints. Of course, the above make use of the adjoints, so really we should say
+\begin{align*}
+	x' \to x \to x'' \to \Sigma x',\quad &x'\in\bperp{(i(\calT'))},\quad x''\in i(\calT'), \\
+	x' \to x \to x'' \to \Sigma x',\quad &x'\in i(\calT'),\quad x''\in i(\calT')^\perp.
+\end{align*}
+Perhaps surprisingly, these things do appear in nature, and one may see them as providing a way to distinguish between \emph{open} and \emph{closed} sets.
+In particular, for any topological space \(X\), let \(\sfD(X)\) denote the derived category of sheaves of Abelian groups on \(X\), and consider a closed
+set \(Z\subseteq X\). Write \(U := X\backslash Z\), and let \(i\!:Z\inj X\), respectively \(j\!:U\inj X\), be the inclusions. Then there is a recollement of the form
+\begin{diagram*}[column sep=large]
+	\sfD(Z)\ar[r,"i_*" description,""{below,name=A},""{above,name=AA}] &
+		\sfD(X) \ar[r,"j^*" description,""{below,name=C},""{above,name=CC}]\ar[l,bend left,shift left,"i^!",""{above,name=B}]\ar[l,bend right,shift right,"i^*"',""{below,name=BB}] &
+		\sfD(U). \ar[l,bend left,shift left,"j_*",""{above,name=D}]\ar[l,bend right,shift right,"j_!"',""{below,name=DD}]
+		\ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+		\ar[from=AA,to=BB,symbol=\vdash]\ar[from=CC,to=DD,symbol=\vdash]
+\end{diagram*}
+In the above, we have suppressed explicitly writing how the functors are derived, as it is not important in the context of merely presenting this as an example.
+The important point is that this kind of situation arises whenever one considers the complement of a closed subspace, even in geometric situations such as for schemes. More
+generally, one can go backwards and use this to ``identify'' which kinds of objects should be considered open versus closed, by placing them within an appropriate
+recollement.
+
+In a recollement
+\begin{diagram*}[column sep=large]
+	\calT'\ar[r,"i" description,""{below,name=A},""{above,name=AA}] &
+		\calT \ar[r,"p" description,""{below,name=C},""{above,name=CC}]\ar[l,bend left,shift left,"i_R",""{above,name=B}]\ar[l,bend right,shift right,"i_L"',""{below,name=BB}] &
+		\mathmakebox[\widthof{\calT'}][l]{\calT''} \ar[l,bend left,shift left,"p_R",""{above,name=D}]\ar[l,bend right,shift right,"p_L"',""{below,name=DD}]
+		\ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+		\ar[from=AA,to=BB,symbol=\vdash]\ar[from=CC,to=DD,symbol=\vdash]
+\end{diagram*}
+the functor \(i_R\circ p_L\) is sometimes referred to as the \emph{gluing functor.} This can be made sense of using the above example of sheaves: the functor \(j_!\) is given
+by ``extending by zero'' while \(i^*!\) considers those sections with support in \(Z\).
+
+\subsection{Appendix: Verdier quotients of stable \(\infty\)-categories as cofibers}
+The appropriate \(\infty\)-categorical version of triangulated categories is given by stable \(\infty\)-categories. A natural question is thus to ask in
+what form the Verdier quotient construction appears in the theory of stable \(\infty\)-categories. There is one evident approach: do the same thing as we did
+for triangulated categories. That is, given a stable \(\infty\)-category \(\calD\), we consider a stable subcategory \(\calC\inj\calD\), and form
+a class of morphsisms \(\calS(\calC) := \{ (f\!:x\to y)\in\calD\mid \cofib{f}\in\calC \}\). Then the Verdier quotient should be the localization \(\calD[\calS(\calC)^{-1}]\).
+
+On the other hand, there is a different approach, and one which is a sense more elegant. The theory of colimits of stable \(\infty\)-categories is very well-behaved,
+particularly if the \(\infty\)-categories in question are presentable. This leads to the
+\begin{definition}
+	Let \(F\!:\calC\to\calD\) be a fully faithful exact functor of presentable stable \(\infty\)-categories. Then the Verdier quotient \(\calD/\calC\)
+	is the cofiber of \(F\). That is, it is the pushout
+	\begin{diagram*}
+		\calC\ar[r,"F"]\ar[d] & \calD\ar[d] \\
+		*\ar[r] & \calD/\calC\ar[ul,pushout]
+	\end{diagram*}
+	in the \(\infty\)-category of presentable stable \(\infty\)-categories.
+\end{definition}
+This is a rather beautiful and simple definition, capturing precisely our intuition for what exact sequences are. One can show that, in various settings,
+this agrees with the previously suggested definition as a localization; this is done in \cite{Blumberg_Gepner_Tabuada_2013} and \cite{drew2015verdierquotientsstablequasicategories}.
+Similarly, they show that the concept agrees with that on triangulated categories: it is proven that \(\ho(\calD/\calC)\simeq\ho(\calD)/\ho(\calC)\).

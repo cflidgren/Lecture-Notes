@@ -9,4 +9,4 @@ The format of the notes is such that topics are divided into lecture-sized chunk
 ### Build instructions
 Build `lectures.tex` using a modern LaTeX compilation tools, such as `latexmk` with `LuaLaTeX`. **Warning:** `pdflatex` will not work.
 
-Each "lecture" is contained in its own file `include`d into the main file, `lectures.tex`. I use Sublime Text, with `LaTeXTools` to compile my LaTeX code; each file thus has a magic comment `%!TEX root = lectures.tex` at the start telling `LaTeXTools` which file to send to compilation.
+Each "lecture" is contained in its own file `include`d into the main file, `lectures.tex`. I use Sublime Text, with `LaTeXTools` to compile my LaTeX code; each file thus has a magic comment `%!TEX root = ../lectures.tex` at the start telling `LaTeXTools` which file to send to compilation.

@@ -1,0 +1,500 @@
+%!TEX root = ../lectures.tex
+
+\section{Monadicity}
+Having built up the formalism of Abelian categories a bit, we would like to produce examples. In order to do this, we will take a detour into the topic of monads,
+because they will allow us to easily deduce properties of certain nice subcategories, namely those whose inclusions admit a left adjoint, and this will be of interest
+to us when we want to construct new Abelian categories from old ones. For this lecture, we follow \cite{riehl-category-theory-in-context}.
+
+\subsection{Monads}
+\begin{definition}
+	Let \(\calC\) be a category. A \emph{monad} on \(\calC\) is a monoid in the category of endofunctors on \(\calC\). This means it is a triple \((T,\eta,\mu)\) consisting of a functor \(T\!:\calC\to\calC\),
+	a natural transformation \(\eta\!:\1 \To T\) called the \emph{unit,} and a natural transformation \(\mu\!:T^2\to T\) called the \emph{multiplication,} such that the diagrams
+	\begin{center}
+		\begin{tikzcd}
+			T \ar[r,Rightarrow,"\eta T"]\ar[dr,equal] & T^2\ar[d,Rightarrow,"\mu"] & \ar[l,Rightarrow,"T\eta"'] T\ar[dl,equal] \\
+			& T
+		\end{tikzcd}
+		\quad
+		\begin{tikzcd}
+			T^3\ar[r,Rightarrow,"T\mu"]\ar[d,Rightarrow,"\mu T"'] & T^2\ar[d,Rightarrow,"\mu"] \\
+			T^2\ar[r,Rightarrow,"\mu"] & T
+		\end{tikzcd}
+	\end{center}
+	expressing unitality and associativity commute.
+\end{definition}
+
+The way to think of monads is as the ``shadow'' an adjunction on the codomain of the right adjoint (i.e.\ the domain of the left adjoint). In particular, we have the following
+\begin{proposition}\label{prop:adjunctions-induce-monads}
+	Consider an adjunction
+	\begin{center}
+	\begin{tikzcd}
+		\calD\ar[from=r,bend right,"L"',""{name=A,below}] & \calC, \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	\quad \(\eta\!:\1\To RL,\quad \varepsilon\!: LR\To\1.\)
+	\end{center}
+	Let \(\mu = R\varepsilon L\) and \(T = RL\). Then \((T, \eta, \mu)\) is a monad on \(\calC\).
+\end{proposition}
+\begin{proof}
+Expanding the diagrams we need to check, we get
+\begin{center}
+	\begin{tikzcd}
+		RL \ar[r,Rightarrow,"\eta RL"]\ar[dr,equal] & RLRL\ar[d,Rightarrow,"R\varepsilon L"] & \ar[l,Rightarrow,"RL\eta"'] RL\ar[dl,equal] \\
+		& RL
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		RLRLRL\ar[r,Rightarrow,"RLR\varepsilon L"]\ar[d,Rightarrow,"R\varepsilon LRL"'] & RLRL\ar[d,Rightarrow,"R\varepsilon L"] \\
+		RLRL\ar[r,Rightarrow,"R\varepsilon L"] & RL
+	\end{tikzcd}
+\end{center}
+and one now sees that the diagram on the left commutes by the triangle identities, and the diagram on the right commutes by applying the following lemma to the natural transformation
+\(R\varepsilon\!:RLR\to R\).
+\end{proof}
+% \begin{lemma}
+% 	Consider two functors \(L\!:\calD\to\calC\), \(R\!:\calC\to\calD\) together with a natural transformation \(\varepsilon\!:LR\To\1\). Then the natural transformation
+% 	\[ R\varepsilon\!:RLR\To R \]
+% 	defines a natural transformation \((R\varepsilon)\) as below
+% 	\begin{diagram*}[column sep=large]
+% 		\Fun(\calC,\calD) \ar[r,bend left,"(RLR)",""{name=A,below}] & \Fun(\calC,\calD)\ar[l,bend left,"(R)",""{name=B,above}]\ar[from=A,to=B,Rightarrow,"(R\varepsilon)"]
+% 	\end{diagram*}
+% 	where \((RLR)\!:\Fun(\calC,\calD)\) is the functor \(F\mapsto RLRF\), similarly for \((R)\), and the natural transformation \((R\varepsilon)\) is defined by
+% 	\[ (R\varepsilon)_F := R\varepsilon F. \]
+% \end{lemma}
+% \begin{proof}
+% Given a natural transformation \(\sigma\!:G\To H\), we have to verify that the diagram
+% \begin{diagram*}
+% 	RLRG \ar[r,Rightarrow,"R\varepsilon G"]\ar[d,Rightarrow, "RLR\sigma"'] & RG\ar[d,Rightarrow,"R\sigma"] \\
+% 	RLRH \ar[r,Rightarrow,"R\varepsilon H"] & RH
+% \end{diagram*}
+% commutes. For this, we may reduce to checking on the components for some generic \(x\in\calC\), which requires us to check that the diagram
+% \begin{diagram*}
+% 	RLRGx \ar[r,"R\varepsilon_{Gx}"]\ar[d, "RLR\sigma_x"'] & RGx\ar[d,"R\sigma_x"] \\
+% 	RLRHx \ar[r,"R\varepsilon_{Hx}"] & RHx
+% \end{diagram*}
+% commutes. Here, we use the naturality of \(\varepsilon\!:LR\To\1\) to note that
+% \begin{diagram*}
+% 	LRGx\ar[d,"LR\sigma_x"']\ar[r,"\varepsilon_{Gx}"] & Gx\ar[d,"\sigma_x"] \\
+% 	LRHx\ar[r,"\varepsilon_{Hx}"] & Hx
+% \end{diagram*}
+% commutes, so that
+% \begin{align*}
+% 	R\varepsilon_{Hx}\circ RLR\sigma_x &= R(\varepsilon_{Hx}\circ LR\sigma_x) \\
+% 	&= R(\sigma_x\circ\varepsilon_{Gx}) = R\sigma_x\circ R\varepsilon_{Gx}
+% \end{align*}
+% as desired.
+% \end{proof}
+\begin{lemma}
+	Consider a natural transformation \( \tau\!:F\To F' \) between functors \(\calC\to\calD\). This defines a natural transformation \((\tau)\) as below
+	\begin{diagram*}
+		\Fun(\calD',\calC) \ar[r,bend left,"(F)",""{name=A,below}]\ar[r,bend right,"(F')"',""{name=B,above}] & \Fun(\calD',\calD)\ar[from=A,to=B,Rightarrow,"(\tau)"]
+	\end{diagram*}
+	where \((F)\!:\Fun(\calC,\calD)\to\Fun(\calD',\calD)\) is the functor \(G\mapsto FG\), similarly for \((F')\), and the natural transformation \((\tau)\) is defined on components by
+	\[ (\tau)_G := \tau G. \]
+\end{lemma}
+\begin{proof}
+Given a natural transformation \(\sigma\!:G\To H\), we have to verify that the diagram
+\begin{diagram*}
+	FG \ar[r,Rightarrow,"\tau G"]\ar[d,Rightarrow, "F\sigma"'] & F'G\ar[d,Rightarrow,"F'\sigma"] \\
+	FH \ar[r,Rightarrow,"\tau H"] & F'H
+\end{diagram*}
+commutes. For this, we may reduce to checking on the components for some generic \(x\in\calC\), which requires us to check that the diagram
+\begin{diagram*}
+	FGx \ar[r,"\tau_{Gx}"]\ar[d, "F\sigma_x"'] & F'Gx\ar[d,"F'\sigma_x"] \\
+	FHx \ar[r,"\tau_{Hx}"] & F'Hx
+\end{diagram*}
+commutes, but this follows by the naturality of \(\tau\!:F\To F'\).
+\end{proof}
+\begin{remark}
+	The above lemma can be seen as a special case of \emph{pasting diagrams} producing a single, well-defined composite in a 2-category. Indeed, the two composites in the square
+	of natural transformations above are the two possible ways of composing the pasting diagram
+	\begin{diagram*}[column sep=large]
+		\calD'\ar[r,bend left,"G",""{name=A,below}]\ar[r,bend right,"H"',""{name=B,above}]\ar[from=A,to=B,Rightarrow,"\sigma"] & \calC\ar[r,bend left,"F",""{name=C,below}]\ar[r,bend right,"F'"',""{name=D,above}]\ar[from=C,to=D,Rightarrow,"\tau"] & \calD
+	\end{diagram*}
+	and it is a general theorem that such diagrams always yield a unique composite. In the case of Proposition \ref{prop:adjunctions-induce-monads}, applying this to the diagram
+	\begin{diagram*}
+		& & \calC\ar[dr,"L"] & & \calC\ar[dr,"L"] & \\
+		\calC\ar[r,"L"] & \calD\ar[rr,equal,""{name=A,above}]\ar[ur,"R"]\ar[from=ur,to=A,Rightarrow,"\varepsilon"] & & \calD\ar[rr,equal,""{name=B,above}]\ar[ur,"R"]\ar[from=ur,to=B,Rightarrow,"\varepsilon"] & & \calD\ar[r,"R"] & \calC
+	\end{diagram*}
+	gives another way to obtain the result.
+\end{remark}
+
+\begin{example}
+	Let \(\calC\) be a category admitting finite coproducts, and let \(x_0\in\calC\). There is an adjunction
+	\begin{diagram*}
+		\mathmakebox[\widthof{\calC}][r]{x_0/\calC} \ar[r,bend right,"U"',""{name=B}] & \calC \ar[l,bend right,"F"',""{name=A}]\ar[from=A,to=B,symbol=\vdash]
+	\end{diagram*}
+	where \(U\) is the forgetful functor, and \(F\) is given by \(x\mapsto (x_0\to x_0\amalg x)\). It is immediate that \(F\ladj U\). The induced monad
+	\((-)_+\!:\calC\to\calC\) sends \(x\) to \(x_0\amalg x\); the unit \(\eta_x\!:x\to x_+\) is just the canonical map \(x\to x_0\amalg x\), and the
+	multiplication \(\mu_x\!:(x_+)_+\to x\) is the map \(x_0\amalg x_0\amalg x \to x_0 \amalg x\) induced by the identities \(\id_{x_0\amalg x}\) and \(\id_{x_0}\).
+\end{example}
+\begin{example}
+	There is a free-forgetful adjunction
+	\begin{diagram*}[cramped,column sep=large]
+		\Mon \ar[r,bend right,"U"',""{name=B}] & \Set \ar[l,bend right,"F"',""{name=A}]\ar[from=A,to=B,symbol=\vdash]
+	\end{diagram*}
+	and the induced monad \(T\!:\Set\to\Set\) is the \emph{free monoid monad,} also known as the \emph{list monad.} For a set \(X\), the unit \(\eta_X\!:X\to TX\)
+	is \(x\mapsto (x)\). The multiplication is given by concatenation.
+\end{example}
+\begin{example}
+	Similarly, for a ring \(R\), there is a free-forgetful functor
+	\begin{diagram*}[cramped,column sep=large]
+		\Mod_R \ar[r,bend right,"U"',""{name=B}] & \Set \ar[l,bend right,"F"',""{name=A}]\ar[from=A,to=B,symbol=\vdash]
+	\end{diagram*}
+	which induces a monad \(R[-]\!:\Set\to\Set\), the \emph{free} \(R\)\emph{-module monad.} It sends a set \(X\) to the set \(R[X]\) of formal sums of elements of \(X\) with coefficients in \(R\).
+	The unit \(\eta_X\!:X\to R[X]\) is given by \(x\mapsto 1\cdot x\), and the multiplication is given by distributing sums.
+\end{example}
+\begin{example}
+	Consider the two adjunctions
+	\begin{diagram*}[cramped,column sep=large]
+		\cat{CHaus} \ar[r,bend right,hook,"U"',""{name=D}] & \Top \ar[r,bend right,"U"',""{name=B}]\ar[l,bend right,"\beta"',""{name=C}] & \Set. \ar[l,bend right,"\text{disc.}"',""{name=A}]\ar[from=A,to=B,symbol=\vdash]\ar[from=C,to=D,symbol=\vdash]
+	\end{diagram*}
+	Composing them, we get a monad \(\beta\!:\Set\to\Set\), which sends a set \(X\) to the Stone--\v{C}ech compactification of the discrete space \(X\), i.e.\ to the set of ultrafilters on \(X\).
+\end{example}
+\begin{example}
+	The (covariant) power set functor \(\sfP\!:\Set\to\Set\), sending a set \(X\) to its power set \(\sfP X\) and a map \(f\!:X\to Y\) to the image map \(f_*\!:\sfP X\to\sfP Y\), \(A\mapsto f(A)\),
+	can be equipped with the structure of a monad. The unit \(\eta_X\!:X\to\sfP X\) is the map \(x\mapsto \{x\}\), and the multiplication \(\mu_X\!:\sfP^2X\to\sfP X\) sends a collection of subsets \(\calA\)
+	to the union \(\cup\calA\).
+\end{example}
+\begin{example}
+	The \emph{contravariant} power set functor \(\sfP\!:\Set\to\Set^\op\), sending a map \(f\!:X\to Y\) to the inverse image map \(f^{-1}\!:\sfP Y\to \sfP X\), is its own adjoint. Indeed,
+	\[ \Set(X,\sfP Y) = \Set(X,2^Y) \cong \Set(X\times Y,2)\cong\Set(Y,2^X)\cong\Set(Y,\sfP X). \]
+	In particular, we get the \emph{double power set monad} \(\sfP^2\!:\Set\to\Set\).
+\end{example}
+\begin{example}
+	Let \((M,\cdot,e)\in\Mon\) be a monoid. Then there is a monad \((-)\times M\!:\Set\to\Set\), where the monad structure is given by \(\eta_X\!:X\to X\times M\), \(x\mapsto (x,e)\),
+	and \(\mu_X\!:X\times M\times M\to X\times M\), \((x,m,m')\mapsto (x,m\cdot m')\). In particular, one gets a monad \((-)\times\N\), which corresponds to considering ``discrete time variables.''
+\end{example}
+\begin{example}
+	Let \(\cat{Meas}\) be the category of measurable spaces, with morphisms measurable functions. There is a monad \(\Prob\!:\cat{Meas}\to\cat{Meas}\), which sends a measurable space
+	\(X\) to the measurable space \(\Prob(X)\) of probability measures on \(X\), where the \(\sigma\)-algebra is the smallest one for which the evaluation maps \(\ev_A\!:\Prob(X)\to[0,1]\) are measurable.
+	The unit \(X\to\Prob(X)\) is given by \(x\mapsto\delta_x\), where the latter is the Dirac measure at \(x\). The multiplication is given by integration: \(\mu_X\!:\Prob(\Prob(X))\to\Prob(X)\)
+	is given by sending a measure \(\nu\in\Prob(\Prob(X))\) to the measure
+	\[ \mu_X(\nu)\!: A \mapsto \int_{\Prob(X)} \ev_A\diff\nu. \]
+\end{example}
+\begin{example}
+	Let \(\Bbbk\) be a field. There is an \emph{affine monad,} \(\Aff_\Bbbk\!:\Set\to\Set\), which is very similar to the free \(R\)-module monad, with a small modification.
+	It is given by
+	\[ \Aff_\Bbbk(X) = \left\{\text{formal sums } \sum_{x\in X}\lambda_x x\text{ such that } \sum_{x\in X}\lambda_x = 1\right\}. \]
+	The unit \(\eta_X\!:X\to\Aff_\Bbbk(X)\) is given by \(x\mapsto 1\cdot x\), while the multiplication distributes sums.
+\end{example}
+
+\subsection{Algebras over monads}
+We saw in Proposition \ref{prop:adjunctions-induce-monads} that an adjunction induces a monad. One may wonder about the converse question: does every monad
+come from an adjunction?
+
+\begin{terminology}
+	We say a monad \((T,\eta,\mu)\) on a category \(\calC\) is \emph{induced from an adjunction} if there is an adjunction
+	\begin{center}
+	\begin{tikzcd}
+		\calD\ar[from=r,bend right,"L"',""{name=A,below}] & \calC, \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	\quad \(\eta\!:\1\To RL,\quad \varepsilon\!: LR\To\1.\)
+	\end{center}
+	such that \((T,\eta,\mu) = (RL,\eta,R\varepsilon L)\). In this case, we say \(T\) is induced from \(L\ladj R\).
+\end{terminology}
+
+It turns out that the answer is yes, and showing this can be done by introducing an independently very interesting category of objects given by the \emph{algebras} over a monad.
+
+\begin{definition}
+	Let \((T,\eta,\mu)\) be a monad on a category \(\calC\). A \(T\)\emph{-algebra} is a pair \((x,a)\) of an object \(x\in\calC\) and a morphism \(a\!:Tx\to x\), such that the diagrams
+	\begin{center}
+	\begin{tikzcd}
+		x\ar[r,"\eta_x"]\ar[dr,equal] & Tx \ar[d,"a"] & \\
+		& x
+	\end{tikzcd}\quad
+	\begin{tikzcd}
+		T^2x\ar[r,"\mu_x"]\ar[d,"Ta"'] & Tx\ar[d,"a"]\\
+		Tx\ar[r,"a"] & x
+	\end{tikzcd}
+	\end{center}
+	commute. A \emph{morphism} of \(T\)-algebras \(f\!:(x,a)\to (y,b)\) is a morphism \(f\!:x\to y\) such that the diagram
+	\begin{diagram*}
+		Tx\ar[r,"Tf"]\ar[d,"a"'] & Ty\ar[d,"b"] \\
+		x\ar[r,"f"] & y
+	\end{diagram*}
+	commutes. This organizes into a category \(\calC^T\) called the \emph{Eilenberg--Moore category} for \(T\), or the \emph{category of} \(T\)\emph{-algebras.}
+\end{definition}
+\begin{construction}\label{construction:free-forgetful-algebra-functors}
+	Let \((T,\eta,\mu)\) be a monad on \(\calC\). We can construct two functors
+	\[ F^T\!:\calC\to\calC^T, \quad U^T\!:\calC^T\to\calC \]
+	as follows. The functor \(U^T\) is the obvious forgetful functor which sends \((x,a)\) to \(x\). The \emph{free} functor \(F^T\) sends \(x\in\calC\) to the \emph{free} \(T\)\emph{-algebra}
+	\[ F^T(x) := (Tx, \mu_x\!:T^2x\to Tx) \]
+	and a morphism \(f\!:x\to y\) in \(\calC\) to the morphism of \(T\)-algebras
+	\[ F^Tf := (Tx,\mu_x) \xrightarrow{Tf} (Ty,\mu_y). \]
+	This is a morphism of \(T\)-algebras since the diagram
+	\begin{diagram*}
+		T^2x\ar[r,"T^2f"]\ar[d,"\mu_x"'] & T^2y\ar[d,"\mu_y"] \\
+		Tx\ar[r,"Tf"] & Ty
+	\end{diagram*}
+	commutes by the naturality of \(\mu\). Note that the functors \(F^T\) and \(U^T\) trivially satisfy \(U^T\circ F^T = T\).
+\end{construction}
+
+\begin{proposition}
+	Let \((T,\eta,\mu)\) be a monad on \(\calC\). Then we have an adjunction
+	\begin{diagram*}[column sep=large]
+		\calC\ar[r,bend left,"F^T",""{name=A,below}] & \ar[l,bend left,"U^T",""{name=B,above}]\calC^T\ar[from=A,to=B,symbol=\dashv]
+	\end{diagram*}
+	inducing \(T\) involving the functors from Construction \ref{construction:free-forgetful-algebra-functors}. In particular, every monad is induced from an adjunction.
+\end{proposition}
+\begin{proof}
+We have to produce unit and counit natural transformations
+\[ \eta\!:\1\To U^TF^T = T,\quad \varepsilon\!:F^TU^T\To\1. \]
+In the first case, we use the existing unit \(\eta\!:\1\To T\). For the counit, we first note that given a \(T\)-algebra \((x,a)\in\calC^T\), the morphism \(a\!:Tx\to x\) defines
+a morphism of \(T\)-algebras
+\[ F^TU^T(x,a) = (Tx,\mu_x) \to (x,a) \]
+since the diagram
+\begin{diagram*}
+	T^2x\ar[r,"Ta"]\ar[d,"\mu_x"'] & Tx\ar[d,"a"] \\
+	Tx \ar[r,"a"] & x
+\end{diagram*}
+commutes. Thus, we let \(\varepsilon\) be given on components by
+\[ \varepsilon_{(x,a)} := a\!: F^TU^T(x,a) \to (x,a). \]
+Thus we have the data of a unit and counit; it remains to check that they satisfy the triangle identities, which are
+\begin{center}
+\begin{tikzcd}[column sep=small]
+	 & U^TF^TU^T\ar[dr,Rightarrow,"U^T\varepsilon"] & \\
+	U^T\ar[ur,Rightarrow,"\eta U^T"]\ar[rr,equal,"?"] & & U^T
+\end{tikzcd}\quad
+\begin{tikzcd}[column sep=small]
+	 & F^TU^TF^T\ar[dr,Rightarrow,"\varepsilon F^T"] & \\
+	F^T\ar[ur,Rightarrow,"F^T\eta"]\ar[rr,equal,"?"] & & F^T
+\end{tikzcd}
+\end{center}
+and so, applying these to some \((x,a)\in\calC^T\) and \(x\in\calC\), we get
+\begin{center}
+\begin{tikzcd}[column sep=small]
+	 & Tx\ar[dr,"a"] & \\
+	x\ar[ur,"\eta_x"]\ar[rr,equal] & & x
+\end{tikzcd}\quad
+\begin{tikzcd}[column sep=tiny]
+	 & (T^2x,\mu_{Tx})\ar[dr,"\mu_x"] & \\
+	(Tx,\mu_x)\ar[ur,"T\eta_x"]\ar[rr,equal] & & (Tx,\mu_x)
+\end{tikzcd}
+\end{center}
+which trially commute by definition of \(T\)-algebras and monads, respectively. Thus we have our adjunction.
+Now note that \(U^T\varepsilon F^T = \mu\), since \(U^T\varepsilon_{F^Tx} = U^T\mu_x = \mu_x\), so we see that
+\((T,\eta,\mu) = (U^TF^T,\eta,U^T\varepsilon F^T)\) as desired.
+\end{proof}
+\begin{remark}
+	In particular, we see that monads can, in some sense, be thought of as structures formalizing free-forgetful adjunctions. Indeed, since any adjunction induces a monad,
+	and any monad induces a free-forgetful adjunction, we see that we can in some sense identify monads with those adjunctions which are of this form. Of course, a
+	``free-forgetful adjunction'' is not really well-defined on its own, so perhaps it is better to see monads as the way in which one makes them precise.
+\end{remark}
+\begin{remark}
+	There is another adjunction one can extract from a monad, formed with respect to a category called the \emph{Kleisli category} of the monad. However, since we will not need it,
+	we will neglect looking into it in these notes.
+\end{remark}
+
+\begin{example}
+	Let \(\Bbbk\) be a field, and consider the affine monad \(\Aff_\Bbbk\). An \emph{affine space} over \(\Bbbk\) (in the sense of linear algebra, not algebraic geometry) is an
+	\(\Aff_\Bbbk\)-algebra.
+\end{example}
+\begin{example}
+	Let \(\calC\) be a category admitting finite coproducts, let \(x_0\in\calC\), and let \((-)_+\!:\calC\to\calC\) be the associated monad \(x\mapsto x_0\amalg x\). An algebra
+	for this monad is an object \(x\in\calC\) together with a structure map \(a\!:x_0\amalg x \to x\), so that some diagrams commute. The square says nothing, but the triangle tells us that the component
+	\(x\to x\) of \(a\) is the identity, so the only new data is a map \(x_0\to x\). One sees by inspection that the category of algebras is given by \(x_0/\calC\) itself,
+	and the adjunction inducing the monad is recovered by the category of algebras.
+\end{example}
+\begin{example}
+	Consider the free monoid monad \(T\) on \(\Set\). Then the category of algebras \(\Set^T\) is equivalent to the category \(\Mon\) of monoids.
+\end{example}
+\begin{example}
+	Let \(R\) be a ring, and consider the free \(R\)-module monad \(R[-]\!:\Set\to\Set\). Then \(R[-]\)-algebras are just left \(R\)-modules, i.e.\ \(\Set^{R[-]}\simeq\Mod_{R^\op}\). An \(R[-]\)-module
+	consists of a set \(A\) and a morphism \(a\!:R[A]\to A\) such that \(a\circ\eta_A = \id_A\) and \(a\circ\mu_A = a\circ R[a]\). The former condition just means that \(a(1\cdot x) = x\) for all \(x\in A\).
+	Now, define
+	\begin{align*}
+		+\!:A\times A &\to A, & \cdot\!:R\times A&\to A, \\
+		(x,y) &\mapsto a(1\cdot x+1\cdot y), & (r,x) &\mapsto a(r\cdot x).
+	\end{align*}
+	This turns \(A\) into a left \(R\)-module. In particular, the commutativity and associativity of \(+\) come from the commutativity of addition of formal sums, as well as the commutative square in the definition
+	of an algebra. The \(R\)-multiplication will give a linear action on \(A\) for similar reasons. To see that \(A\) has a zero element, let \(0\in A\) be the image of the empty formal sum; one
+	easily sees that \(0+x = x\) for all \(x\in A\). The existence of additive inverses is not hard either.
+
+	An \(R[-]\)-algebra morphism \((A,a)\to (B,b)\) provides an \(R\)-linear homomorphism \(A\to B\), when \(A\) and \(B\) are equipped with the left \(R\)-module structures described above. In
+	particular, we get a functor \(\Set^{R[-]}\to\Mod_{R^\op}\), which is clearly faithful. One can check, by explicitly constructing an \(R[-]\)-algebra from a left \(R\)-module, that it is also essentially surjective.
+	In the process, one will also see that the functor is full, hence an equivalence.
+\end{example}
+\begin{exercise}
+	Let \(R\) be a ring (commutative, for simplicity). Consider the adjunction given by the tensor product \(R\otimes_\Z(-)\!:\Ab\to\Mod_R\) and the forgeful functor \(U\!:\Mod_R\to\Set\).
+	Abusively, let \(R\otimes_\Z(-)\) also denote the associated monad on \(\Ab\). Show that the category of \((R\otimes_\Z(-))\)-algebras is equivalent to \(\Mod_R\).
+\end{exercise}
+
+The category of \(T\)-algebras is unique in that it is, in a suitable way, \emph{terminal} amongst categories with adjunctions that induce \(T\). In order to see this, we will also briefly
+need to explain a concept about adjunctions.
+\begin{proposition}
+	Let \((T,\eta,\mu)\) be a monad on \(\calC\). Then, for any adjunction \(F\ladj U\) inducing \(T\), we have a unique induced functor
+	\begin{diagram*}[column sep=huge, row sep=large]
+		\calD\ar[r,dashed,"K"]\ar[d,bend left,"U",""{name=D,left}] & \calC^T\ar[dl,shift left, bend left=40, "U^T",""{name=B,above}] \\
+		\calC\ar[u,bend left,"F",""{name=C,right}]\ar[ur,bend right=10,"F^T",""{name=A,right}]\ar[to=A,from=B,symbol=\vdash]\ar[to=C,from=D,symbol=\vdash]
+	\end{diagram*}
+	for which \(KF = F^T\) and \(U^T K = U\).
+\end{proposition}
+\begin{proof}
+Let \(\varepsilon\!:FU\To\1\) be the counit for the adjunction \(F\ladj U\). Since the adjunction induces \(T\), we have \(\mu = U\varepsilon F\). Furthermore, since
+the units of \(F\ladj U\) and \(F^T\ladj U^T\) agree, both being \(\eta\!:\1\To T\), Lemma \ref{lemma:morphism-of-adjunctions-equivalence} below tells us that if \(K\) exists,
+\(\varepsilon\) is the counit for \(F^T\ladj U^T\) and \(\varepsilon'\) is the counit for \(F\ladj U\), then \(K\varepsilon' = \varepsilon K\).
+
+We need to define \(K\) so that \(U^TK = U\), i.e.\ so that \(U^TKx = Ux\), \(x\in\calD\). In other words, we are forced to design \(K\) by putting a \(T\)-algebra structure on \(Ux\), i.e.\ a map \(TUx \to Ux\)
+in such a way that a map \(f\!:x\to y\) should lead to \(Uf\) being a \(T\)-algebra morphism.
+
+On the other hand, for any \(T\)-algebra \((z,a)\in\calC^T\), the morphism \(a\!:Tz\to z\) is given by the component of the counit \(\varepsilon\) at \((z,a)\). Thus, we are forced to endow \(Kx\) with the algebra
+structure given by the morphism
+\[ \varepsilon_{Kx} = K\varepsilon_x' = U\varepsilon_x'. \]
+Therefore, we set \(Kx := (Ux,U\varepsilon)\). One easily checks that given a morphism \(f\!:x\to y\) ion \(\calC\), the morphism \(Uf\) is a morphism of \(T\)-algebras
+\[ Kx = (Ux,U\varepsilon_x')\to(Uy,U\varepsilon_y') = Ky \]
+so we have our desired functor. Since all choices were forced on us, the choice is unique. Finally, it is clear that \(KF = F^T\)
+since \(KFx = (UFx, U\varepsilon_{Fx}) = (Tx, \mu_x) = F^Tx\).
+\end{proof}
+
+In the above, we use a property of certain diagrams involving adjunctions, indicating to the below lemma, which explains a few equivalent conditions. In general, a diagram as below satisfying
+the listed equivalent properties is called a \emph{morphism of adjunctions.} As witnessed in the proof above, they have convenient properties.
+
+\begin{lemma}\label{lemma:morphism-of-adjunctions-equivalence}
+	Consider a diagram
+	\begin{diagram*}
+		\calC\ar[r,"H"]\ar[d,shift right,bend right=10,"F"',""{name=A,right}]\ar[from=d,shift right,bend right=10,"G"',""{name=B,left}] & \calC'\ar[d,shift right,bend right=10,"F'"',""{name=C,right}]\ar[from=d,shift right,bend right=10,"G'"',""{name=D,left}] \\
+		\calD\ar[r,"K"'] & \calD'
+		\ar[from=A,to=B,symbol=\vdash]\ar[from=C,to=D,symbol=\vdash]
+	\end{diagram*}
+	such that \(KF = HF'\) and \(HG = G'K\). Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(H\eta = \eta' H\), where \(\eta\) and \(\eta'\) are the units of the adjunctions.
+	\item \(K\varepsilon = \varepsilon' K\), where \(\varepsilon\) and \(\varepsilon'\) are the counits of the adjunctions.
+	\item The diagram
+	\begin{diagram*}
+		\calD(Fx,y)\ar[d,"K"']\ar[r,"\sim"] & \calC(x,Gy)\ar[d,"H"] \\
+		\calD'(KFx,Ky)\ar[d,equal] & \calC'(Hc,HGd)\ar[d,equal] \\
+		\calD'(F'Hx,Ky)\ar[r,"\sim"] & \calC'(Hx,G'Ky)
+	\end{diagram*}
+	commutes.
+	\end{enumerate}
+\end{lemma}
+\begin{proof} We begin by showing that (1) is equivalent to (3). The two composites in the diagram in (3) are
+\[ f\mapsto H(Gf\circ\eta_{x})\quad \text{and} \quad f\mapsto G'Kf\circ\eta'_{Hx}. \]
+
+(1) \(\Rightarrow\) (3). For this, we just compute
+\[ G'Kf\circ\eta'_{Hx} = HGf\circ\eta'_{Hx} \overset{(1)}= HGf\circ H\eta_x = H(Gf\circ\eta_x) \]
+as desired.
+
+(3) \(\Rightarrow\) (1). Here, we set \(y=Fx\) and track what happens to \(\id_{Fx}\). On one hand, we have
+\[ HG\id_{Fx}\circ H\eta_{x} = \id_{HGFx}\circ H\eta_{x} = H\eta_x \]
+and on the other
+\[ G'K\id_{Fx}\circ\eta'_{Hx} = \id_{G'KFx}\circ\eta'_{Hx} = \eta'_{Hx} = (\eta'H)_x \]
+so that
+\[ \forall x\in\calC,\quad H\eta_x \overset{(3)}= (\eta'H)_x \quad\implies\quad H\eta = \eta H \]
+as desired. Thus, (1) is equivalent to (3).
+
+The equivalence between (2) and (3) is dual. In particular, following the same argument as above but using the inverses of the adjunction isomorphisms yields the result.
+\end{proof}
+
+
+\subsection{Monadic functors}
+\begin{definition}
+	Monadic functors are those which are determined by algebras over monads.
+	\begin{enumerate}[label=(\arabic*)]
+	\item Consider an adjunction
+	\begin{tikzcd}[cramped]
+		\calD\ar[from=r,bend right,"L"',""{name=A,below}] & \calC, \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	and let \(T\) be the induced monad on \(\calC\). The adjunction \(L\ladj R\) is \emph{monadic} if the canonical functor \(\calC\to\calC^T\) is an equivalence.
+	\item A functor \(F\!:\calC\to\calD\) is \emph{monadic} if it admits a left adjoint \(L\) for which the adjunction \(L\ladj F\) is monadic.
+	\end{enumerate}
+\end{definition}
+
+Here is a simple way to see that knowing a functor is monadic may be useful.
+
+\begin{proposition}\label{prop:monadic-functors-reflect-isomorphisms}
+	Let \(U\!:\calD\to\calC\) be monadic. Then \(U\) reflects isomorphisms.
+\end{proposition}
+\begin{proof}
+Since \(U\) is monadic, we may assume that \(U = U^T\) and \(\calD = \calC^T\). An isomorphism \(f\!:(x,a)\to(y,b)\) in \(\calC^T\) is merely an isomorphism \(f\!:x\to y\)
+in \(\calC\), since the commutative diagram for \(f\) provides one for \(f^{-1}\) and vice versa. Since \(Uf = f\), we are done.
+\end{proof}
+
+\begin{definition}\label{definition:creates-limits}
+	Let \(F\!:\calC\to\calD\) be a functor, and \(D\!: I \to\calC\) be a diagram. We say that \(F\) \emph{creates} the limit of \(D\) in \(\calC\) if
+	\begin{enumerate}[label=(\arabic*)]
+	\item whenever we have a cone over \(D\) in \(\calC\) for which the image in \(\calD\) is a limit cone for \(F\circ D\), the original cone is a limit cone;
+	\item whenever a limit cone for \(F\circ D\) exists in \(\calD\), it lifts to a cone in \(\calC\) for \(D\) (which must be a limit cone by (1)).
+	\end{enumerate}
+\end{definition}
+
+\begin{theorem}\label{thm:monadic-functors-create-limits}
+	Let \(U\!:\calD\to\calC\) be a monadic functor. Then \(U\) creates all limits that \(\calC\) admits.
+\end{theorem}
+\begin{proof}
+Since \(U\) is monadic, there is a monad \(T\) on \(\calC\) for which we have a commutative diagram
+\begin{diagram*}[cramped]
+	\calD\ar[rr,"\sim"]\ar[dr,"U"'] & & \calC^T\ar[dl,"U^T"] \\
+	& \calC &
+\end{diagram*}
+and furthermore, it is clear that \(U^T\) creates limits if and only if \(U\) does. In particular, we may assume that \(\calD = \calC^T\) and \(U = U^T\).
+
+Let \(D\!:I\to\calC^T\) define some diagram of objects \((Di, a_i)\) for which \(U^TD\!:I\to\calC\) admits a limit \(L\in\calC\), given by some limit cone
+\[ \beta\!: L\To U^TD,\quad (\beta_i\!: L \to Di)_{i\in I}. \]
+The strategy is simple: we will endow \(L\) with the structure of a \(T\)-algebra in such a way that the \(\beta_i\) define \(T\)-algebra maps to \((Di,a_i)\). Since \(D\)
+is a diagram in \(\calC^T\), the \(T\)-algebra structure maps \(a_i\) define a natural transformation \(a\!:TU^TD\To U^TD\); given \(\varphi\!:i\to j\) in \(I\),
+\begin{diagram*}
+	TDi\ar[d,"TU^TD\varphi"']\ar[r,"a_i"] & Di\ar[d,"U^TD\varphi"] \\
+	TDj\ar[r,"a_j"] & Dj
+\end{diagram*}
+commutes. We can now apply \(T\) to the limit cone \(\beta\) and compose to get a cone
+\begin{diagram*}
+	TL\ar[r,Rightarrow,"T\beta"] & TU^TD\ar[r,Rightarrow,"a"] & U^TD
+\end{diagram*}
+which by univeral property of the limit thus induces a unique map \(b\!:TL\to L\) in \(\calC\) for which the diagrams
+\begin{diagram*}
+	TL \ar[r,dashed,"b"]\ar[d,"T\beta_i"'] & L\ar[d,"\beta_i"] \\
+	TDi\ar[r,"a_i"] & Di
+\end{diagram*}
+commute. This \(b\) is our candidate map for making \(L\) into a \(T\)-algebra. To have \((L,b)\in\calC^T\), we must check that the left-most faces in the diagrams
+\begin{center}
+	\begin{tikzcd}[column sep=small]
+		L \ar[dd,equal]\ar[rr,"\beta_i"]\ar[dr,"\eta_L"] & & Di\ar[dr,"\eta_{Di}"]\ar[dd,equal] \\
+		& TL\ar[dl,"b"'] & & TDi\ar[from=ll,crossing over,"T\beta_i" near start]\ar[dl,"a_i"] \\
+		L\ar[rr,"\beta_i"] & & Di
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		T^2L\ar[dd,"\mu_L"']\ar[rr,"T^2\beta_i"]\ar[dr,"Tb"] & & T^2Di\ar[dd,"\mu_{Di}" near start]\ar[dr,"Ta_i"] & \\
+		& TL & & TDi \ar[from=ll,crossing over,"T\beta_i" near start]\ar[dd,"a_i"] \\
+		TL\ar[dr,"b"']\ar[rr,"T\beta_i" near start] & & TDi\ar[dr,"a_i"] & \\
+		& L \ar[rr,"\beta_i"]\ar[from=uu,crossing over,"b" near start] & & Di
+	\end{tikzcd}
+\end{center}
+with the knowledge that the rest of the faces already do. By universal property, we can do this by checking that it holds after composing with \(\beta_i\) for all \(i\in I\),
+which is the content of the other faces commuting. We conclude that \((L,b\!:TL\to L)\) is a \(T\)-algebra, and the commutativity defining \(b\) from before means we get a cone
+\[ \alpha\!:(L,b)\To D. \]
+We have therefore proven that \(U^T\) satisfies condition (2) in Definition \ref{definition:creates-limits}. It remains to check condition (1).
+
+Using the same notation as before, suppose we have a cone \((\alpha\!:(L,d)\To D)\in\Fun(I,\calC^T)\) such that \(U^T\alpha\!:L\To U^TD\) is a limit cone, and let
+\(\gamma\!:(L',b')\To D\) be some other cone. Then \(U^T\gamma\!:L'\To D\) factors uniquely through \(U^T\alpha\) as
+\begin{diagram*}[sep=small]
+	L'\ar[rr,Rightarrow,"U^T\gamma"]\ar[dr,dashed,"f"'] & & U^TD \\
+	& L\ar[ur,Rightarrow,"U^T\alpha"'] &
+\end{diagram*}
+and all we need to do is check that \(f\) defines a \(T\)-algebra morphism \((L',b')\to (L,b)\), i.e.\ that the left-most face of the diagram
+\begin{diagram*}
+	TL'\ar[rr,Rightarrow,"TU^T\gamma"]\ar[dr,"Tf"']\ar[dd,"b'"'] & & TU^TD\ar[dd,Rightarrow,"a"] \\
+	& TL\ar[ur,Rightarrow,"TU^T\alpha"' near start] & \\
+	L'\ar[rr,Rightarrow,"U^T\gamma" near start]\ar[dr,"f"'] & & U^TD \\
+	& L\ar[ur,Rightarrow,"U^T\alpha"']\ar[from=uu,crossing over,"b" near start] &
+\end{diagram*}
+commutes. This follows by the same argument as before since \(U^T\alpha\) is a limit cone.
+\end{proof}
+\begin{example}
+	Let \(R\) be a ring (commutative, for sake of simplicity). We have seen that the forgetful functor \(\Mod_R\to\Set\) is monadic. In particular, we can deduce that \(\Mod_R\) is complete,
+	which we already knew anyway; nonetheless, this gives an ``automatic'' way to prove the result. Using the monadicity of the forgetful functor \(\Mod_R\to\Ab\), one can (using a variant of
+	Theorem \ref{thm:monadic-functors-create-limits}) show that \(\Mod_R\) admits all colimits that \(\Ab\) admits. Using some more monadicity results, one can prove quite abstractly that \(\Ab\)
+	is cocomplete.
+\end{example}
+\begin{example}
+	From knowing that \(\Set\) is complete, Theorem \ref{thm:monadic-functors-create-limits} can prove that \(\Set\) is also cocomplete: one shows that the contravariant power set
+	functor \(\Set^\op\to\Set\) is monadic, and thus deduce that \(\Set^\op\) is complete.
+\end{example}
+\begin{example}
+	The forgetful functor \(\cat{CHaus}\to\Set\) is monadic, so Proposition \ref{prop:monadic-functors-reflect-isomorphisms} tells us that a continuous bijective map
+	between compact Hausdorff spaces is a homeomorphism.
+\end{example}
+
+

@@ -1,0 +1,474 @@
+%!TEX root = ../lectures.tex
+
+\section{More about Abelian categories}
+This lecture is about some ways to obtain Abelian categories from ones we already know of. We begin with an easy method, and follow it up with an application of the results of the last
+lecture.
+
+\subsection{Functor categories}
+In general, given an object \(x_0\) with some property \(P\), the collection of maps \(x\to x_0\) tends to inherit the property \(P\). For example, for a set \(X\) and a group \(G\),
+the collection of maps of sets \(X\to G\) forms a group. If \(R\) is a ring, then the collection of maps of sets \(X\to R\) forms a ring. The same holds true for categories of functors.
+\begin{proposition}\label{prop:functor-category-inherits-limits-from-codomain}
+	Let \(\calC\) and \(\calD\) be categories, and suppose \(\calD\) admits limits of \(I\)-shaped diagrams. Then \(\Fun(\calC,\calD)\) admits \(I\)-shaped limits.
+\end{proposition}
+\begin{proof}
+Given a diagram \(D\!:I\to\Fun(\calC,\calD)\), we consider the evaluation functors
+\[ \forall x\in\calC,\quad \ev_x\!:\Fun(\calC,\calD)\to\calD,\quad F\mapsto F(x) \]
+and define the functor \(\projlim{D}\) by
+\[ (\projlim{D})(x) := \projlim(\ev_x\circ D). \]
+We note that this defines a functor since for any \(f\!:x\to y\) in \(\calC\), we obtain a natural transformation
+\[ \ev_x\To \ev_y \]
+given, for a natural transformation \(\eta\!:F\To G\), by
+\begin{diagram*}
+	\ev_x(F)\ar[d,"\ev_x(\eta)"']\ar[r,equal] & F(x)\ar[d,"\eta_x"']\ar[r,"F(f)"] & F(y)\ar[d,"\eta_y"]\ar[r,equal] & \ev_y(F)\ar[d,"\ev_y(\eta)"] \\
+	\ev_x(G)\ar[r,equal] & F(x)\ar[r,"G(f)"] & G(y) \ar[r,equal] & \ev_y(G)
+\end{diagram*}
+and so induces a natural transformation \(\ev_x\circ D\to\ev_y\circ D\). One defines the map
+\[ (\projlim{D})(f)\!:(\projlim{D})(x) \to (\projlim{D})(y) \]
+as the image of this natural transformation under the functor
+\[ \projlim\!:\Fun(I,\calD)\to\calD \]
+which exists since \(\calD\) admits \(I\)-shaped limits.
+\end{proof}
+\begin{exercise}
+	Let \(\calC\) and \(\calD\) be categories.
+	\begin{enumerate}[label=(\arabic*)]
+	\item Show that \((-)^\op\) determines a functor \(\Fun(\calC,\calD)^\op\to\Fun(\calC^\op,\calD^\op)\).
+	\item Prove that the functor in (1) is an isomorphism of categories.
+	\item Deduce from Proposition \ref{prop:functor-category-inherits-limits-from-codomain} that if \(\calD\) admits \(I\)-shaped colimits, then \(\Fun(\calC,\calD)\) admits \(I\)-shaped colimits.
+	\item Prove the result in (3) by hand following the proof of Proposition \ref{prop:functor-category-inherits-limits-from-codomain}.
+	\end{enumerate}
+\end{exercise}
+\begin{theorem}
+	Let \(\calA\) be an additive category, and let \(\calC\) be some arbitrary category. Then \(\Fun(\calC,\calA)\) is additive. Furthermore, if \(\calA\) is Abelian,
+	then \(\Fun(\calC,\calA)\) is Abelian.
+\end{theorem}
+\begin{proof}
+We promote \(\Fun(\calC,\calA)\) into a pre-additive category by defining \(\eta+\sigma\), for \(\eta,\sigma\!:F\To G\), by
+\[ (\eta+\sigma)_x = \eta_x+\sigma_x. \]
+This defines a natural transformation, since if \((f\!:x\to y)\in\calC\) then
+\[ (\eta+\sigma)_y \circ F(f) = \eta_y\circ F(f) + \sigma_y\circ F(f) = G(f)\circ\eta_x+G(f)\circ\sigma_x = G(f)\circ(\eta+\sigma)_x. \]
+It is clear that this makes \(\Fun(\calC,\calA)\) into a pre-additive category. It now follows that \(\Fun(\calC,\calA)\) is additive by applying Proposition \ref{prop:functor-category-inherits-limits-from-codomain}.
+
+If we assume that \(\calA\) is Abelian, then Proposition \ref{prop:functor-category-inherits-limits-from-codomain} and its dual specialize to tell us that \(\Fun(\calC,\calA)\) admits
+kernels and cokernels, which for some \(\eta\!:F\To G\) are given by
+\[ \ker\eta\!:x\mapsto\ker\eta_x,\quad\coker\eta\!:x\mapsto\coker\eta_x. \]
+We see in particular that the image and coimage are given by
+\[ \img\eta\!:x\mapsto\img\eta_x,\quad \coimg\eta\!:x\mapsto\coimg\eta_x \]
+and therefore the map
+\[ \coimg\eta\to\img\eta \]
+must be an isomorphism, since it is an isomorphism on its components by \(\calA\) being Abelian.
+\end{proof}
+
+
+\subsection{Reflective \& Giraud subcategories}
+Consider two categories \(\calC\) and \(\calD\) together with a fully faithful functor \(P\!:\calC\inj\calD\). One might wonder what properties of \(\calD\) are inherited by \(\calC\) and vice versa.
+For example, since \(P\) is fully faithful, it reflects isomorphisms, and so any objects in \(\calC\) which are isomorphic in \(\calD\) are isomorphic in \(\calC\) too. On the other hand,
+\(P\) need not preserve epimorphisms nor monomorphisms, except for split ones, and similarly, need not preserve limits nor colimits. So, we need more data in order to deduce
+properties about \(\calC\) from properties of \(\calD\).
+
+Last lecture, we saw that monadic functors create limits. We will now apply this to a particularly interesting example, namely that of \emph{reflective subcategories.} We begin
+with some general properties of adjoints, as well as of reflective subcategories.
+\begin{lemma}\label{lemma:fully-faithful-adjoint}
+	Consider an adjunction
+	\begin{diagram*}
+		\calD\ar[from=r,bend right,"L"',""{name=A,below}] & \calC, \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{diagram*}
+	with unit \(\eta\) and counit \(\varepsilon\).
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(R\) is faithful if and only if every component of \(\varepsilon\) is an epimorphism.
+	\item \(R\) is fully faithful if and only if \(\varepsilon\) is a natural isomorphism.
+	\end{enumerate}
+	In the case of (2), \(L\) is essentially surjective and the natural transformation \(L \eta\!:L\To LRL\) is a natural isomorphism.
+\end{lemma}
+\begin{proof}
+We have natural transformations
+\[ \calC(x,-)\to\calD(Rx,R-)\iso\calC(LRx,-) \]
+the composite of which corresponds to the unit map \(\varepsilon_x\!:LRx\to x\) under the Yoneda lemma. In particular,
+\(\varepsilon_x\) is an epimorphism (isomorphism) if and only if the composite \(\calC(x,-)\to\calC(LRx,-)\) is a monomorphism (isomorphism) if and only
+if the morphism \(\calC(x,-)\to\calD(Rx,R-)\) is a monomorphism (isomorphism), i.e.\ \(R\) is faithful (fully faithful).
+
+For the final claim, suppose that \(R\) is fully faithful. We then have \(x\cong L(R(x))\) so that \(L\) is essentially surjective; the triangle identity
+\begin{diagram*}
+	& LRL\ar[dr,Rightarrow,"\varepsilon L"] & \\
+	L\ar[ur,Rightarrow,"L\eta"]\ar[rr,equal] & & L
+\end{diagram*}
+sandwiches \(L\eta\) between the natural isomorphisms \(\id\) and \(\varepsilon L\), so that \(L\eta\) is a natural isomorphism.
+\end{proof}
+\begin{exercise}
+	Show that \(R\) is full if and only if every component of \(\varepsilon\) is a split monomorphism. Furthermore, dualize the above results.
+\end{exercise}
+\begin{lemma}\label{lemma:right-adjoints-preserve-monomorphisms}
+	Let \(R\!:\calC\to\calD\) be a functor admitting a left adjoint \(L\!:\calD\to\calC\). Then \(R\) preserves monomorphisms.
+\end{lemma}
+\begin{proof}
+Suppose \(f\) is a monomorphism, and that we have \(g,g'\!:z\to Rx\) such that
+\begin{diagram*}
+	z\ar[r,shift left,"g"]\ar[r,shift right,"g'"'] & Rx\ar[r,"Rf"] & Ry
+\end{diagram*}
+commutes. Applying \(L\), we transpose this to
+\begin{diagram*}
+	Lz\ar[r,shift left,"Lg"]\ar[r,shift right,"Lg'"']\ar[d,equal] & LRx\ar[r,"LRf"]\ar[d,"\varepsilon_x"'] & LRy\ar[d,"\varepsilon_y"'] \\
+	Lz\ar[r,shift left]\ar[r,shift right] & x\ar[r,hook,"f"] & y
+\end{diagram*}
+and now, since \(f\) is monic, we have that
+\[ \varepsilon_x\circ Lg = \varepsilon_x\circ Lg'. \]
+Thus \(g = g'\), since the map
+\[ \calD(z,Rx)\iso\calC(Lz,x),\quad h\mapsto \varepsilon_x\circ Lh \]
+is a bijection.
+\end{proof}
+\begin{definition}
+	Let \(\calC\inj\calD\) be a fully faithful functor. We say it is \emph{reflective} if it has a left adjoint, called the \emph{reflection.} A \emph{reflective subcategory} of \(\calD\) is a full subcategory
+	for which the inclusion is reflective.
+\end{definition}
+\begin{remark}
+	In other words, \(\iota\!:\calC\inj\calD\) is reflective if it has a left adjoint \(\pi\) for which the counit \(\varepsilon\!:\1\To \pi \iota\) is an isomorphism.
+	One thinks of \(\iota\) as an inclusion and of \(\pi\) as a projection onto \(\calC\). The counit being an isomorphism then says that including then projecting does nothing.
+	When one regards \(\calC\) as a genuine full subcategory of \(\calD\), this is somewhat more literal: the counit is then an isomorphism \(x\iso \pi x\) in \(\calD\) for all \(x\in\calC\).
+\end{remark}
+\begin{proposition}
+	Suppose \(\iota\!:\calC\inj\calD\) is reflective, and let \(f\!:x\to y\) be a morphism in \(\calC\). Then \(f\) is a monomorphism if and only if \(\iota(f)\) is a monomorphism.
+\end{proposition}
+\begin{proof}
+By Lemma \ref{lemma:right-adjoints-preserve-monomorphisms}, \(\iota\) preserves monomorphisms since it is a right adjoint, so one direction is done. Hence, suppose \(\iota(f)\)
+is a monomorphism, and that we have morphisms \(g,g'\!:z\to x\) such that
+\begin{diagram*}
+	z\ar[r,shift left,"g"]\ar[r,shift right,"g'"'] & x\ar[r,"f"] & y
+\end{diagram*}
+commutes. Applying \(\iota\), we have
+\begin{diagram*}
+	\iota(z)\ar[r,shift left,"\iota(g)"]\ar[r,shift right,"\iota(g)'"'] & \iota(x)\ar[r,"\iota(f)"] & \iota(y)
+\end{diagram*}
+and since \(\iota(f)\) is monic, we see that \(\iota(g) = \iota(g')\). Since \(\iota\) is fully faithful, the map
+\[ \calC(z,x)\to\calD(\iota(z),\iota(x)) \]
+is injective, and therefore \(g = g'\).
+\end{proof}
+\begin{lemma}\label{lemma:reflective-subcategory-essential-image}
+	Let \(\iota\!:\calC\inj\calD\) be a reflective fully faithful functor with reflector \(\pi\!:\calD\to\calC\). An object \(y\in\calD\) is in the essential image
+	of \(\iota\) if and only if \(\eta_y\!:y\to \iota\pi(y)\) is an isomorphism.
+\end{lemma}
+\begin{proof}
+By universal property of the unit, if \(x\in\calC\) and we have a morphism \(f\!:y\to\iota(x)\), then we have a diagram
+\begin{diagram*}
+	y\ar[r,"\eta_y"]\ar[dr,"f"'] & \iota\pi(y)\ar[d,dashed,"g'"] \\
+	& \iota(x).
+\end{diagram*}
+Since \(\iota\) is fully faithful, there is some unique \(g\!:\pi(y)\to x\) such that \(\iota(g) = g'\). Applying \(\pi\) to the above diagram, we have
+\begin{diagram*}
+	\pi(y)\ar[r,"\pi(\eta_y)"',"\sim"]\ar[dr,bend right,"\pi(f)"'] & \pi\iota\pi(y)\ar[d,"\pi(g')"]\ar[r,"\sim","\varepsilon_{\pi(y)}"'] & \pi(y)\ar[d,"g"] \\
+	& \pi\iota(x)\ar[r,"\sim","\varepsilon_x"'] & x
+\end{diagram*}
+and from this it is clear that
+\[ \pi(f)\text{ iso.} \iff \pi(g')\text{ iso.}\iff g\text{ iso.} \iff g'\text{ iso.} \iff f\text{ iso.} \]
+Now, if \(\eta_y\) is an isomorphism, there is nothing to do. Conversely, if \(f\) is an isomorphism, then by the above, \(g'\) is also an isomorphism, so \(\eta_y\) is an isomorphism.
+\end{proof}
+\begin{proposition}\label{proposition:reflective-subcategories-are-monadic}
+	The inclusion \(\iota\!:\calC'\inj\calC\) of a reflective subcategory is monadic. That is, leting \(L\!:\calC\to\calC\) be the induced monad, there is a canonical equivalence of categories
+	\(\calC'\simeq\calC^L\) given by the functor \(K := F^L\circ\iota\).
+\end{proposition}
+\begin{proof}
+An \(L\)-algebra in \(\calC\) consists of an object \(x\in\calC\) together with a map \(a\!:Lx\to x\). By definition, \(a\) is a retract of the unit \(\eta_x\!:x\to Lx\), i.e.\
+\(a\circ\eta_x = \id_x\). We first show that in this case, we also have \(\eta_x\circ a = \id_{Lx}\). Note that \(\mu\) is a natural isomorphism since it is built from the
+counit of the adjunction (involving a fully faithful right adjoint) inducing \(L\). Thus, \(L\eta = \eta L\), since both are right inverses to \(\mu\) by definition (the unitality condition
+for a monad). Now, by naturality,
+\begin{diagram*}
+	Lx\ar[d,"a"']\ar[r,"\eta_{Lx}"] & L^2x\ar[d,"La"] \\
+	x\ar[r,"\eta_x"] & Lx
+\end{diagram*}
+so
+\[ \eta_x\circ a = La\circ\eta_{Lx} = La\circ L\eta_x = L(a\circ\eta_x) = \id_{Lx} \]
+as desired. Therefore, if \(x\in\calC\) admits an \(L\)-algebra structure, the unit component \(\eta_x\) necessarily must be invertible. However,
+this is also a sufficient condition: the above naturality diagram shows that if \(\eta_x\) is invertible, then \(\eta_x^{-1}\!:Lx\to x\) gives \(x\) the structure
+of an \(L\)-algebra.
+
+Now, an object \(x\) is in the essential image of \(\calC'\inj\calC\) if and only if \(\eta_x\) is an isomorphism. In particular, \(K\) is essentially surjective.
+That \(K\) is fully faithful now follows just by the naturality of \(\eta\).
+\end{proof}
+
+\begin{theorem}\label{thm:limits-and-colimits-in-reflective-subcategories}
+	Let \(P\!:\calC\inj\calD\) be reflective with reflection \(Q\!:\calD\to\calC\), and suppose \(D\!:I\to\calC\) is a diagram.
+	\begin{enumerate}[label=(\arabic*)]
+	\item If the colimit of \(P\circ D\) exists, then the colimit of \(D\) exists and is given by \(Q\injlim(P\circ D)\).
+	\item If the limit of \(P\circ D\) exists, then the limit of \(D\) exists and is given by \(Q\projlim(P\circ D)\).
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) Since \(Q\) is a left adjoint, it preserves colimits. In particular, we have isomorphisms
+\[  \calC(Q\injlim(P\circ D),x)\cong \calC(\injlim(P\circ D),Px) \cong \projlim\calC(P\circ D,Px) \cong \projlim\calC(D,x) \]
+which are functorial in \(x\in\calC\).
+
+(2) By Proposition \ref{proposition:reflective-subcategories-are-monadic}, the inclusion \(\calC\inj\calD\) is a monadic functor. Thus, by Theorem \ref{thm:monadic-functors-create-limits},
+it creates all limits which \(\calD\) admits. In particular, if \(\projlim(P\circ D)\) exists, then \(\projlim{D}\) exists, and so we can use that \(P\) is a right adjoint to see that
+\[ Q\projlim(P\circ D) \cong QP\projlim{D} \cong\projlim{D} \]
+as desired.
+\end{proof}
+
+Reflective subcategories are interesting to us because the above property, with a small modification, allows us to deduce that certain subcategories of Abelian categories are
+Abelian, with predictable limits and colimits. This is one of the standard ``abstract'' ways to show that e.g.\ the category of sheaves of Abelian groups \(\Sh(X,\Ab)\) on a space \(X\) is an Abelian category,
+or more generally, that \(\Mod_{\Ox_X}\) is an Abelian category for a ringed space \((X,\Ox_X)\).
+
+\begin{definition}
+	Let \(\iota\!:\calD\inj\calC\) be a reflective subcategory. We say it is \emph{Giraud} if the left adjoint preserves finite limits.
+\end{definition}
+\begin{theorem}\label{thm:giraud-subcategory-of-abelian-category-is-abelian}
+	Let \(\iota\!:\calB\inj\calA\) be a Giraud subcategory of an Abelian category \(\calA\). Then \(\calB\) is Abelian.
+\end{theorem}
+\begin{proof}
+The pre-additive structure on \(\calA\) induces one on \(\calA\). Since \(\calA\) is Abelian, we see that \(\calB\) is additive and admits all kernels and cokernels.
+
+Let \(\pi\!:\calA\to\calB\) be the reflector, and let \(f\!:x\to y\) be a morphism in \(\calB\). We need to check that
+\[ \coimg{f}\iso\img{f}. \]
+However, for this, note that we have canonical isomorphisms
+\begin{align*}
+	\coimg{f} &= \coker(\ker{f}\inj x)\\
+	&\cong \pi\coker(\ker\iota(f)\inj\iota(x))\\
+	&= \pi\coimg\iota(f) \\
+	&\cong \pi\img\iota(f) \\
+	&= \pi\ker(\iota(y)\sur \coker\iota(f)) \\
+	&\cong \ker(\pi\iota(y)\sur \pi\coker\iota(f)) \\
+	&\cong \ker(y\sur \coker{f}) = \img{f}
+\end{align*}
+as desired.
+\end{proof}
+
+\subsection{Generators \& resolutions in Abelian categories}
+\begin{definition}
+	Let \(\calC\) be a category. A \emph{family of generators} for \(\calC\) is a set of objects \(\calU\subseteq\Ob(\calC)\) which can \emph{separate morphisms} in the sense that
+	they satisfy the following condition:
+	\begin{itemize}[label=\(\star\)]
+	\item Let \(f,g\!:x\to y\) be morphisms in \(\calC\). If for every morphism \(h\!:u\to x\), \(u\in\calU\), we have \(f\circ h = g\circ h\) then \(f = g\).
+	\end{itemize}
+	In other words, if \(f\not= g\) then there is some morphism \(h_0\!:u\to x\) with \(u\in\calU\) such that \(f\circ h_0\not= g\circ h_0\).
+\end{definition}
+
+The following proposition is the motivation for the terminology.
+
+\begin{proposition}\label{prop:generators-equivalent-conditions}
+	Let \(\calC\) be a locally small category which admits small coproducts, and let \(\calU\) be a small set of objects in \(\calC\). Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item The set \(\calU\) is a generating family.
+	\item For all \(x\in\calC\), the canonical morphism
+	\[ \coprod_{u\in\calU}\coprod_{u\to x}u \to x \]
+	is an epimorphism.
+	\item For all \(x\in\calC\), there is some family of sets \(\{I_u\}_{u\in\calU}\) and an epimorphism
+	\[ \coprod_{u\in\calU}\coprod_{i\in I_u}u\sur x. \]
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) \(\Rightarrow\) (2). Just observe that having a commutative diagram
+\begin{diagram*}
+	\displaystyle \coprod_{u\in\calU}\coprod_{u\to x} u \ar[r] & x\ar[r,shift left,"f"]\ar[r,shift right,"g"'] & y
+\end{diagram*}
+is the same as saying that for all \(u\in\calU\) and \(h\in\calC(u,x)\) we have \(f\circ h = g\circ h\).
+
+(2) \(\Rightarrow\) (3). This is clear.
+
+(3) \(\Rightarrow\) (1). Suppose we have \(f,g\!:x\to y\) such that \(f\circ r = g\circ r\) for all \(u\in\calU\), \(r\!:u\to x\). Let \(\iota_{u,i}\) be the canonical inclusion of \(u\) into the coproduct,
+let \(h\) be the epimorphism, and set \(h_{u,i} := h\circ\iota_{u,i} \), so we in particular have a diagram
+\begin{diagram*}
+	u\ar[d,"\iota_{i,u}"']\ar[dr,bend left,"h_{i,u}"] & \\
+	\coprod_{u\in\calU}\coprod_{i\in I_u}u \ar[r,two heads,"h"] & x\ar[r,shift left,"f"]\ar[r,shift right,"g"'] & y
+\end{diagram*}
+which commutes. We see that \(f\circ h = g\circ h\), so that \(f = g\) since \(h\) is an epimorphism.
+\end{proof}
+\begin{definition}\label{definition:generator}
+	We say that an object \(u\in\calC\) is a \emph{generator} for \(\calC\) if \(\{u\}\) is a family of generators.
+\end{definition}
+\begin{example}
+	The one-point set \(\{*\}\) is a generator for the category \(\Set\) of (small) sets.
+\end{example}
+\begin{example}
+	Let \(\Bbbk\) be a field. Then \(\Bbbk\in\Vect_\Bbbk\) is a generator. In particular, if \(V\) is a vector space over \(\Bbbk\), then a linear
+	map \(\Bbbk\to V\) is just a choice of a vector \(v\in V\), and we clearly have an epimorphism
+	\[ \coprod_{v\in V}\Bbbk\cdot v \sur V \]
+	so that the above proposition implies \(\Bbbk\) is a generator. The same statement holds more generally when \(\Bbbk\) is replaced by a ring \(R\)
+	and \(\Vect_\Bbbk\) by \(\Mod_R\).
+\end{example}
+
+Now, generators in the context of an Abelian category let us create \emph{resolutions} of objects. For simplicity, we only handle the case
+with one generator, but of course this restriction is artificial. These resolutions can be useful when the generator is nice.
+\begin{proposition}
+	Consider a locally small Abelian category \(\calA\) admitting small coproducts, and suppose \(u\in\calA\) is a generator. Let \(x\in\calA\). Then there is an exact sequence
+	of the form
+	\[ \cdots \to \coprod_{j \in J_1}u \to \coprod_{j\in J_0}u \sur x \to 0 \]
+	in \(\calA\).
+\end{proposition}
+\begin{proof}
+The idea for this is simple, and essentially follows by induction. First, we use Proposition \ref{prop:generators-equivalent-conditions} to produce an epimorphism and form an
+exact sequence
+\[ 0 \to \ker{\pi_0} \inj \coprod_{j\in J_0}u \overset{f_0}\sur x \to 0. \]
+Now, we pick an epimorphism onto \(\ker{f_0}\), and take its kernel to get an exact sequence
+\[ 0 \to \ker{f_1} \inj \coprod_{j\in J_1} u \overset{f_1}\to \coprod_{j\in J_0}u \overset{f_0}\sur x \to 0. \]
+Continuing like this indefinitely, one obtains the result.
+\end{proof}
+
+
+\subsection{Appendix: Grothendieck categories}
+Some Abelian categories are nicer than others, and the nicest of them are typically the module categories \(\Mod_R\) over a ring \(R\). A general Abelian category can be used
+to phrase many results of homological algebra, but it turns out that they are usually not enough in applications. For example, in homological algebra one often needs to take a
+resolution of one's objects in order to calculate, but no such thing is guaranteed to exist in an arbitrary Abelian category. Grothendieck isolated a few properties
+that can be used to solve this.
+
+\begin{definition}
+	Let \(\calA\) be an Abelian category. We say \(\calA\) is a \emph{Grothendieck category} if it has a generator, and satisfies the following exactness condition:
+	\begin{itemize}[label=(Ab5)]
+	\item \(\calA\) admits all small colimits, and for any filtered category \(I\) the colimit functor
+	\[ \Fun(I,\calA)\xrightarrow{\injlim(-)}\calA \]
+	preserves finite limits, i.e.\ is exact.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	Concretely, if we are given a filtered category \(I\) and an \(I\)-diagram of exact sequences
+	\[ \{ 0 \to x_i \to y_i \to z_i \to 0 \}_{i\in I} \]
+	then the sequence
+	\[ 0 \to \injlim_{i\in I}x_i \to \injlim_{i\in I}y_i \to \injlim_{i\in I}z_i \to 0 \]
+	is exact.
+\end{remark}
+\begin{remark}
+	A category \(I\) is filtered if any finite subcategory has a join. That is, if for any finite category \(J\) with a functor \(J\to I\), there is an extension
+	to a functor \(J^\triangleright \to I\). These are the analogues of \emph{directed posets,} and a poset is directed if and only if it is filtered as a category.
+\end{remark}
+
+\begin{proposition}
+	Let \(\iota\!:\calB\inj\calA\) be a Giraud subcategory of a Grothendieck category. Then \(\calB\) is a Grothendieck category.
+\end{proposition}
+\begin{proof}
+We have seen in Theorem \ref{thm:giraud-subcategory-of-abelian-category-is-abelian} that \(\calB\) is Abelian. It remains to check that it has a generator, and that
+filtered colimits are exact, i.e.\ (Ab5). Denote by \(\pi\!:\calA\to\calB\) the left adjoint of \(\iota\), and let \(u\in\calA\) be a generator for \(\calA\). Then
+\(\pi(u)\) is a generator for \(\calB\). In particular, by the dual of Lemma \ref{lemma:right-adjoints-preserve-monomorphisms}, the functor \(\pi\) preserves epimorphisms;
+therefore, for \(x\in\calB\), we can produce epimorphisms
+\[ \coprod_{i\in I}u \sur \iota(x) \text{ in }\calA\quad\leadsto\quad \coprod_{i\in I}\pi(u) \sur \pi\iota(x) \iso x\text{ in }\calB. \]
+We now need to check (Ab5). Since colimits commute with colimits, the colimit functor is already right exact, so we need only check that it preserves monomorphisms.
+So, let \(I\) be a filtered category, and consider two diagrams \(D,D'\!:I\to\calB\) with a monomorphism \(D\inj D'\) (this means that each morphism \(D(i)\to D'(i)\) is a monomorphism).
+Since \(\calA\) is (Ab5), we know that
+\[ \projlim(\iota\circ D) \inj \projlim(\iota\circ D'). \]
+However, colimits in \(\calB\) are calculated by applying \(\pi\) to the above diagram, and since \(\calB\) is a Giraud subcategory, \(\pi\) preserves finite limits, hence kernels.
+Therefore, the induced map
+\[ \projlim{D} \cong \pi\projlim(\iota\circ D) \to \pi\projlim(\iota\circ D') \cong \projlim{D'} \]
+is a monomorphism.
+\end{proof}
+
+The following is the reason to care about Grothendieck categories. We will not prove it for now.
+
+\begin{theorem}
+	Let \(\calA\) be a Grothendieck category. Then
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\calA\) is locally small,
+	\item \(\calA\) admits all small limits, and
+	\item \(\calA\) has enough injectives.
+	\end{enumerate}
+\end{theorem}
+
+\subsection{Appendix: Abelian categories with a compact projective generator}\label{appendix:abelian-categories-with-a-compact-projective-generator}
+Let \(\calA\) be an Abelian category. Recall that an object \(p\in\calA\) is \emph{projective} if \(\calA(p,-)\!:\calA\to\Ab\) is an exact functor.
+We will prove a theorem which allows us to recognize module categories in terms of the existence of a \emph{compact projective generator.} We defined what
+a generator is in Definition \ref{definition:generator}, so we will now say what a \emph{compact object} is in the context of an additive category.
+\begin{construction}\label{construction:additive-category-compactness-map}
+	Let \(\calC\) be an additive category, let \(x\in\calC\), and let \(\{x_i\}_{i\in I}\) be some collection of objects indexed by a small set \(I\).
+	Whenever the coproduct exists, consider the maps
+	\[ \iota_i\!: x_i \to \coprod_{i\in I}x_i. \]
+	We construct a map
+	\[ \coprod_{i\in I}\calC(x,x_i) \to \calC(x,\coprod_{i\in I}x_i) \]
+	by letting it be given on components by the maps
+	\[ \calC(x,x_i) \to \calC(x,\coprod_{i\in I}x_i),\quad f \mapsto \iota_i\circ f \]
+	given by composition with the canonical inclusion \(\iota_i\).
+\end{construction}
+\begin{definition}
+	Let \(\calC\) be an additive category. We say that an object \(x\in\calC\) is \emph{compact} if for any small set \(I\) and objects \(\{x_i\}_{i\in I}\), the map
+	\[ \coprod_{i\in I}\calC(x,x_i) \to \calC(x,\coprod_{i\in I}x_i) \]
+	from Construction \ref{construction:additive-category-compactness-map} is an isomorphism.
+\end{definition}
+\begin{remark}
+	Another formulation of this is that for any small set \(I\) and objects \(\{x_i\}_{i\in I}\), any map from \(x\) to the coproduct will factor uniquely through a finite subset.
+	That is, there is some finite \(J\subseteq I\) such that
+	\begin{diagram*}[cramped, sep=small]
+		x\ar[rr]\ar[dr,dashed,"\exists!"'] & & \coprod_{i\in I}x_i \\
+		& \bigoplus_{j\in J}x_j\ar[ur] & 
+	\end{diagram*}
+	commutes. That is, any map to a coproduct is defined by a ``finite amount of data.''
+\end{remark}
+\begin{remark}
+	This notion of compactness is unique to additive categories, and is not really the ``right'' notion outside this context. In an arbitrary category \(\calC\),
+	one is instead interested in the analogous notion but with coproducts replaced by filtered colimits.
+\end{remark}
+
+\begin{theorem}\label{thm:abelian-cat-with-compact-projective-generator}
+	Let \(\calA\) be a locally small Abelian category which admits small coproducts, and let \(p\in\calA\). Consider the functor
+	\[ \calA(p,-)\!:\calA\to\Mod_{\End(p)} \]
+	from \(\calA\) to the category of right modules over \(\End(p) := \calA(p,p)\).
+	\begin{enumerate}[label=(\arabic*)]
+	\item If \(p\) is a generator, then \(\calA(p,-)\) is faithful.
+	\item If \(p\) is a compact projective generator, then \(\calA(p,-)\) is an equivalence.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+We must investigate, for all \(x,y\in\calA\), the homomorphism
+\[ \calA(x,y) \to \Mod_{\End(p)}(\calA(p,x),\calA(p,y)). \]
+
+(1) To see that it is injective, consider a morphism \(f\!:x\to y\) such that \(f_*\!:\calA(p,x)\to\calA(p,y)\) is the zero morphism. We want
+to use the Yoneda lemma to deduce that \(f=0\), so pick \(z\in\calA\) and, using the fact that \(p\) is a generator, pick an epimorphism \(\pi\!:\coprod_{i\in I}p\sur z\).
+Then
+\begin{diagram*}
+	\calA(z,x)\ar[r,"f_*"]\ar[d,hook,"\pi^*"'] & \calA(z,y)\ar[d,hook,"\pi^*"'] \\
+	\calA(\coprod_{i\in I}p,x)\ar[r,"f_*"]\ar[d,"\sim" labl] & \calA(\coprod_{i\in I}p,y)\ar[d,"\sim" labl] \\
+	\prod_{i\in I}\calA(p,x)\ar[r,"(f_*)"] & \prod_{i\in I}\calA(p,y)
+\end{diagram*}
+commutes, and the bottom horizontal arrow is the zero map by assumption. We conclude that the natural transformation \(f_*\!:\calA(-,x)\to\calA(-,y)\) is zero,
+so that \(f=0\) by the Yoneda lemma.
+
+(2)(i) To have fullness, suppose we have an \(\End(p)\)-linear homomorphism
+\[ \varphi\!:\calA(p,x)\to\calA(p,y). \]
+Using the fact that \(p\) is a generator, we can build an exact sequence for \(x\) in terms of \(p\),
+\[ 0\to \ker\pi \overset{\kappa}\inj \coprod_{i\in I}p \overset{\pi}\sur x \to 0. \]
+Maps \(x\to y\) can be described in terms of this, through universal property:
+\begin{diagram*}
+	0 \ar[r] & \ker\pi \ar[r,hook,"\kappa"]\ar[dr,"0"'] & \coprod_{i\in I}p \ar[r,two heads,"\pi"]\ar[d] & x\ar[dl,dashed] \ar[r] & 0. \\
+	& & y & &
+\end{diagram*}
+We build the solid vertical arrow. Let \(f_i\!:p\to x_i\) be the \(i\)th component of \(\pi\). That is, if \(\iota_i\!:p\to\coprod_{i\in I}p\) is the canonical inclusion, we set
+\(f_i := \pi\circ\iota_i\). Using \(\varphi\), we get maps \(g_i := \varphi(f_i)\!:p\to y\) which define a map \(g\!:\coprod_{i\in I}p \to y\). We need to see that \(g\circ\kappa\) is zero
+as in the above diagram. For this, since \(p\) is a generator, it suffices to check that for all \(a\!:p\to\ker\pi\), we have \(g\circ\kappa\circ a = 0\). Using the compactness of \(p\),
+we factorize:
+\begin{diagram*}
+	& p\ar[d,"a"'] \ar[r,dashed,"h_{a}"] & \bigoplus_{j\in J_a}p\ar[d,hook]\ar[r,"\pi_j"] & p\ar[dl,"\iota_j"]\ar[d,"f_j"] & \\
+	0 \ar[r] & \ker\pi \ar[r,hook,"\kappa"] & \coprod_{i\in I}p \ar[r,two heads,"\pi"]\ar[d,"g"] & x \ar[r] & 0. \\
+	& & y & &
+\end{diagram*}
+and setting \(h_{a,j} := \pi_j\circ h_a\), we see that it suffices to check that for all \(j\in J_a\subseteq I\), \(g\circ\iota_j\circ h_{a,j} = 0\).
+To check this, we use \(\End(p)\)-linearity to see that
+\[ g\circ\iota_j\circ h_{a,j} = g_j \circ h_{a,j} = \varphi(f_j\circ h_{a,j}) = 0 \]
+as desired. We conclude that \(\calA(p,-)\) is fully faithful, since the above induces a map \(f\!:x\to y\) and one easily checks that it recovers \(\varphi\) using the projectivity
+and compactness of \(p\).
+
+(2)(ii) We show that \(\calA(p,-)\) is essentially surjective. Let \(M\in\Mod_{\End(p)}\), and choose a free resolution
+\[ \cdots \to \coprod_{j\in J_1}\End(p) \to \coprod_{j\in J_0}\End(p) \sur M \to 0. \]
+Since \(p\) is compact, we have natural isomorphisms
+\begin{diagram*}
+	\cdots \ar[r] & \coprod_{j\in J_1}\End(p) \ar[r] \ar[d,"\sim" labl] & \coprod_{j\in J_0}\End(p) \ar[r,two heads]\ar[d,"\sim" labl] & M \ar[r] \ar[d,equal] & 0 \ar[d,equal] \\
+	\cdots \ar[r] & \calA(p,\coprod_{j\in J_1}p) \ar[r] & \calA(p,\coprod_{j\in J_0}p)\ar[r,two heads] & M\ar[r] & 0
+\end{diagram*}
+making the above diagram commute, and by the fully faithfulness of \(\calA(p,-)\) we obtain an exact sequence
+\[ \cdots \to \coprod_{j\in J_2} p \to \coprod_{j\in J_1}p\to \coprod_{j\in J_0}p. \]
+Taking the cokernel of the right-most map, we have an exact sequence
+\[ \cdots \to \coprod_{j\in J_1}p\to \coprod_{j\in J_0}p \sur x \to 0 \]
+and now, since \(\calA(p,-)\) is exact since \(p\) is projective, the uniqueness of cokernels means \(\calA(p,x) \cong M\). We conclude that
+\(\calA(p,-)\) is both fully faithful and essentially surjective, hence an equivalence.
+\end{proof}
+
+\begin{exercise}
+	In the proof of Theorem \ref{thm:abelian-cat-with-compact-projective-generator}, we made two unjustified statements. They are the following:
+	\begin{enumerate}[label=(\arabic*)]
+	\item In the proof that \(\calA(p,-)\) is full, the constructed function \(f\) induces a morphism \(f_*\!:\calA(p,x)\to\calA(p,y)\), and this agrees with the original map \(\varphi\).
+	\item In the proof that \(\calA(p,-)\) is essentially surjective, we use that any faithful functor \(F\!:\calA\to\calB\) between Abelian categories reflects exact sequences.
+	\end{enumerate}
+	Prove these statements.
+\end{exercise}
+
+\begin{remark}
+	There is a version of Theorem \ref{thm:abelian-cat-with-compact-projective-generator} for stable \(\infty\)-categories which is originally due to Schwede \& Shipley in \cite{SCHWEDE2003103} in the setting of stable model categories,
+	later generalized to the aforementioned setting by Lurie in \cite[Thm.\ 7.1.2.1]{lurie-ha}.
+\end{remark}
+
+\begin{remark}
+	There is \emph{almost} a version of Theorem \ref{thm:abelian-cat-with-compact-projective-generator} for triangulated categories. Hoshino, Kato, \& Miyachi in \cite{hkm02} prove that a triangulated category \(\calT\) with a compact generator
+	\(s\in\calT\) satisfying \(\forall i>0,\,\calT(s,s[i]) = 0\), admits a \emph{t-structure} whose heart is equivalent to \(\Mod_{\End(s)}\). In general, however, this kind of thing
+	is typically the best you can do with just triangulated categories. We will explain all this terminology in future lectures.
+\end{remark}

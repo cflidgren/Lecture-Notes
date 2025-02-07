@@ -1,0 +1,178 @@
+\documentclass[a4paper, 11pt]{article}
+\newcommand\hmmax{0}
+\newcommand\bmmax{0}
+\input{preamble-fancy-very-minimal-newpxtext}
+%\input{preamble}
+\usepackage[textwidth=15.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+\title{Lecture Notes}
+\author{on assorted topics}
+\date{Carl-Fredrik Lidgren}
+
+\defaultfontfeatures[HaranoAjiMincho]{
+    Renderer=HarfBuzz,
+    Script=Kana,
+    Scale=MatchUppercase,
+    UprightFont=*-Light,
+    BoldFont=*-Medium,
+    Extension=.otf
+}
+
+\newfontfamily\kanafont{HaranoAjiMincho}
+\DeclareRobustCommand\yo{\textup{\kanafont よ}}
+
+\newcommand{\1}{\ensuremath{\mathbb{1}}}
+\newcommand{\2}{\ensuremath{\mathbb{2}}}
+\newcommand{\3}{\ensuremath{\mathbb{3}}}
+\newcommand{\n}{\ensuremath{\mathbb{n}}}
+\newcommand{\I}{\ensuremath{\mathbb{I}}}
+\newcommand{\Isofib}{\ensuremath{\mathsf{Isofib}}}
+
+\newcommand{\Prob}{\operatorname{Prob}}
+\newcommand{\Aff}{\operatorname{Aff}}
+
+\newcommand{\ladj}{\vdash}
+\newcommand{\fib}{\operatorname{fib}}
+\newcommand{\cof}{\operatorname{cof}}
+\newcommand{\cofib}{\operatorname{cofib}}
+
+
+\newcommand{\bp}[1]{\prescript{p}{}{#1}}
+\newcommand{\bperp}[1]{\prescript{\perp}{}{#1}}
+
+\tikzset{
+    labl/.style={anchor=north, rotate=90},
+    pullback/.style={commutative diagrams/phantom, "\usebox\pullback" , very near start},
+	pushout/.style={commutative diagrams/phantom, "\usebox\pushout" , very near start},
+	symbol/.style={%
+		draw=none,
+		every to/.append style={edge node={node [sloped, allow upside down, auto=false]{$#1$}}}
+	}
+}
+
+
+\newsavebox{\pullback}
+\sbox\pullback{%
+\begin{tikzpicture}%
+\draw (0,0) -- (1ex,0ex);%
+\draw (1ex,0ex) -- (1ex,1ex);%
+\end{tikzpicture}}
+
+\newsavebox{\pushout}
+\sbox\pushout{%
+\begin{tikzpicture}%
+\draw (0,0) -- (0ex,1ex);%
+\draw (0ex,1ex) -- (1ex,1ex);%
+\end{tikzpicture}}
+
+
+\usepackage[backend=biber, style=alphabetic]{biblatex}
+\addbibresource{bibliography.bib}
+
+
+
+\begin{document}
+\maketitle
+
+
+\tableofcontents
+
+\clearpage
+\setcounter{section}{-1}
+\section{Welcome}
+\subsection{Introduction}
+This document contains an assortment of lecture notes prepared initially for use in lectures of 2--3 hours, focused at a listener with a decent amount of mathematical
+maturity and some experience with category theory, algebra, topology, and so on. There is no overarching goal, other than to cover interesting topics in and around category
+theory, homological algebra, geometry, higher category theory, and higher algebra.
+
+Very often, the notes have been prepared without too much care, and so one should expect mistakes, occasional hand-waving, and suboptimal approaches. Hopefully, all the essential ideas
+remain correct. On a related note, while there has been some effort put into making the exposition clear, we are sometimes rather terse as it makes it easier to use the notes
+for lectures, where the exposition may be expanded upon in any case.
+
+\subsection{Foundations}
+In this preliminary section, we spell out the general foundational framework we adopt in these notes. Since foundations will never play a \emph{huge} role in what we do, or at least
+it won't affect how we do things generally, we will not be too careful. However, the crux of it is as follows: we adopt your favourite common axiomatics for set theory, such as ZFC, along with
+Grothendieck's universe axiom. A (Grothendieck) universe is essentially a model for ZF set theory within ZFC set theory itself, so it is a set wherein one can do all basic expected operations (and contains \(\N\)).
+The universe axiom postulates that every set is contained in a universe. In particular, we may pick some universe \(\bbU_1\ni\varnothing\), the elements of which we call the \emph{small sets.} Iterating this, the axiom
+also implies the existence of a hierarchy of universes
+\[ \bbU_1 \in \bbU_2 \in \bbU_3\in \cdots \in \bbU_n\in\cdots \]
+and we call elements of \(\bbU_2\) \emph{large,} elements of \(\bbU_3\) \emph{very large,} and so on. If we have picked some universe \(\bbU\), we may also refer to a set \(X\) as \(\bbU\)-small to mean that \(X\in\bbU\), or
+that \(X\) is in bijection with a set in \(\bbU\). Note that we will essentially never need to use this nor think about it in any detail. To be noted as well is that in this framework, the notion of a \emph{class} is subsumed
+by the notion of a set, in the sense that we may think of elements of \(\bbU_2\backslash\bbU_1\) as analogous to ``proper classes.'' If one wishes, type theory can play a similar role, where one demands a hierarchy of type universes instead.
+
+\subsection{Planned contents}
+Some planned contents already have a rough lecture section assigned to them, but some others are a lot looser and so are hard to pin down enough for that to be reasonable, and may span many lectures.
+Here is a list to which I aspire.
+\begin{enumerate}[label=(\arabic*)]
+\item The theory of \((\infty,1)\)-categories, blending the standard approaches (say, \cite{lurie-htt} and \cite{cisinski-book}) with the synthetic approach of \cite{riehl-verity-elements}.
+\item Sheaves on sites, probably following \cite{kashiwara-schapira-book}. Relating sheaves between sites will be a focus. Maybe something from \cite{lurie-htt} to include \(\infty\)-categorical aspects.
+\item Approximable triangulated categories.
+\item Perverse sheaves, as an application of the gluing of t-structures.
+\item Brown representability.
+\item Topics surrounding model categories: lifting problems, the small object argument, Bousfield localizations, \& stable model categories.
+\item Operads, due to their importance in understanding e.g. \(\E_n\)-rings and their modules.
+\item Huber's adic spaces, as a ``reasonably elementary'' formalism for rigid analytic geometry.
+\item Condensed sets, with a focus on eventually building up to condensed analytic geometry (via Clausen \& Scholze's analytic stacks).
+\item \(K\)-theory, particularly of stable \(\infty\)-categories. Perhaps recent research extending the \(K\)-theory machine to certain large categorie, à la Efimov.
+\item Waldhausen categories, i.e.\ categories with cofibrations and weak equivalences.
+\item ``Lower'' higher category theory, so 2-categories and bicategories. (Virtual) double categories, for their applications to \(\infty\)-cosmoi.
+\item Topoi and \(\infty\)-topoi.
+\item The theorem of Hoshino--Kato--Miyachi on t-structures generated by silting objects. Also requires the computation of \(\Ext^1\) in the heart of a t-structure
+in terms of the Hom-sets in the ambient triangulated category.
+\end{enumerate}
+
+\include{lectures/abelian-categories}
+
+\include{lectures/basics-of-homological-algebra}
+
+\include{lectures/monadicity}
+
+\include{lectures/more-about-abelian-categories}
+
+\include{lectures/localizations-of-categories}
+
+\include{lectures/homotopical-algebra-through-deformations}
+
+\include{lectures/triangulated-categories}
+
+\include{lectures/localizations-of-triangulated-categories}
+
+\include{lectures/localization-sequences-recollements-triangulated-categories}
+
+\include{lectures/abstract-cohomology-through-t-structures}
+
+\include{lectures/gluing-t-structures}
+
+\include{lectures/ind-categories-and-compactness}
+
+\include{lectures/more-about-ind-categories-and-compact-generation}
+
+\include{lectures/grothendieck-categories-freyd-mitchell}
+
+\include{lectures/metric-infinity-categories}
+
+\include{lectures/derived-categories}
+
+\include{lectures/sheaves-on-sites}
+
+
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\printbibliography
+\end{document}
+
+
+% \begin{center}
+% \begin{tikzcd}
+% 	z\ar[dr,dashed]\ar[drr,bend left]\ar[ddr,bend right] & & \\
+% 	& x\ar[r]\ar[d,hook] & * \ar[d,hook] \\
+% 	& y\ar[r,"\varphi"] & \Omega
+% \end{tikzcd}\(\quad \iff\quad\)
+% \begin{tikzcd}
+% 	 & z\ar[d,"\psi"]\ar[dl,dashed] & \\
+% 	x\ar[r,hook]\ar[dr,hook] & y\times *\ar[d,equal,"\sim" labl] \ar[r,shift left]\ar[r,shift right,"\varphi"'] & \Omega \\
+% 	& y &
+% \end{tikzcd}
+% \end{center}

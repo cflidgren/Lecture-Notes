@@ -1,0 +1,700 @@
+\usepackage[utf8]{inputenc}
+\tracinglostchars=3
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{mathrsfs, bm}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{listings}
+\usepackage{verbatim,mathtools,graphicx}
+\usepackage[T1]{fontenc}
+%\usepackage{kpfonts,newtxmath}
+\usepackage{newpxtext}
+\usepackage[varbb]{newpxmath}
+%\usepackage{libertinus}
+%\usepackage[urw-garamond]{mathdesign}
+%\usepackage{garamondx}
+\usepackage{tikz, tikz-cd}
+\usepackage{enumitem,xparse,url}
+\usepackage[most]{tcolorbox}
+\usepackage{multirow,array}
+\usepackage{hyperref,bookmark}
+\usepackage{stmaryrd}
+\usepackage{fontspec}
+
+% Renewed commands
+\renewcommand{\injlim}{\varinjlim}
+\renewcommand{\projlim}{\varprojlim}
+
+% Column stuff
+\newcolumntype{x}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+% set graphicx directory
+\graphicspath{{./img/}}
+
+% Environments
+% warning box
+\newenvironment{warningbox}{\begin{tcolorbox}[colback=red!5!white, colframe=red!80!black, title=\textbf{Warning!}]}{\end{tcolorbox}}
+% note box
+\newenvironment{notebox}{\begin{tcolorbox}[colback=blue!5!white, colframe=blue!80!black, title=\textbf{Note}]}{\end{tcolorbox}}
+% todo box
+\newenvironment{todobox}{\begin{tcolorbox}[colback=green!5!white, colframe=green!80!black, title=\textbf{TODO}]}{\end{tcolorbox}}
+% tikzcd diagram
+\newenvironment{diagram*}{\begin{center}\begin{tikzcd}}{\end{tikzcd}\end{center}}
+\newenvironment{diagram}{\begin{equation}\begin{tikzcd}}{\end{tikzcd}\end{equation}\ignorespaces}
+
+\newenvironment{graph*}{\vspace{0.1cm}\begin{center}\begin{tikzcd}[every arrow/.append style={dash,thick}]}{\end{tikzcd}\end{center}\vspace{0.1cm}}
+\newenvironment{graph}{\begin{equation}\begin{tikzcd}[every arrow/.append style={dash,thick}]}{\end{tikzcd}\end{equation}\ignorespaces}
+
+
+% Fancy theorem, proof, example, etc. environments.
+\tcbuselibrary{theorems}
+\tcbuselibrary{skins}
+\tcbuselibrary{breakable}
+\tcbuselibrary{vignette}
+
+% styling
+\tcbset{
+  plategeneric/.style={
+    enhanced, breakable,
+    borderline west={2pt}{0pt}{white!75!black},
+    colback=white,
+    top=1.3pt,
+    bottom=1.3pt,
+    left=7pt,
+    right=7pt,
+    grow to left by=10pt,
+    grow to right by=10pt,
+    boxrule=0pt,
+    sharp corners
+  },
+  plate/.style={
+    plategeneric,
+    frame hidden,
+    beforeafter skip balanced=0.22\baselineskip plus 1pt,
+    height fixed for=first and middle,
+    lines before break=1,
+    pad at break*=1.1mm,
+    detach title,
+    coltitle=black
+  },
+  fancythm/.style={
+    plate,
+    top=4pt,
+    bottom=4pt,
+    borderline west={2pt}{0pt}{Goldenrod!70!black},
+    colback=Goldenrod!5!white,
+    before upper={\parindent15pt\noindent\textup{\textbf{\tcbtitle.}}\,\,},
+    fontupper=\itshape
+  },
+  fancyconj/.style={
+    plate,
+    borderline west={2pt}{0pt}{Goldenrod!80!black},
+    %colback=Goldenrod!10!white,
+    before upper={\parindent15pt\noindent\textup{\textbf{\tcbtitle.}}\,\,},
+    fontupper=\itshape
+  },
+  fancyproof/.style={
+    plate,
+    borderline west={2pt}{0pt}{Peach!75!black},
+    colback=Peach!1!white,
+    fonttitle=\itshape,
+    before upper={\parindent15pt\noindent\tcbtitle\textit{.}\,\,\,},
+    fontupper=\upshape
+  },
+  fancydef/.style={
+    plate,
+    borderline west={2pt}{0pt}{NavyBlue!85!black},
+    colback=white,
+    fonttitle=\bfseries,
+    before upper={\parindent15pt\noindent\tcbtitle\textbf{.}\,\,\,}
+  },
+  fancynotation/.style={
+    plate,
+    borderline west={2pt}{0pt}{Cyan!65!black},
+    colback=white,
+    fonttitle=\bfseries,
+    before upper={\parindent15pt\noindent\tcbtitle\textbf{.}\,\,\,}
+  },
+  fancyexample/.style={
+    plate,
+    borderline west={2pt}{0pt}{Plum!75!black},
+    colback=white,
+    fonttitle=\bfseries,
+    before upper={\parindent15pt\noindent\tcbtitle\textbf{.}\,\,\,}
+  },
+  fancyremark/.style={
+    plate,
+    borderline west={2pt}{0pt}{Emerald!75!black},
+    colback=white,
+    fonttitle=\itshape,
+    before upper={\parindent15pt\noindent\tcbtitle\textit{.}\,\,\,}
+  },
+  fancyexercise/.style={
+    plate,
+    borderline west={2pt}{0pt}{WildStrawberry!85!black},
+    colback=WildStrawberry!10!white,
+    fonttitle=\bfseries,
+    before upper={\parindent15pt\noindent\tcbtitle\textbf{.}\,\,\,}
+  },
+  fancysoln/.style={
+    plate,
+    borderline west={2pt}{0pt}{YellowGreen!85!black},
+    colback=white,
+    fonttitle=\bfseries,
+    before upper={\parindent15pt\noindent\tcbtitle\textbf{.}\,\,\,}
+  },
+  fancywarning/.style={
+    plate,
+    borderline west={2pt}{0pt}{Red!75!black},
+    colback=Red!15!white,
+    before upper={\parindent15pt\noindent\tcbtitle\textbf{.}\,\,\,},
+    fonttitle=\bfseries,
+    fontupper=\upshape
+  },
+  fancynote/.style={
+    plategeneric,
+    grow to right by=4pt,
+    borderline west={2pt}{0pt}{ProcessBlue!75!black},
+    colback=ProcessBlue!15!white,
+    colbacktitle=ProcessBlue!50!white,
+    coltitle={ProcessBlue!30!black},
+    title={Note},
+    fonttitle=\bfseries,
+    fontupper=\upshape,
+    before upper={\parindent15pt\noindent}
+  },
+  fancytodo/.style={
+    plategeneric,
+    grow to right by=4pt,
+    borderline west={2pt}{0pt}{Green!75!black},
+    colback=Green!15!white,
+    colbacktitle=Green!50!white,
+    coltitle={Green!40!black},
+    title={TO-DO},
+    fonttitle=\bfseries,
+    fontupper=\upshape,
+    before upper={\parindent15pt\noindent}
+  }
+}
+
+% fix the newtcbtheorem command to be more useful (broken, don't know how to fix this)
+\ExplSyntaxOn
+
+\NewDocumentCommand{\betternewtcbtheorem}{O{}mmmm}
+ {
+  \newtcbtheorem[#1]{#2inner}{#3}{#4}{#5}
+  \NewDocumentEnvironment{#2}{O{}}
+   {
+    \keys_set:nn { hushus/tcb } { ##1 }
+    \hushus_tcb_begin:nVV {#2inner} \l__hushus_tcb_title_tl \l__hushus_tcb_label_tl
+   }
+   {
+    \end{#2inner}
+   }
+  \cs_if_exist:cF { c@#5} { \newcounter{#5} }
+ }
+
+\cs_new_protected:Nn \hushus_tcb_begin:nnn
+ {
+  \begin{#1}{#2}{#3}
+ }
+\cs_generate_variant:Nn \hushus_tcb_begin:nnn { nVV }
+\keys_define:nn { hushus/tcb }
+ {
+  title .tl_set:N = \l__hushus_tcb_title_tl,
+  label .tl_set:N = \l__hushus_tcb_label_tl,
+ }
+
+\ExplSyntaxOff
+
+% Command for creating fancy theorem-like environments
+% Creates the title format for some parts.
+% args: display name, thesection, number (& added text for optional)
+\newcommand{\ThmTitleNoOptional}[3]{#1 #2.#3}
+\newcommand{\ThmTitleOptional}[4]{#1 #2.#3: #4}
+% args: counter prefix (optional), name, display name, style, counter    \ThmTitleOptional{#3}{\thesection}{\arabic{#5}}{##1}
+\NewDocumentCommand\goodnewtcbtheorem{ommmm}{%
+  \IfNoValueTF{#1}{%
+  \newenvironment{#2}[1][]{\refstepcounter{#5}\begin{tcolorbox}[title={\if\relax\detokenize{##1}\relax{\ThmTitleNoOptional{#3}{\thesection}{\arabic{#5}}}\else{\ThmTitleOptional{#3}{\thesection}{\arabic{#5}}{##1}}\fi},#4]}{\end{tcolorbox}}%
+  \newenvironment{#2*}[1][]{\begin{tcolorbox}[title={\if\relax\detokenize{##1}\relax{#3}\else{#3: ##1}\fi},#4]}{\end{tcolorbox}}%
+  }{%
+  \newenvironment{#2}[1][]{\refstepcounter{#5}\begin{tcolorbox}[title={\if\relax\detokenize{##1}\relax{#3 #1\arabic{#5}}\else{#3 #1\arabic{#5}: ##1}\fi},#4]}{\end{tcolorbox}}%
+  \newenvironment{#2*}[1][]{\begin{tcolorbox}[title={\if\relax\detokenize{##1}\relax{#3}\else{#3: ##1}\fi},#4]}{\end{tcolorbox}}%
+  }
+}
+\NewDocumentCommand\goodrenewtcbtheorem{ommmm}{%
+  \IfNoValueTF{#1}{%
+  \renewenvironment{#2}[1][]{\refstepcounter{#5}\begin{tcolorbox}[title={\if\relax\detokenize{##1}\relax{#3 \thesection.\arabic{#5}}\else{#3 \thesection.\arabic{#5}: ##1}\fi},#4]}{\end{tcolorbox}}%
+  \renewenvironment{#2*}[1][]{\begin{tcolorbox}[title={\if{#3}\else{#3: ##1}\fi},#4]}{\end{tcolorbox}}%
+  }{%
+  \renewenvironment{#2}[1][]{\refstepcounter{#5}\begin{tcolorbox}[title={\if\relax\detokenize{##1}\relax{#3 #1\arabic{#5}}\else{#3 #1\arabic{#5}: ##1}\fi},#4]}{\end{tcolorbox}}%
+  \renewenvironment{#2*}[1][]{\begin{tcolorbox}[title={\if{#3}\else{#3: ##1}\fi},#4]}{\end{tcolorbox}}%
+  }
+}
+
+% Counters
+\newcounter{thmcounter}
+\numberwithin{thmcounter}{section}
+
+\newcounter{excounter}
+\newcounter{probcounter}
+\newcounter{solcounter}
+\newcounter{taskcounter}
+
+% Theorems, Lemmas, etc.
+% Theorem style
+\goodnewtcbtheorem{theorem}{Theorem}{fancythm}{thmcounter}
+\goodnewtcbtheorem{theoremdef}{Theorem-Definition}{fancythm}{thmcounter}
+\goodnewtcbtheorem{proposition}{Proposition}{fancythm}{thmcounter}
+\goodnewtcbtheorem{propositiondef}{Proposition-Definition}{fancythm}{thmcounter}
+\goodnewtcbtheorem{corollary}{Corollary}{fancythm}{thmcounter}
+\goodnewtcbtheorem{lemma}{Lemma}{fancythm}{thmcounter}
+\goodnewtcbtheorem{fact}{Fact}{fancythm}{thmcounter}
+
+\goodnewtcbtheorem{conjecture}{Conjecture}{fancyconj, fontupper=\upshape}{thmcounter}
+
+\goodnewtcbtheorem{goal}{Goal}{fancyconj, fontupper=\upshape}{thmcounter}
+
+% Definition style
+\goodnewtcbtheorem{definition}{Definition}{fancydef}{thmcounter}
+
+% Notation style
+\goodnewtcbtheorem{notation}{Notation}{fancynotation}{thmcounter}
+\goodnewtcbtheorem{terminology}{Terminology}{fancynotation}{thmcounter}
+\goodnewtcbtheorem{convention}{Convention}{fancynotation}{thmcounter}
+\goodnewtcbtheorem{question}{Question}{fancynotation}{thmcounter}
+\goodnewtcbtheorem{axiom}{Axiom}{fancynotation}{thmcounter}
+
+% Example style
+\goodnewtcbtheorem{example}{Example}{fancyexample}{thmcounter}
+\goodnewtcbtheorem{construction}{Construction}{fancyexample}{thmcounter}
+\goodnewtcbtheorem{sketch}{Sketch}{fancyexample}{thmcounter}
+
+% Remark style
+\goodnewtcbtheorem{remark}{Remark}{fancyremark}{thmcounter}
+\goodnewtcbtheorem{discussion}{Discussion}{fancyremark}{thmcounter}
+
+% Exercise style, empty [] necessary.
+\goodnewtcbtheorem[]{exercise}{Exercise}{fancyexercise}{excounter}
+\goodnewtcbtheorem[]{task}{Task}{fancyexercise}{taskcounter}
+\goodnewtcbtheorem[]{problem}{Problem}{fancyexercise}{probcounter}
+
+% Solution style, empty [] necessary.
+\goodnewtcbtheorem[]{solution}{Solution}{fancysoln}{solcounter}
+
+% Warning style
+\goodnewtcbtheorem{warning}{Warning}{fancywarning}{thmcounter}
+
+% fancy note and todo
+\newtcolorbox{note}{fancynote}
+\newtcolorbox{todo}{fancytodo}
+
+% Proof environment.
+\newcommand{\qedsymbol}{$\blacksquare$}
+\newtcolorbox{proof}[1][Proof]{fancyproof, title={#1}}
+\AtEndEnvironment{proof}{\null\hfill\qedsymbol}
+% "Proof Sketch" environment
+\newenvironment{proofsketch}{\begin{proof}[Proof sketch]\renewcommand\qedsymbol{$\square$}}{\end{proof}\renewcommand\qedsymbol{$\blacksquare$}}
+
+% QED symbol should be black tombstone.
+\renewcommand\qedsymbol{$\blacksquare$}
+\makeatletter
+\newcommand{\oset}[3][0ex]{%
+  \mathrel{\mathop{#3}\limits^{
+    \vbox to#1{\kern-2\ex@
+    \hbox{$\scriptstyle#2$}\vss}}}}
+\makeatother
+
+% utility "such that" command.
+\newcommand{\st}{
+  \text{ s.t. }
+}
+
+\newcommand{\bigmid}{\biggm|}
+\newcommand{\ldsq}{\llbracket}
+\newcommand{\rdsq}{\rrbracket}
+\newcommand{\dashto}{\dashrightarrow}
+
+\newcommand{\vecb}{\mathbf}
+\newcommand{\lcm}{\operatorname{lcm}}
+\newcommand{\divides}{\mid}
+\newcommand{\longto}{\longrightarrow}
+\newcommand{\ot}{\leftarrow}
+\newcommand{\xto}{\xrightarrow}
+\newcommand{\xot}{\xleftarrow}
+\newcommand{\longot}{\longleftarrow}
+\newcommand{\Longto}{\Longrightarrow}
+\newcommand{\oT}{\Leftarrow}
+\newcommand{\To}{\Rightarrow}
+\newcommand{\longoT}{\Longleftarrow}
+
+\newcommand{\fd}{\textup{f.d.}}
+\newcommand{\ev}{\operatorname{ev}}
+
+% mathbf
+\newcommand{\bfA}{\ensuremath{\mathbf{A}}}
+\newcommand{\bfB}{\ensuremath{\mathbf{B}}}
+\newcommand{\bfC}{\ensuremath{\mathbf{C}}}
+\newcommand{\bfD}{\ensuremath{\mathbf{D}}}
+\newcommand{\bfE}{\ensuremath{\mathbf{E}}}
+\newcommand{\bfF}{\ensuremath{\mathbf{F}}}
+\newcommand{\bfG}{\ensuremath{\mathbf{G}}}
+\newcommand{\bfH}{\ensuremath{\mathbf{H}}}
+\newcommand{\bfI}{\ensuremath{\mathbf{I}}}
+\newcommand{\bfJ}{\ensuremath{\mathbf{J}}}
+\newcommand{\bfK}{\ensuremath{\mathbf{K}}}
+\newcommand{\bfL}{\ensuremath{\mathbf{L}}}
+\newcommand{\bfM}{\ensuremath{\mathbf{M}}}
+\newcommand{\bfN}{\ensuremath{\mathbf{N}}}
+\newcommand{\bfO}{\ensuremath{\mathbf{O}}}
+\newcommand{\bfP}{\ensuremath{\mathbf{P}}}
+\newcommand{\bfQ}{\ensuremath{\mathbf{Q}}}
+\newcommand{\bfR}{\ensuremath{\mathbf{R}}}
+\newcommand{\bfS}{\ensuremath{\mathbf{S}}}
+\newcommand{\bfT}{\ensuremath{\mathbf{T}}}
+\newcommand{\bfU}{\ensuremath{\mathbf{U}}}
+\newcommand{\bfV}{\ensuremath{\mathbf{V}}}
+\newcommand{\bfW}{\ensuremath{\mathbf{W}}}
+\newcommand{\bfX}{\ensuremath{\mathbf{X}}}
+\newcommand{\bfY}{\ensuremath{\mathbf{Y}}}
+\newcommand{\bfZ}{\ensuremath{\mathbf{Z}}}
+\newcommand{\bfDelta}{\ensuremath{\mathbf{\Delta}}}
+
+% mathsf
+\newcommand{\sfA}{\ensuremath{\mathsf{A}}}
+\newcommand{\sfB}{\ensuremath{\mathsf{B}}}
+\newcommand{\sfC}{\ensuremath{\mathsf{C}}}
+\newcommand{\sfD}{\ensuremath{\mathsf{D}}}
+\newcommand{\sfE}{\ensuremath{\mathsf{E}}}
+\newcommand{\sfF}{\ensuremath{\mathsf{F}}}
+\newcommand{\sfG}{\ensuremath{\mathsf{G}}}
+\newcommand{\sfH}{\ensuremath{\mathsf{H}}}
+\newcommand{\sfI}{\ensuremath{\mathsf{I}}}
+\newcommand{\sfJ}{\ensuremath{\mathsf{J}}}
+\newcommand{\sfK}{\ensuremath{\mathsf{K}}}
+\newcommand{\sfL}{\ensuremath{\mathsf{L}}}
+\newcommand{\sfM}{\ensuremath{\mathsf{M}}}
+\newcommand{\sfN}{\ensuremath{\mathsf{N}}}
+\newcommand{\sfO}{\ensuremath{\mathsf{O}}}
+\newcommand{\sfP}{\ensuremath{\mathsf{P}}}
+\newcommand{\sfQ}{\ensuremath{\mathsf{Q}}}
+\newcommand{\sfR}{\ensuremath{\mathsf{R}}}
+\newcommand{\sfS}{\ensuremath{\mathsf{S}}}
+\newcommand{\sfT}{\ensuremath{\mathsf{T}}}
+\newcommand{\sfU}{\ensuremath{\mathsf{U}}}
+\newcommand{\sfV}{\ensuremath{\mathsf{V}}}
+\newcommand{\sfW}{\ensuremath{\mathsf{W}}}
+\newcommand{\sfX}{\ensuremath{\mathsf{X}}}
+\newcommand{\sfY}{\ensuremath{\mathsf{Y}}}
+\newcommand{\sfZ}{\ensuremath{\mathsf{Z}}}
+
+% mathbb
+\newcommand{\bbA}{\ensuremath{\mathbb{A}}}
+\newcommand{\bbB}{\ensuremath{\mathbb{B}}}
+\newcommand{\bbC}{\ensuremath{\mathbb{C}}}
+\newcommand{\bbD}{\ensuremath{\mathbb{D}}}
+\newcommand{\bbE}{\ensuremath{\mathbb{E}}}
+\newcommand{\bbF}{\ensuremath{\mathbb{F}}}
+\newcommand{\bbG}{\ensuremath{\mathbb{G}}}
+\newcommand{\bbH}{\ensuremath{\mathbb{H}}}
+\newcommand{\bbI}{\ensuremath{\mathbb{I}}}
+\newcommand{\bbJ}{\ensuremath{\mathbb{J}}}
+\newcommand{\bbK}{\ensuremath{\mathbb{K}}}
+\newcommand{\bbL}{\ensuremath{\mathbb{L}}}
+\newcommand{\bbM}{\ensuremath{\mathbb{M}}}
+\newcommand{\bbN}{\ensuremath{\mathbb{N}}}
+\newcommand{\bbO}{\ensuremath{\mathbb{O}}}
+\newcommand{\bbP}{\ensuremath{\mathbb{P}}}
+\newcommand{\bbQ}{\ensuremath{\mathbb{Q}}}
+\newcommand{\bbR}{\ensuremath{\mathbb{R}}}
+\newcommand{\bbS}{\ensuremath{\mathbb{S}}}
+\newcommand{\bbT}{\ensuremath{\mathbb{T}}}
+\newcommand{\bbU}{\ensuremath{\mathbb{U}}}
+\newcommand{\bbV}{\ensuremath{\mathbb{V}}}
+\newcommand{\bbW}{\ensuremath{\mathbb{W}}}
+\newcommand{\bbX}{\ensuremath{\mathbb{X}}}
+\newcommand{\bbY}{\ensuremath{\mathbb{Y}}}
+\newcommand{\bbZ}{\ensuremath{\mathbb{Z}}}
+
+% mathcal
+\newcommand{\calA}{\ensuremath{\mathcal{A}}}
+\newcommand{\calB}{\ensuremath{\mathcal{B}}}
+\newcommand{\calC}{\ensuremath{\mathcal{C}}}
+\newcommand{\calD}{\ensuremath{\mathcal{D}}}
+\newcommand{\calE}{\ensuremath{\mathcal{E}}}
+\newcommand{\calF}{\ensuremath{\mathcal{F}}}
+\newcommand{\calG}{\ensuremath{\mathcal{G}}}
+\newcommand{\calH}{\ensuremath{\mathcal{H}}}
+\newcommand{\calI}{\ensuremath{\mathcal{I}}}
+\newcommand{\calJ}{\ensuremath{\mathcal{J}}}
+\newcommand{\calK}{\ensuremath{\mathcal{K}}}
+\newcommand{\calL}{\ensuremath{\mathcal{L}}}
+\newcommand{\calM}{\ensuremath{\mathcal{M}}}
+\newcommand{\calN}{\ensuremath{\mathcal{N}}}
+\newcommand{\calO}{\ensuremath{\mathcal{O}}}
+\newcommand{\calP}{\ensuremath{\mathcal{P}}}
+\newcommand{\calQ}{\ensuremath{\mathcal{Q}}}
+\newcommand{\calR}{\ensuremath{\mathcal{R}}}
+\newcommand{\calS}{\ensuremath{\mathcal{S}}}
+\newcommand{\calT}{\ensuremath{\mathcal{T}}}
+\newcommand{\calU}{\ensuremath{\mathcal{U}}}
+\newcommand{\calV}{\ensuremath{\mathcal{V}}}
+\newcommand{\calW}{\ensuremath{\mathcal{W}}}
+\newcommand{\calX}{\ensuremath{\mathcal{X}}}
+\newcommand{\calY}{\ensuremath{\mathcal{Y}}}
+\newcommand{\calZ}{\ensuremath{\mathcal{Z}}}
+
+% mathscr
+\newcommand{\scrA}{\ensuremath{\mathscr{A}}}
+\newcommand{\scrB}{\ensuremath{\mathscr{B}}}
+\newcommand{\scrC}{\ensuremath{\mathscr{C}}}
+\newcommand{\scrD}{\ensuremath{\mathscr{D}}}
+\newcommand{\scrE}{\ensuremath{\mathscr{E}}}
+\newcommand{\scrF}{\ensuremath{\mathscr{F}}}
+\newcommand{\scrG}{\ensuremath{\mathscr{G}}}
+\newcommand{\scrH}{\ensuremath{\mathscr{H}}}
+\newcommand{\scrI}{\ensuremath{\mathscr{I}}}
+\newcommand{\scrJ}{\ensuremath{\mathscr{J}}}
+\newcommand{\scrK}{\ensuremath{\mathscr{K}}}
+\newcommand{\scrL}{\ensuremath{\mathscr{L}}}
+\newcommand{\scrM}{\ensuremath{\mathscr{M}}}
+\newcommand{\scrN}{\ensuremath{\mathscr{N}}}
+\newcommand{\scrO}{\ensuremath{\mathscr{O}}}
+\newcommand{\scrP}{\ensuremath{\mathscr{P}}}
+\newcommand{\scrQ}{\ensuremath{\mathscr{Q}}}
+\newcommand{\scrR}{\ensuremath{\mathscr{R}}}
+\newcommand{\scrS}{\ensuremath{\mathscr{S}}}
+\newcommand{\scrT}{\ensuremath{\mathscr{T}}}
+\newcommand{\scrU}{\ensuremath{\mathscr{U}}}
+\newcommand{\scrV}{\ensuremath{\mathscr{V}}}
+\newcommand{\scrW}{\ensuremath{\mathscr{W}}}
+\newcommand{\scrX}{\ensuremath{\mathscr{X}}}
+\newcommand{\scrY}{\ensuremath{\mathscr{Y}}}
+\newcommand{\scrZ}{\ensuremath{\mathscr{Z}}}
+
+% mathfrak
+\newcommand{\frakA}{\ensuremath{\mathfrak{A}}}
+\newcommand{\frakB}{\ensuremath{\mathfrak{B}}}
+\newcommand{\frakC}{\ensuremath{\mathfrak{C}}}
+\newcommand{\frakD}{\ensuremath{\mathfrak{D}}}
+\newcommand{\frakE}{\ensuremath{\mathfrak{E}}}
+\newcommand{\frakF}{\ensuremath{\mathfrak{F}}}
+\newcommand{\frakG}{\ensuremath{\mathfrak{G}}}
+\newcommand{\frakH}{\ensuremath{\mathfrak{H}}}
+\newcommand{\frakI}{\ensuremath{\mathfrak{I}}}
+\newcommand{\frakJ}{\ensuremath{\mathfrak{J}}}
+\newcommand{\frakK}{\ensuremath{\mathfrak{K}}}
+\newcommand{\frakL}{\ensuremath{\mathfrak{L}}}
+\newcommand{\frakM}{\ensuremath{\mathfrak{M}}}
+\newcommand{\frakN}{\ensuremath{\mathfrak{N}}}
+\newcommand{\frakO}{\ensuremath{\mathfrak{O}}}
+\newcommand{\frakP}{\ensuremath{\mathfrak{P}}}
+\newcommand{\frakQ}{\ensuremath{\mathfrak{Q}}}
+\newcommand{\frakR}{\ensuremath{\mathfrak{R}}}
+\newcommand{\frakS}{\ensuremath{\mathfrak{S}}}
+\newcommand{\frakT}{\ensuremath{\mathfrak{T}}}
+\newcommand{\frakU}{\ensuremath{\mathfrak{U}}}
+\newcommand{\frakV}{\ensuremath{\mathfrak{V}}}
+\newcommand{\frakW}{\ensuremath{\mathfrak{W}}}
+\newcommand{\frakX}{\ensuremath{\mathfrak{X}}}
+\newcommand{\frakY}{\ensuremath{\mathfrak{Y}}}
+\newcommand{\frakZ}{\ensuremath{\mathfrak{Z}}}
+
+
+% Calculus, transforms, and other stuff
+\newcommand*{\diff}{\mathop{}\!\mathrm{d}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\p}{\partial}
+\newcommand{\diam}{\mathrm{diam}\,}
+\renewcommand{\Im}{\operatorname{Im}}
+\renewcommand{\Re}{\operatorname{Re}}
+\newcommand{\sinc}{\mathrm{sinc}}
+
+% Common Sets
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\TT}{\mathbb{T}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\pow}{
+  \mathcal{P}
+}
+
+% Algebra
+\newcommand{\adj}{\operatorname{adj}}
+\newcommand{\ind}{\operatorname{ind}}
+\newcommand{\height}{\operatorname{ht}}
+\newcommand{\dual}{\vee}
+\newcommand{\sep}{\text{sep}}
+\newcommand{\nor}{\text{nor}}
+\newcommand{\red}{\mathrm{red}}
+\newcommand{\gal}{\text{gal}}
+\newcommand{\ideal}{\mathfrak}
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\SL}{\operatorname{SL}}
+\newcommand{\M}{\operatorname{M}}
+\newcommand{\nrmleq}{\trianglelefteq}
+\newcommand{\nrmgeq}{\trianglerighteq}
+\newcommand{\cyclic}[1]{\langle #1 \rangle}
+\newcommand{\coimg}{\operatorname{coim}}
+\newcommand{\img}{\operatorname{im}}
+\newcommand{\Frac}{\operatorname{Frac}}
+\newcommand{\aut}{\operatorname{Aut}}
+\newcommand{\Aut}{\operatorname{Aut}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Ann}{\operatorname{Ann}}
+\newcommand{\Gal}{\operatorname{Gal}}
+\newcommand{\Tor}{\operatorname{Tor}}
+\newcommand{\coker}{\operatorname{coker}}
+\newcommand{\eq}{\operatorname{eq}}
+\newcommand{\coeq}{\operatorname{coeq}}
+\newcommand{\spec}{\operatorname{Spec}}
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Proj}{\operatorname{Proj}}
+\newcommand{\Ox}{\mathcal{O}}
+\newcommand{\Open}{\operatorname{Open}}
+\newcommand{\Char}{\operatorname{char}}
+\newcommand{\Span}{\operatorname{Span}}
+\newcommand{\intO}{\mathscr{O}}
+\newcommand{\Pic}{\operatorname{Pic}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\KProj}{\operatorname{KProj}}
+
+
+\newcommand{\hooktwoheadrightarrow}{\hookrightarrow\mathrel{\mspace{-15mu}}\rightarrow}
+\makeatletter
+\newcommand{\xhooktwoheadrightarrow}[2][]{%
+  \lhook\joinrel
+  \ext@arrow 0359\rightarrowfill@ {#1}{#2}%
+  \mathrel{\mspace{-15mu}}\rightarrow
+}
+\makeatother
+\newcommand{\iso}{\xrightarrow{\sim}}
+\newcommand{\isom}{\hooktwoheadrightarrow}
+\newcommand{\inj}{\hookrightarrow}
+\newcommand{\sur}{\twoheadrightarrow}
+\newcommand{\orbits}{\mathrm{O}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\nullity}{\operatorname{nullity}}
+\newcommand{\tr}{\operatorname{tr}}
+
+% Geometry
+\newcommand{\simh}{\sim_\textup{h}}
+\newcommand{\Supp}{\operatorname{Supp}}
+\newcommand{\spa}{\operatorname{sp}}
+\newcommand{\HH}{\operatorname{H}}
+\newcommand{\hh}{\operatorname{h}}
+\newcommand{\mult}{\operatorname{mult}}
+\newcommand{\codim}{\operatorname{codim}}
+\newcommand{\model}{\mathcal}
+\newcommand{\Gm}[1][]{\mathbf{G}_{\mathrm{m} #1}}
+\newcommand{\Ga}[1][]{\mathbf{G}_{\mathrm{a} #1}}
+\newcommand{\Sp}{\mathrm{Sp}}
+\newcommand{\Sk}{\operatorname{Sk}}
+\newcommand{\Sing}{\operatorname{Sing}}
+\newcommand{\ho}{\operatorname{ho}}
+
+% Category Theory
+\newcommand{\Qis}{\operatorname{Qis}}
+\newcommand{\thick}{\operatorname{thick}}
+\newcommand{\Lan}{\operatorname{Lan}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Com}{\operatorname{Com}}
+\newcommand{\Ind}{\operatorname{Ind}}
+\newcommand{\Pro}{\operatorname{Pro}}
+\newcommand{\pre}{\mathrm{pre}}
+\newcommand{\op}{\mathrm{op}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Map}{\operatorname{Map}}
+\newcommand{\iHom}{\underline{\Hom}}
+\newcommand{\SHom}{\mathcal{H}\hspace{-0.0833em}om}
+\newcommand{\Mor}{\operatorname{Mor}}
+\newcommand{\Fun}{\operatorname{Fun}}
+\newcommand{\Nat}{\operatorname{Nat}}
+\newcommand{\Der}{\operatorname{Der}}
+\newcommand{\hocolim}{\operatorname{hocolim}}
+\newcommand{\sheaf}{\mathscr}
+\newcommand{\sh}{\text{sh}}
+\newcommand{\cat}{\mathbf}
+\newcommand{\natcat}[1]{ \mathbf{[#1]} }
+\newcommand{\dom}{\operatorname{dom}}
+\newcommand{\cod}{\operatorname{cod}}
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Cones}{\operatorname{Cones}}
+\newcommand{\ob}{\operatorname{Ob}}
+\newcommand{\Ob}{\ob}
+\newcommand{\Ar}{\operatorname{Ar}}
+\newcommand{\natto}{%
+  \mathrel{\vbox{\offinterlineskip
+    \mathsurround=0pt
+    \ialign{\hfil##\hfil\cr
+      \normalfont\scalebox{1.2}{.}\cr
+%      \noalign{\kern-.05ex}
+      $\rightarrow$\cr}
+  }}%
+}
+
+% Some Categories
+\newcommand{\Cat}{\cat{Cat}}
+\newcommand{\inftyCat}{\infty\text{-}\cat{Cat}}
+\newcommand{\Set}{\cat{Set}}
+\newcommand{\PSet}{\cat{Set_*}}
+\newcommand{\Ens}[1]{\cat{Ens}_{#1}}
+\newcommand{\Mon}{\cat{Mon}}
+\newcommand{\CMon}{\cat{CMon}}
+\newcommand{\Grp}{\cat{Grp}}
+\newcommand{\Gpd}{\cat{Gpd}}
+\newcommand{\Ab}{\cat{Ab}}
+\newcommand{\Rng}{\cat{Rng}}
+\newcommand{\CRng}{\cat{CRng}}
+\newcommand{\Mod}{\cat{Mod}}
+\newcommand{\Alg}{\cat{Alg}}
+\newcommand{\Rep}{\cat{Rep}}
+\newcommand{\RMod}[1][R]{#1\text{-}\cat{Mod}}
+\newcommand{\ModR}[1][R]{\cat{Mod}\text{-}#1}
+\newcommand{\RAlg}[1][R]{#1\text{-}\cat{Alg}}
+\renewcommand{\Top}{\cat{Top}}
+%\@ifundefined{Top}{\newcommand{\Top}{\cat{Top}}}{\renewcommand{\Top}{\cat{Top}}}
+\newcommand{\SMan}{\cat{SMan}}
+\newcommand{\SmMan}{\cat{SmMan}}
+\newcommand{\Sm}{\cat{Sm}}
+\newcommand{\PTop}{\cat{Top_*}}
+\newcommand{\hTop}{\cat{hTop}}
+\newcommand{\Vect}{\cat{Vect}}
+\newcommand{\PShf}{\operatorname{\cat{PShf}}}
+\newcommand{\Shf}{\operatorname{\cat{Shf}}}
+\newcommand{\PSh}{\operatorname{\cat{PSh}}}
+\newcommand{\Sh}{\operatorname{\cat{Sh}}}
+\newcommand{\RSp}{\cat{RSp}}
+\newcommand{\Sch}{\cat{Sch}}
+\newcommand{\AffSch}{\cat{AffSch}}
+\newcommand{\sSet}{\cat{sSet}}
+\newcommand{\Ch}{\cat{Ch}}
+
+% Python Code Highlighting Style
+\definecolor{codebg}{rgb}{0.9,0.9,0.9}
+\lstdefinestyle{pythoncode}{
+  backgroundcolor=\color{codebg},
+  commentstyle=\color{Green},
+  keywordstyle=\color{Magenta},
+  numberstyle=\tiny\color{Gray},
+  stringstyle=\color{ForestGreen},
+  basicstyle=\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=3
+}
+\lstset{style=pythoncode}

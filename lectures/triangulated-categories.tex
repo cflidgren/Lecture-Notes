@@ -1,0 +1,646 @@
+%!TEX root = ../lectures.tex
+
+\section{Triangulated categories}
+Homological algebra is essentially concerned with properties of the cohomology of chain complexes, and so is primarily interested in the category of chain complexes \(\Ch(\calA)\) in an Abelian
+category \emph{considered up to quasi-isomorphism.} The way this is done, classically, is by passing from the category of chain complexes \(\Ch(\calA)\) to the \emph{derived category} \(\sfD(\calA)\),
+which is obtained from \(\Ch(\calA)\) by formally inverting the quasi-isomorphisms (i.e.\ morphisms which induce an isomorphism on cohomology) through the machinery of Lecture \ref{section:localization-of-categories}.
+
+In the process of forming the derived category \(\sfD(\calA)\), many properties of \(\calA\) (and \(\Ch(\calA)\)) are destroyed: whereas the latter two are Abelian categories, the former is not.
+However, one nonetheless sees a shadow of its Abelian origins; for one, \(\sfD(\calA)\) is an additive category. Furthermore, it sees the remains of kernels and cokernels with nice properties, though
+they are no longer canonical. In the 1960s, Grothendieck \& Verdier developed the formalism of \emph{triangulated categories} to deal with the problem of encapsulating the properties exhibited
+by derived categories.
+
+\subsection{Pre-triangulated categories \& triangulated categories}
+The basic initial concept of triangulated categories is to mimick the property that Abelian categories admit \emph{exact sequences.} In the context of triangulated categories, the analogous
+concept is a \emph{triangle.}
+\begin{definition}
+	Let \(\calT\) be an additive category equipped with an automorphism \(\Sigma\!:\calT\to\calT\). A \emph{triangle} for \(\Sigma\) is a sequence of maps
+	\[ x \overset{f}\to y \overset{g}\to z \overset{h}\to \Sigma x \]
+	in \(\calT\). One says that a triangle as above is a \emph{candidate triangle} if \(g\circ f = 0\) and \(h\circ g = 0\).
+
+	A \emph{morphism of triangles} from \(x\to y \to z \to \Sigma x\) to \(x'\to y'\to z'\to \Sigma x'\) is a triple of maps \((a,b,c)\) in a commutative diagram
+	\begin{diagram*}
+		x\ar[r]\ar[d,"a"] & y\ar[r]\ar[d,"b"] & z\ar[r]\ar[d,"c"] & \Sigma x.\ar[d,"\Sigma a"] \\
+		x'\ar[r] & y'\ar[r] & z'\ar[r] & \Sigma x'
+	\end{diagram*}
+\end{definition}
+
+Recall that we briefly discussed \emph{Quillen exact categories} in Appendix \ref{appendix:quillen-exact-categories}. These were additive categories which admitted some kernels and cokernels,
+in the form of certain distinguished exact sequences. Triangulated categories are very similar: one specifies a distinguished class of triangles to be considered ``exact.''
+
+\begin{definition}
+	A \emph{(Neeman) pre-triangulated category} is a triple \((\calT, \Sigma, \calE)\) of an additive category \(\calT\), an automorphism \(\Sigma\!:\calT\to\calT\), and a set \(\calE\) of triangles for \(\Sigma\), called the
+	\emph{distinguished triangles} or \emph{exact triangles,} closed under isomorphisms of triangles. These are required to satisfy the following axioms:
+	\begin{enumerate}[label=(TR\arabic*)]
+	\item For any \(x\in\calT\), \(x\overset{\id}\to x \to 0 \to \Sigma x\) is a distinguished triangle, and for any morphism \(f\!:x\to y\) in \(\calT\) there is a distinguished triangle
+	\[ x\overset{f}\to y \to z \to \Sigma x. \]
+	\item The triangle
+	\[ x\overset{u}\to y\overset{v}\to z\overset{w}\to \Sigma x \]
+	is distinguished if any only if the triangle
+	\[ y\overset{v}\to z\overset{w}\to \Sigma x\overset{-\Sigma u}\to \Sigma y \]
+	is distinguished.
+	\item For any commutative diagram
+	\begin{diagram*}
+		x\ar[r]\ar[d,"a"] & y\ar[r]\ar[d,"b"] & z\ar[r]\ar[d,dashed] & \Sigma x\ar[d,"\Sigma a"] \\
+		x'\ar[r] & y'\ar[r] & z'\ar[r] & \Sigma x'
+	\end{diagram*}
+	of solid arrows where the rows are distinguished triangles, a dashed arrow exists making the diagram into a morphism of triangles. It need not be unique!
+	\end{enumerate}
+	We often abuse notation by saying that \(\calT\) is a pre-triangulated category, leaving the rest of the data implicit. We call the functor \(\Sigma\) the \emph{shift functor.}
+\end{definition}
+\begin{remark}
+	One will often see distinguished triangles notated as
+	\[ x\to y\to z \overset{+1}\to \]
+	as shorthand. There is also other common notation used for the shift functor, such as \(T\) or \([1]\), the latter being written as e.g.\ \(x[1]\). We will likely switch between
+	different notations depending on the context.
+\end{remark}
+\begin{terminology}
+	Consider a pre-triangulated category \(\calT\) and a morphism \(f\!:x\to y\). An object \(z\) with a morphism \(g\!:y\to z\) as in (TR1), i.e.\ sitting in a distinguished triangle
+	\[ x\overset{f}\to y \overset{g}\to z \to \Sigma x \]
+	is called a \emph{cone} of \(f\). Dually, one calls \(f\) a \emph{cocone} of \(g\).
+\end{terminology}
+\begin{remark}
+	One should think of a cone of \(f\) as roughly like a cokernel (which we will justify the dual of in Corollary \ref{corollary:weak-kernel-property-of-cocones}), except \emph{up to homotopy} in some sense. Notably, it is
+	absolutely not unique! On the other hand, we will see that it certainly is unique up to isomorphism (see Proposition \ref{prop:triangulated-five-lemma}), just not a canonical one.
+
+	One can constrast this situation with the one for exact categories, which are similar except that the cokernel actually is canonical.
+\end{remark}
+\begin{exercise}\label{exercise:partial-morphism-of-dts-fills}
+	Let \(\calT\) be a pre-triangulated category. Show that an analogue of axiom (TR3) holds for any ``partial morphism of distinguished triangles'' missing only one arrow.
+\end{exercise}
+
+\begin{definition}
+	Let \(\calT\) and \(\calT'\) be triangulated categories. A \emph{lax-triangulated functor} is a pair \((F,\sigma)\) of an additive functor \(F\!:\calT\to\calT'\) and a natural transformation \(\sigma\!:F\circ\Sigma \to \Sigma\circ F\)
+	such that for all distinguished triangles
+	\[ x \overset{f}\to y \overset{g}\to z \overset{h}\to \Sigma x\text{ d.t.\ in }\calT\quad\implies\quad Fx\overset{Ff}\longto Fy\overset{Fg}\longto Fz\overset{\sigma_{z}\circ Fh}\longto \Sigma Fx\text{ d.t.\ in }\calT' \]
+	We say a lax-triangulated functor is \emph{triangulated} (or \emph{strict}) if \(\sigma\) is a natural isomorphism.
+\end{definition}
+\begin{remark}
+	Triangulated functors are sometimes called \emph{exact} functors, in analogy with exact functors between Abelian categories. We will not use this terminology.
+\end{remark}
+
+\begin{lemma}
+	Let \(\calT\) be a pre-triangulated category. Then any distinguished triangle is a candidate triangle.
+\end{lemma}
+\begin{proof}
+Consider a distinguished triangle
+\[ x\overset{f}\to y\overset{g}\to z\to \Sigma x. \]
+By (TR2), it suffices to show that \(g\circ f = 0\). To do this, apply (TR1) and (TR3) to see that we have a morphism of triangles
+\begin{diagram*}
+	x\ar[r,equal]\ar[d,equal] & x\ar[d,"f"]\ar[r] & 0\ar[r]\ar[d] & \Sigma x\ar[d,equal] \\
+	x\ar[r,"f"] & y\ar[r,"g"] & z\ar[r] & \Sigma x
+\end{diagram*}
+from which it follows that \(g\circ f = 0\).
+\end{proof}
+
+\begin{definition}
+	A \emph{triangulated category} is a pre-triangulated category \(\calT\) in which the distinguished triangles satisfy the following additional axiom relating the cones
+	of composable morphisms with those of their composition:
+	\begin{itemize}[label=(TR4)]
+	\item Let \(f\!:x\to y\) and \(g\!:y\to z\) be morphisms in \(\calT\), lying in a commutative diagram of solid arrows as below
+	\begin{diagram*}
+		x\ar[r,"f"']\ar[d,equal] & y\ar[d,"g"] \ar[r] & w\ar[r]\ar[d,dashed] & \Sigma x\ar[d,equal] \\
+		x\ar[r,"g\circ f"]\ar[d,"f"'] & z\ar[r]\ar[d,equal] & w' \ar[r]\ar[d,dashed] & \Sigma x\ar[d,"\Sigma f"] \\
+		y\ar[r,"g"]\ar[d] & z\ar[r]\ar[d] & w''\ar[r]\ar[d,equal] & \Sigma y\ar[d] \\
+		w\ar[r,dashed] & w'\ar[r,dashed] & w''\ar[r,dashed] & \Sigma w
+	\end{diagram*}
+	in which the rows are distinguished triangles. Then there exist dashed arrows as indicated making the diagram commute and making the bottom row a distinguished triangle.
+	\end{itemize}
+\end{definition}
+\begin{remark}
+	One can think of (TR4) as analogous to the third isomorphism theorem. Heuristically, cones are like cokernels, so if we set \(w = y/x\), \(w'=z/x\), and \(w'' = z/y\),
+	then (TR4) says that \((z/x)/(y/x) = z/y\).
+\end{remark}
+
+\begin{exercise}
+	Let \(\calT\) be a (pre-)triangulated category. Show that \(\calT^\op\) can be endowed with the structure of a (pre-)triangulated category, where the shift is given by the inverse of the shift on \(\calT\).
+\end{exercise}
+
+\subsection{Cohomological functors \& the ``triangulated Yoneda lemma''}
+One of the magical miracles that pre-triangulated categories allow us is a way to formulate what it means for a functor to be cohomological.
+
+\begin{definition}
+	Let \(\calT\) be a triangulated category, and \(\calA\) an Abelian category. Consider an additive functor \(H\!:\calT\to\calA\). We say \(H\) is \emph{cohomological}
+	if for any distinguished triangle
+	\[ x\to y\to z \to \Sigma x \]
+	in \(\calT\), the sequence
+	\[ Hx\to Hy\to Hz \]
+	in \(\calA\) is exact.
+\end{definition}
+\begin{remark}
+	The mantra is: cohomological functors take short exact sequences to long exact sequences. The above makes this precise; given a ``short homotopy exact sequence''
+	\[ x\to y\to z \to \Sigma x, \]
+	we extend this to a long sequence of morphisms
+	\[ \cdots \to \Sigma^{-1}y \to \Sigma^{-1}z\to x\to y \to z\to \Sigma x \to \Sigma y \to \cdots \]
+	and after applying \(H\), obtain a long exact sequence
+	\[ \cdots \to H\Sigma^{-1}y \to H\Sigma^{-1}z\to Hx\to Hy \to Hz\to H\Sigma x \to H\Sigma y \to \cdots \]
+	as expected.
+\end{remark}
+\begin{proposition}[``Triangulated Yoneda lemma'']\label{prop:pre-triangulated-representable-functors-are-cohomological}
+	Let \(\calT\) be a pre-triangulated category, and let \(x\in\calT\). Then the functors
+	\[ \calT(x,-)\!:\calT\to\Ab,\quad \calT(-,x)\!:\calT^\op\to\Ab \]
+	are cohomological.
+\end{proposition}
+\begin{proof}
+We prove the proposition for \(\calT(x,-)\); the other case is essentially dual. Fix a distinguished triangle
+\[ x'\overset{f}\to y'\overset{g}\to z'\to \Sigma x' \]
+and consider the sequence
+\[ \calT(x,x')\overset{f_*}\longto\calT(x,y')\overset{g_*}\longto\calT(x,z'). \]
+Since \(g\circ f = 0\), this is a complex, i.e.\ \(\img(f_*)\subseteq\ker(g_*)\). For the other inclusion, let \(v\!:x\to y'\) be such that \(g\circ v = 0\). We need to
+find a map \(u\!:x\to x'\) such that \(u = f\circ v\). Applying Exercise \ref{exercise:partial-morphism-of-dts-fills}, we have a filling dashed arrow in the solid diagram
+\begin{diagram*}
+	x\ar[r,equal]\ar[d,dashed,"u"] & x\ar[d,"v"]\ar[r] & 0\ar[r]\ar[d] & \Sigma x\ar[d,dashed,"\Sigma u"] \\
+	x'\ar[r,"f"] & y'\ar[r,"g"] & z'\ar[r] & \Sigma x'
+\end{diagram*}
+providing the desired map \(u\!:x\to x'\).
+\end{proof}
+\begin{corollary}\label{corollary:weak-kernel-property-of-cocones}
+	Let \(\calT\) be a pre-triangulated category, and let \(x\overset{f}\to y\overset{g}\to z\to \Sigma x\) be a distinguished triangle.
+	Then the morphism \(f\) satisfies the following ``weak'' universal property with respect to \(g\): for any morphism \(u_0\!:x_0\to y\) such that \(g\circ u = 0\),
+	there exists a morphism \(u\!:x_0\to x\) making the diagram
+	\begin{diagram*}
+		 & x_0\ar[dl,dashed,"u"']\ar[d,"u_0"]\ar[dr,"0"] & & \\
+		x\ar[r] & y\ar[r] & z\ar[r] & \Sigma x
+	\end{diagram*}
+	commute.
+\end{corollary}
+\begin{terminology}
+	A morphism \(f\!:x\to y\) satisfying the property described above for a morphism \(g\!:y\to z\) is called a \emph{weak kernel} for \(g\). Dually, one defines the notion of a \emph{weak cokernel} for \(f\).
+\end{terminology}
+\begin{exercise}
+	Write out a proof for the unproven part of Proposition \ref{prop:pre-triangulated-representable-functors-are-cohomological}, and deduce the dual of Corollary \ref{corollary:weak-kernel-property-of-cocones}.
+	That is, show that cones are weak cokernels.
+\end{exercise}
+
+\begin{remark}
+	The above implies that distinguished triangles form \emph{weak kernel/cokernel pairs,} analogous to the observation that the distinguished exact sequences in an exact category
+	form distinguished kernel/cokernel pairs.
+\end{remark}
+
+\begin{proposition}[``Triangulated five lemma'']\label{prop:triangulated-five-lemma}
+	Let \(\calT\) be a pre-triangulated category. Consider a morphism
+	\begin{diagram*}
+		x\ar[r]\ar[d,"a"] & y\ar[r]\ar[d,"b"] & z\ar[r]\ar[d,"c"] & \Sigma x\ar[d,"\Sigma a"] \\
+		x'\ar[r] & y'\ar[r] & z'\ar[r] & \Sigma x'
+	\end{diagram*}
+	of distinguished triangles. If any two of \(a,b,c\) are isomorphisms, then so is the third.
+\end{proposition}
+\begin{proof}
+By applying (TR2), it suffices to show that if \(a\) and \(b\) are isomorphisms, then so is \(c\). Let \(w\in\calT\). Applying Proposition \ref{prop:pre-triangulated-representable-functors-are-cohomological}, we have a
+commutative diagram
+\begin{diagram*}
+	\calT(w,x)\ar[r]\ar[d,"a_*"] & \calT(w,y)\ar[d,"b_*"]\ar[r] & \calT(w,z)\ar[d,dashed,"c_*"]\ar[r] & \calT(w,\Sigma x)\ar[r]\ar[d,"(\Sigma a)_*"] & \calT(w,\Sigma y)\ar[d,"(\Sigma b)_*"] \\
+	\calT(w,x')\ar[r] & \calT(w,y')\ar[r] & \calT(w,z')\ar[r] & \calT(w,\Sigma x')\ar[r] & \calT(w,\Sigma y')
+\end{diagram*}
+with exact rows. By assumption, all arrows are isomorphisms except the dashed one, so by the classical five lemma, the dashed morphism is also an isomorphism. Since this holds for all \(w\),
+the Yoneda lemma tells us that \(c\) is an isomorphism.
+\end{proof}
+
+\begin{corollary}
+	Let \(\calT\) be a pre-triangulated category, and let \(f\!:x\to y\) be a morphism in \(\calT\). Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(f\) is an isomorphism.
+	\item The triangle \(x\overset{f}\to y\to 0 \to \Sigma x\) is distinguished.
+	\end{enumerate}
+\end{corollary}
+\begin{proof}
+We have a morphism of triangles
+\begin{diagram*}
+	x\ar[r,equal]\ar[d,equal] & x\ar[r]\ar[d,"f"] & 0\ar[d,equal]\ar[r] & \Sigma x\ar[d,equal] \\
+	x\ar[r,"f"] & y\ar[r] & 0 \ar[r] & \Sigma x
+\end{diagram*}
+so by the triangulated five lemma, Proposition \ref{prop:triangulated-five-lemma}, the morphism \(f\) is an isomorphism if and only if the lower triangle is distinguished.
+\end{proof}
+
+\subsection{Uniqueness issues}
+In the axioms for a pre-triangulated category, there are many postulates of the existence of some object. However, as emphasized, there is no guarantee of uniqueness.
+We explore here some situations where one can get a unique choice. These have significance because one can use these simple criteria in order to build functors
+in favourable situations.
+\begin{lemma}\label{lemma:simple-tr3-uniqueness}
+	Let \(\calT\) be a pre-triangulated category, and suppose we have a partial morphism of distinguished triangles
+	\begin{diagram*}
+		x\ar[r]\ar[d] & y\ar[r,"g"]\ar[d] & z \ar[r,"h"]\ar[d,dashed] & \Sigma x\phantom. \ar[d] \\
+		x' \ar[r] & y'\ar[r,"g'"] & z'\ar[r,"h'"] & \Sigma x'.
+	\end{diagram*}
+	If \(\calT(\Sigma x, z') = 0\) or \(\calT(z,y') = 0\), then there exists a unique dashed morphism making the diagram commute.
+\end{lemma}
+\begin{proof}
+By (TR3), some morphism exists, and we must show it is unique. Let \(a,b\!:z\to z'\) be two such morphisms. Then the morphism \(a-b\) satisfies
+\begin{diagram*}
+	x\ar[r]\ar[d] & y\ar[r,"g"]\ar[d]\ar[dr,"0"] & z \ar[r,"h"]\ar[d,"a-b"]\ar[dr,"0"] & \Sigma x \ar[d] \\
+	x' \ar[r] & y'\ar[r,"g'"] & z'\ar[r,"h'"] & \Sigma x'
+\end{diagram*}
+so that Corollary \ref{corollary:weak-kernel-property-of-cocones} (and its dual) yield morphisms \(\Sigma x\to z'\) and \(z\to y'\) factorizing \(a-b\). Thus, if
+either of the assumptions of the lemma are true, \(a-b\) factors through the zero morphism, so \(a=b\).
+\end{proof}
+Here is a more complex condition, which we can use to produce a useless but neat condition for a cone to be unique.
+\begin{proposition}\label{prop:complicated-tr3-uniqueness}
+	Let \(\calT\) be a triangulated category, and suppose we have a partial morphism of distinguished triangles
+	\begin{diagram*}
+		x\ar[r,"f"]\ar[d,"a"] & y\ar[r,"g"]\ar[d,"b"] & z \ar[r,"h"]\ar[d,dashed] & \Sigma x \ar[d,"\Sigma a"] \\
+		x' \ar[r,"f'"] & y'\ar[r,"g'"] & z'\ar[r,"h'"] & \Sigma x'
+	\end{diagram*}
+	and assume that \(\calT(y,x') = 0\) and \(\calT(\Sigma x, y') = 0\). Then there exists a unique dashed morphism making the diagram commute.
+\end{proposition}
+\begin{proof}
+Again, by (TR3), a morphism exists. We may assume that \(a=0\) and \(b=0\) by considering the difference of induced two dashed morphisms. Thus, we must show that
+given a candidate dashed morphism \(c\!:z\to z'\), we have \(c=0\). Expanding these assumptions and applying Corollary \ref{corollary:weak-kernel-property-of-cocones}, we have a (non-commuting) diagram
+\begin{diagram*}
+	x\ar[r,"f"]\ar[d,"0"] & y\ar[r,"g"]\ar[d,"0"] & z \ar[r,"h"]\ar[d,"c"]\ar[dl,"p"'] & \Sigma x\ar[dl,"q"'] \ar[d,"0"] \\
+	x' \ar[r,"f'"] & y'\ar[r,"g'"] & z'\ar[r,"h'"] & \Sigma x'
+\end{diagram*}
+which provides for us, via an application of (TR3), a morphism of distinguished triangles
+\begin{diagram*}
+	y\ar[r,"g"]\ar[d,dashed,"r"] & z\ar[r,"h"]\ar[d,"p"] & \Sigma x \ar[r,"-\Sigma f"]\ar[d,"q"] & \Sigma y \ar[d,dashed,"\Sigma r"] \\
+	x' \ar[r,"f'"] & y'\ar[r,"g'"] & z'\ar[r,"h'"] & \Sigma x'
+\end{diagram*}
+but since \(\calT(y,x') = 0\), we see that \(r=0\). Applying Corollary \ref{corollary:weak-kernel-property-of-cocones} again, we see that \(p\) factors through a
+map \(\Sigma x\to y'\), but since \(\calT(\Sigma x,y')=0\), this means \(p=0\). Since \(c\) factors through \(p\), we have \(c=0\).
+\end{proof}
+\begin{corollary}
+	Let \(f\!:x\to y\) be a morphism in a pre-triangulated category \(\calT\), and assume \(\calT(y,x) = 0\) and \(\calT(\Sigma x,y)=0\). Then \(f\) has a cone
+	unique up to unique isomorphism of distinguished triangles.
+\end{corollary}
+\begin{proof}
+Suppose we have two distinguished triangles,
+\begin{diagram*}
+	x\ar[r,"f"]\ar[d,equal] & y\ar[r]\ar[d,equal] & z\ar[r]\ar[d,dashed,"\sim" labl] & \Sigma x\ar[d,equal] \\
+	x\ar[r,"f"] & y\ar[r] & z' \ar[r] & \Sigma x
+\end{diagram*}
+with the dashed morphism induced by (TR3). By Proposition \ref{prop:complicated-tr3-uniqueness}, the assumptions of this corollary imply that the morphism is unique,
+and it is an isomorphism by the triangulated five lemma, Proposition \ref{prop:triangulated-five-lemma}.
+\end{proof}
+
+Given a sequence of maps
+\[ x\to y \to z, \]
+one may wonder how many ways this occurs as part of a distinguished triangle. In general, there could be many ways to extend it, but under the assumption of Lemma \ref{lemma:simple-tr3-uniqueness},
+one can make sure it is unique.
+\begin{lemma}\label{lemma:simple-uniqueness-of-cone-shift-map}
+	Let \(\calT\) be a pre-triangulated category, and suppose we have a pair of maps \(x\overset{f}\to y\overset{g}\to z\) such that \(g\circ f = 0\). Suppose that
+	\(\calT(\Sigma x,z) = 0\). Then there is at most one distinguished triangle
+	\[ x\overset{f}\to y\overset{g}\to z \to \Sigma x. \]
+\end{lemma}
+\begin{proof}
+Suppose that we have two; let \(h_i\!:z\to\Sigma x\) be the associated maps completing the sequence to an exact triangle. Then we have a partial morphism
+\begin{diagram*}
+	x\ar[d,equal]\ar[r,"f"] & y\ar[d,equal]\ar[r,"g"] & z\ar[d,dashed,"c"',"\sim" labl]\ar[r,"h_1"] & \Sigma x\ar[d,equal] \\
+	x\ar[r,"f"] & y\ar[r,"g"] & z\ar[r,"h_2"] & \Sigma x
+\end{diagram*}
+which induces a unique dashed isomorphism by Lemma \ref{lemma:simple-tr3-uniqueness}. In particular, \(c\circ g = g\), hence
+\((\id_y-c)\circ g = 0\), so Corollary \ref{corollary:weak-kernel-property-of-cocones} says that \(\id_y-c\) factors through a morphism \(\Sigma x\to z\).
+By assumption, any such morphism is zero, so \(c = \id_y\) and \(h_1 = h_2\).
+\end{proof}
+
+Conditions of the form \(\calT(\Sigma x,z)=0\) turn out to be practical, as such \emph{orthogonality} properties show up in other situations.
+
+\subsection{Interesting triangles}
+\begin{proposition}
+	Let \(\calT\) be a pre-triangulated category, and let \(I\) be some indexing set. Suppose that we have a family of distinguished triangles
+	\[ \left(x_i\overset{f_i}\longto y_i\overset{g_i}\longto z_i\overset{h_i}\longto \Sigma x_i\right)_{i\in I} \]
+	in \(\calT\) for which the coproducts
+	\[ \coprod_{i\in I}x_i,\quad \coprod_{i\in I}y_i,\quad \coprod_{i\in I}z_i \]
+	exist. Then the triangle
+	\[ \coprod_{i\in I}x_i \xrightarrow{\coprod_i f_i} \coprod_{i\in I}y_i\xrightarrow{\coprod_i g_i}\coprod_{i\in I}z_i\xrightarrow{\coprod_ih_i} \coprod_{i\in I}\Sigma x_i \]
+	is a distinguished triangle.
+\end{proposition}
+\begin{proof}
+The strategy is to take a cone of the left morphism and show that one gets the correct output. We have a distinguished triangle
+\[ \coprod_{i\in I}x_i \xrightarrow{\coprod_i f_i} \coprod_{i\in I}y_i\longto z' \longto \coprod_{i\in I}\Sigma x_i \]
+by (TR1), and by (TR3) induced morphisms of distinguished triangles
+\begin{diagram*}
+	x_i \ar[r,"f_i"]\ar[d,hook] & y_i\ar[r,"g_i"]\ar[d,hook] & z_i\ar[d,dashed] \ar[r, "h_i"] & \Sigma x_i\ar[d,hook] \\
+	\coprod_{i\in I}x_i \ar[r,"\coprod_i f_i"] & \coprod_{i\in I}y_i\ar[r] & z' \ar[r] & \coprod_{i\in I}\Sigma x_i 
+\end{diagram*}
+which combine into a morphism of triangles
+\begin{diagram*}
+	\coprod_{i\in I}x_i \ar[r,"\coprod_{i}f_i"]\ar[d,equal] & \coprod_{i\in I}y_i\ar[r,"\coprod_{i}g_i"]\ar[d,equal] & \coprod_{i\in I}z_i\ar[d] \ar[r, "\coprod_{i}h_i"] & \coprod_{i\in I}\Sigma x_i\ar[d,equal] \\
+	\coprod_{i\in I}x_i \ar[r,"\coprod_i f_i"] & \coprod_{i\in I}y_i\ar[r] & z' \ar[r] & \coprod_{i\in I}\Sigma x_i 
+\end{diagram*}
+and after application of \(\calT(-,w)\) for some \(w\in\calT\) and unraveling one more step, we have a diagram
+\begin{diagram*}
+	\calT(\coprod_{i}\Sigma y_i,w) \ar[r]\ar[d,equal] & \calT(\coprod_{i}\Sigma x_i,w)\ar[d,equal]\ar[r] & \calT(\coprod_{i}z_i,w)\ar[d]\ar[r] & \calT(\coprod_{i}y_i,w)\ar[r]\ar[d,equal] & \calT(\coprod_{i\in I}x_i,w)\ar[d,equal] \\
+	\calT(\coprod_{i}\Sigma y_i,w) \ar[r] & \calT(\coprod_{i}\Sigma x_i,w)\ar[r] & \calT(z',w)\ar[r] & \calT(\coprod_{i}y_i,w)\ar[r] & \calT(\coprod_{i\in I}x_i,w)
+\end{diagram*}
+where the bottom row is exact. Commuting out the coproducts on the top row and using that the original triangles are exact yields that the top row is exact, so the five lemma implies that the middle vertical
+morphism is an isomorphism. By the Yoneda lemma, we deduce that the morphism
+\[ \coprod_{i\in I}z_i \to z \]
+is an isomorphism, and since the class of distinguished triangles is closed under isomorphism, we are done.
+\end{proof}
+
+While the above may seem somewhat innocuous, it has the following remarkable corollary which is actually tremendously useful.
+
+\begin{corollary}\label{corollary:direct-sum-triangle}
+	Let \(\calT\) be a triangulated category, and let \(x,y\in \calT\). Then the triangle
+	\[ x\inj x\oplus y \sur y \overset{0}\to \Sigma x \]
+	is distinguished. In particular, any distinguished triangle
+	\[ x\to e\to y\overset{0}\to \Sigma x \]
+	is isomorphic to the first distinguished triangle.
+\end{corollary}
+\begin{proof}
+The first statement follows by taking the direct sum of the two distinguished triangles
+\[ x\overset{\id}\to x\to 0 \to \Sigma x,\quad 0\to y\overset{\id}\to y \to \Sigma 0, \]
+where we note that \(\Sigma 0 = 0\). For the second, construct the obvious partial morphism of triangles and apply (TR3) together with Proposition \ref{prop:triangulated-five-lemma}.
+\end{proof}
+
+The immense value of this corollary is that it allows us to identify an element as a direct summand of another by exhibiting the existence of a suitable distinguished triangle.
+This turns out to be surprisingly doable in many interesting situations.
+
+\subsection{Appendix: The five lemma}
+One of the most frequently used results in homological algebra is the \emph{five lemma.} We dedicate this appendix to proving it.
+The five lemma is primarily useful to us because it allows us to prove Proposition \ref{prop:triangulated-five-lemma}, but it also has relevance when understanding
+extensions in Abelian categories. We will aim to prove a generalization of the five lemma found in \cite{kashiwara-schapira-book}. We begin with a prerequisite lemma.
+
+\begin{lemma}\label{lemma:five-lemma-technical-necessary-lemma}\textup{\cite[Lemma 8.3.12]{kashiwara-schapira-book}}
+	Let \(\calA\) be an Abelian category, and suppose we have morphisms \(x' \overset{f}\to x \to \overset{g}\to x'' \) in \(\calA\) such that \(g\circ f = 0\).
+	Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+		\item The pair of morphisms form an exact sequence, i.e.\ the canonical map \(\img{f} \to \ker{f}\) is an isomorphism.
+		\item For any \(h\!:z\to x\) such that \(g\circ h = 0\), there is an epimorphism \(f'\!:z'\to z\) and a commutative diagram
+		\begin{diagram*}
+			z'\ar[r,two heads,"f'"]\ar[d] & z\ar[dr,"0"]\ar[d,"h"] & \\
+			x'\ar[r,"f"] & x\ar[r,"g"] & x''.
+		\end{diagram*}
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+(1) \(\Rightarrow\) (2). The maps \(f\!:x'\to x\) and \(h\!:z\to x\) both factor through \(\ker{g}\inj x\). Thus, we set \(z' := x'\times_{\ker{g}}z\).
+By exactness, \(x'\to\ker{g}\) is an epimorphism, and pullbacks of epimorphisms in Abelian categories are epimorphisms, so the map \(z'\to z\) is an epimorphism.
+
+(2) \(\Rightarrow\) (1). Take \(z = \ker{g}\) and let \(h\!:\ker{g}\inj x\) be the canonical inclusion. We find an epimorphism \(z'\sur\ker{g}\),
+but then the composition \(z'\to x'\to\ker{g}\) is also necessarily epic, which implies that \(x'\to\ker{g}\) is epic, so \(\img{f}\cong\ker{g}\).
+\end{proof}
+
+\begin{lemma}\label{lemma:generalized-five-lemma}\textup{\cite[Lemma 8.3.13]{kashiwara-schapira-book}}
+	Let \(\calA\) be an Abelian category, and consider a commutative diagram
+	\begin{diagram*}
+		x^0 \ar[r]\ar[d,"f^0"] & x^1 \ar[r]\ar[d,"f^1"] & x^2\ar[r]\ar[d,"f^2"] & x^3 \ar[d,"f^3"] \\
+		y^0 \ar[r] & y^1 \ar[r] & y^2\ar[r] & y^3 
+	\end{diagram*}
+	where
+	\begin{enumerate}[label=(\roman*)]
+		\item each row is a complex (i.e.\ adjacent morphisms compose to zero), and
+		\item \(x^1 \to x^2 \to x^3\) and \(y^0 \to y^1 \to y^2\) are exact.
+	\end{enumerate}
+	Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(f^0\) is an epimorphism and \(f^1\), \(f^3\) are monomorphisms, then \(f^2\) is a monomorphism.
+		\item If \(f^3\) is a monomorphism and \(f^0\), \(f^2\) are epimorphisms, then \(f^1\) is an epimorphism.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+The statements of (1) and (2) are dual, so it suffices to prove (1). As we endeavour to prove \(f^2\) is a monomorphism, suppose we have a morphism
+\(a\!:z\to x^2\) such that \(f^2\circ a = 0\). We must prove that \(a=0\). By the commutativity of the diagram, we have
+\[ (z \overset{a}\to x^2 \to x^3 \overset{f^3}\inj y^3) = (z \overset{a}\to x^2 \overset{f^2} \to y^2 \to y^3) = 0 \implies (z \overset{a}\to x^2 \to x^3) = 0. \]
+Using Lemma \ref{lemma:five-lemma-technical-necessary-lemma}, we find some epimorphism \(z^1 \sur z\) sitting in the solid diagram
+\begin{diagram*}
+	w\ar[rr,two heads,dashed]\ar[ddr,dashed] & & z^1\ar[d,"a^1"']\ar[r,two heads] & z\ar[d,"a"]\ar[dr,"0"] & \\
+	& x^0 \ar[r]\ar[d,two heads,"f^0"] & x^1 \ar[r]\ar[d,hook,"f^1"] & x^2\ar[r]\ar[d,"f^2"] & x^3 \ar[d,hook,"f^3"] \\
+	& y^0 \ar[r] & y^1 \ar[r] & y^2\ar[r] & y^3 
+\end{diagram*}
+where we observe that
+\[ (z^1 \overset{a^1}\to x^1 \overset{f^1}\inj y^1 \to y^2) = (z^1\sur z \overset{a}\to x^2 \overset{f^2}\to y^2) = 0. \]
+Applying Lemma \ref{lemma:five-lemma-technical-necessary-lemma} again, we find an epimorphism \(w\sur s^1\) as indicated by the dashed morphisms.
+
+Now, here is a slightly tricky bit: let \(z^0 := w\times_{y^0}x^0\) be the pullback of \(f^0\) along \(w\to y^0\). Since pullbacks of epimorphims are epic (since \(\calA\) is Abelian), we have an epimorphism
+\(z^0 \sur w\) such that \((z^0\sur w \to y^0) = z^0 \to x^0 \overset{f^0}\sur y^0\). As a result, we have a commutative diagram
+\begin{diagram*}
+	z^0\ar[d,"a^0"']\ar[r,two heads] & z^1\ar[d,"a^1"']\ar[r,two heads] & z\ar[d,"a"]\ar[dr,"0"] & \\
+	x^0 \ar[r]\ar[d,two heads,"f^0"] & x^1 \ar[r]\ar[d,hook,"f^1"] & x^2\ar[r]\ar[d,"f^2"] & x^3 \ar[d,hook,"f^3"] \\
+	y^0 \ar[r] & y^1 \ar[r] & y^2\ar[r] & y^3 
+\end{diagram*}
+where we note that the top left square in the diagram commutes since it commutes after composition with the monomorphism \(f^1\). Finally, we now see that
+\[ (z^0 \sur z^1 \sur z \overset{a}\to x^2) = (z^0\overset{a^0}\to x^0 \to x^1 \to x^2) = 0 \]
+and therefore \(a = 0\).
+\end{proof}
+\begin{remark}
+	The above proof is perhaps illuminated by the philosophy of generalized elements. What we start off with is an element \(a\in x^2\) such that
+	\(f^2(a) = 0\). We then lift this to an element \(a^1 \in x^1\) which is sent to \(a\), and \(a^1\) is in turn lifted to an element \(a^0\in x^0\)
+	which is sent to \(a^1\), meaning that \(a\) is in the image of the composite of two adjacent morphisms, so \(a=0\). The repeatedly used
+	Lemma \ref{lemma:five-lemma-technical-necessary-lemma} is just a formalization of these lifting steps (or most of them).
+\end{remark}
+\begin{corollary}[Five lemma]
+	Let \(\calA\) be an Abelian category, and consider a commutative diagram with exact rows
+	\begin{diagram*}
+		x^0\ar[r] \ar[d,"\sim" labl] & x^1\ar[r] \ar[d,"\sim" labl] & x^2\ar[r]\ar[d] & x^3\ar[r] \ar[d,"\sim" labl] & x^4 \ar[d,"\sim" labl] \\
+		y^0\ar[r] & y^1\ar[r] & y^2\ar[r] & y^3\ar[r] & y^4 
+	\end{diagram*}
+	in \(\calA\), with isomorphisms as indicated. Then the middle vertical morphism is an isomorphism.
+\end{corollary}
+\begin{proof}
+Apply Lemma \ref{lemma:generalized-five-lemma} to the left part of the diagram and then to the right to see that the middle morphism is both monic and epic,
+thus an isomorphism.
+\end{proof}
+
+\subsection{Appendix: Adjoints of triangulated functors are triangulated}
+
+There is a somewhat tricky business in triangulated categories coming from the shift functor, namely that one should really demand compatibility with it at
+all times, including e.g.\ with natural transformations. Consider the following definition, which we hope is obviously a natural one.
+\begin{definition}
+	Let \((F,\sigma),(F',\sigma')\!:\calT\to\calT'\) be lax-triangulated functors. A natural transformation \(\alpha\!:F\To F'\) is \emph{triangulated} if
+	\begin{diagram*}
+		F\Sigma\ar[r,Rightarrow,"\sigma"]\ar[d,Rightarrow,"\alpha\Sigma"'] & \Sigma F \ar[d,Rightarrow,"\Sigma\alpha"] \\
+		F'\Sigma\ar[r,Rightarrow,"\sigma'"]  & \Sigma F'
+	\end{diagram*}
+	commutes.
+\end{definition}
+\begin{remark}
+	These are sometimes called \emph{trinatural transformations,} but we choose to avoid this terminology due to its proximity to the completely unrelated notion
+	of a \emph{dinatural} transformation.
+\end{remark}
+
+This definition gives rise to a 2-category \(\underline{\cat{TCat}}\), the objects of which are triangulated categories, 1-morphisms are triangulated
+functors, and 2-morphisms are triangulated natural transformations. Now, any 2-category automatically induces a notion of adjunction between 1-morphisms. In the case
+of the 2-category \(\underline{\cat{TCat}}\), it yields the following:
+\begin{definition}
+	Let \((F,\sigma)\!:\calT\to\calT'\) and \((G,\sigma')\!:\calT'\to\calT\) be triangulated functors between triangulated categories. We say that they form
+	a \emph{triangulated adjunction} \((F,\sigma)\ladj(G,\sigma')\) if \(F\ladj G\) and the unit and counit are triangulated natural transformations.
+\end{definition}
+
+One would like for ordinary adjunctions between functors which happen to have a triangulated structure to yield a triangulated adjunction, but this is a non-trivial
+statement. As such, we prove the following result.
+
+\begin{theorem}\label{thm:adjoints-of-triangulated-functors-are-triangulated}
+	Let \((G,\sigma)\!:\calT'\to\calT\) be a triangulated functor between triangulated categories. If \(G\) has a left adjoint \(F\), then there is a canonical triangulated structure on \(F\)
+	for which the unit and counit of the adjunction are triangulated.
+\end{theorem}
+\begin{proof}
+We have a natural isomorphism \(\sigma\!:G\circ\Sigma\To\Sigma\circ G\). This yields a natural isomorphism
+\[ \Sigma^{-1}\sigma \Sigma^{-1}\!: \Sigma^{-1}\circ G \To G\circ\Sigma^{-1}. \]
+Let \(\sigma'\!:F\circ \Sigma\To\Sigma\circ F\) be the composition
+\begin{diagram*}
+	F\Sigma \ar[r,"F\Sigma\eta"] & F\Sigma GF \ar[r," F\sigma^{-1}F "] & FG\Sigma F \ar[r,"\varepsilon\Sigma F"] & \Sigma F.
+\end{diagram*}
+One can check that this natural transformation is also implemented using the Yoneda lemma and the chain of natural isomorphisms
+\begin{align*}
+	\calT'(F\Sigma-,-) &\cong \calT(\Sigma-,G-) \\
+	&\cong \calT(-,\Sigma^{-1}G-) \\
+	&\cong \calT(-,G\Sigma^{-1}-) \\
+	&\cong \calT'(F-,\Sigma^{-1}-) \cong \calT'(\Sigma F-,-).
+\end{align*}
+In particular, we conclude that \(\sigma'\) is a natural isomorphism. As a trivial remark, note that \(F\) is a left adjoint and hence commutes with colimits, and so is
+automatically additive.
+
+Before we check that \((F,\sigma')\) is triangulated, let us assume it is the case, and check that the unit \(\eta\!:\1\to GF\) and counit \(\varepsilon\!:FG\To\1\) are then triangulated.
+First, note that the compositions \(GF\) and \(FG\) are triangulated with shift compatibilities
+\[ \sigma F \circ G\sigma' \!: GF\Sigma\To \Sigma GF,\quad  \sigma' G \circ F\sigma \!: FG\Sigma \To \Sigma FG. \]
+To see that \(\varepsilon\Sigma = \Sigma\varepsilon \circ (\sigma' G \circ F\sigma) \), we have the commutative diagram
+\begin{diagram*}
+	FG\Sigma\ar[r,Rightarrow,"F\sigma"] & F\Sigma G\ar[r,Rightarrow,"F\Sigma\eta G"]\ar[dr,equal] & F\Sigma GFG\ar[r,Rightarrow,"F\sigma^{-1}FG"]\ar[d,Rightarrow,"F\Sigma G\varepsilon"] & FG\Sigma FG \ar[r,Rightarrow,"\varepsilon\Sigma FG"]\ar[d,Rightarrow,"FG\Sigma\varepsilon"] & \Sigma FG\ar[d,Rightarrow,"\Sigma\varepsilon"] \\
+	 & & F\Sigma G\ar[r,Rightarrow,"F\sigma^{-1}"'] & FG\Sigma\ar[r,Rightarrow,"\varepsilon\Sigma"'] & \Sigma
+\end{diagram*}
+by naturality and one of the triangle identities. Checking that \( (\sigma'F\circ G\sigma) \circ \eta\Sigma = \Sigma\eta \) is similar, and uses
+the other triangle identity.
+
+Now we show that \((F,\sigma')\) is triangulated. Consider a distinguished triangle
+\[ x \overset{f}\to y \overset{g}\to z \overset{h}\to \Sigma x \]
+in \(\calT\). We must show that the induced triangle
+\[ Fx \overset{Ff}\longto Fy \overset{Fg}\longto Fz \overset{\sigma'_{x}\circ Fh}\longto \Sigma Fx \]
+is distinguished. We will show that it is isomorphic to a distinguished triangle. For this, first take the cone of \(Ff\) to get a distinguished triangle
+\[ Fx \overset{Ff}\to Fy \overset{g'}\to z' \overset{h'}\to \Sigma Fx. \]
+Now, applying \(G\), we have a distinguished triangle
+\[ GFx \overset{GFf}\longto GFy \overset{Gg'}\longto Gz' \overset{\sigma_{Fx}\circ Gh'}\longto \Sigma GFx. \]
+Let \(\eta\!:\1\To GF\) be the unit of the adjunction \(F\ladj G\). By (TR3), we obtain a morphism of distinguished triangles
+\begin{diagram*}
+	x \ar[r,"f"]\ar[d,"\eta_x"] & y \ar[r,"g"]\ar[d,"\eta_y"] & z \ar[r,"h"]\ar[d,dashed,"\theta"] & \Sigma x \ar[d,"\Sigma\eta_x"] \\
+	GFx \ar[r,"GFf"] & GFy \ar[r,"Gg'"] & Gz' \ar[r,"\sigma_{Fx}\circ Gh'"] & \Sigma GFx
+\end{diagram*}
+which now allows us to define, for any \(w\in\calT'\), the map
+\[ \calT'(z',w) \to \calT'(z,Gw),\quad q \mapsto G(q)\circ\theta. \]
+In particular, by applying \(\calT'(-,w)\) to the triangle defining \(z'\) and \(\calT(-,Gw)\) to the top row above, we get a commutative diagram
+\begin{diagram*}
+	\calT(x,Gw) \ar[d,"\sim" labl] & \calT(y, Gw) \ar[l]\ar[d,"\sim" labl] & \calT(z, Gw) \ar[l]\ar[d] & \calT(\Sigma x, Gw) \ar[l]\ar[d,"\sim" labl] & \calT(\Sigma y, Gw) \ar[d,"\sim" labl] \ar[l] \\
+	\calT'(Fx, w)  & \calT'(Fy, w) \ar[l] & \calT'(z',w) \ar[l] & \calT'(w,\Sigma Gx) \ar[l] & \calT'(w,\Sigma Gy) \ar[l]
+\end{diagram*}
+with exact rows. It follows by the five lemma that \(\calT(z,Gw) \iso \calT'(z,w) \), which implies that for any morphism \(q\!:z\to Gw\), there is a unique morphism \(q'\!:z'\to w\) such that \(q = Gq'\circ\theta\).
+This is the universal property of the unit, and we deduce that the morphism \(Fz\to z'\) corresponding to \(\theta\) is an isomorphism. That is, we have an isomorphism
+of triangles
+\begin{diagram*}
+	Fx \ar[r,"Ff"]\ar[d,equal] & Fy \ar[r,"Fg"]\ar[d,equal] & Fz \ar[r,"\sigma'_{x}\circ Fh"]\ar[d,"\sim" labl] & \Sigma Fx \ar[d,equal] \\
+	Fx \ar[r,"Ff"] & Fy \ar[r,"g'"] & z' \ar[r,"h'"] & \Sigma Fx 
+\end{diagram*}
+as desired.
+\end{proof}
+\begin{remark}
+	Note that by dualizing Theorem \ref{thm:adjoints-of-triangulated-functors-are-triangulated}, we get that right adjoints of triangulated functors are canonically triangulated.
+	Observe that the proof relies on the functor in question being triangulated and not just lax-triangulated.
+\end{remark}
+\begin{remark}
+	The above proof is adapted from \cite[Thm.\ 47]{murfet-triangulated-categories} (which is based on \cite[Lemma 5.3.6]{neeman-triangulated-categories}) and \cite{4984372}.
+\end{remark}
+
+\subsection{Appendix: The most elementary \(K\)-theory}
+Let \(X\) be some kind of geometric object. One of the fundamental tools available in all ``geometric'' areas (say, differential or algebraic) is to study the
+\emph{vector bundles} on \(X\), and one of the standard ways to do this is to consider invariants like Euler characteristics. In his work on algebraic geometry,
+Grothendieck introduced \(K\)-theory, which one may see as the \emph{universal} receptacle of Euler characteristics.
+
+While \(K\)-theory was initially defined in a concrete way, it was realized that many aspects of \(K\)-theory were visible more clearly when one realized it as
+a purely categorical kind of invariant. In this appendix, we will describe one way to define the easiest \(K\)-group, namely \(K_0\), in the context of a triangulated
+category. Much the same strategy we use here can be used to define \(K_0\) of a Quillen exact category as well. The idea is that the Euler characteristic splits short exact sequences,
+sending the middle term to the sum of the adjacent terms.
+
+\begin{definition}
+	Let \(\calT\) be a triangulated category. The \emph{zeroth} \(K\)-group of \(\calT\), denoted \(K_0(\calT)\), is the quotient of the free Abelian group
+	generated by isomorphism classes of objects in \(\calT\), by the relation
+	\[ [y] = [x] + [z] \quad\text{if}\quad \exists\text{d.t. } x\to y\to z \to \Sigma x.  \]
+	As implied above, we write \([x]\) for the image of \(x\in\calT\) in \(K_0(\calT)\).
+\end{definition}
+\begin{remark}
+	For any \(x,y\in\calT\) we have the distinguished triangle
+	\[ x \to x\oplus y \to y \overset0\to \Sigma x \]
+	which implies that
+	\[ \forall x,y\in\calT,\quad [x\oplus y] = [x] + [y] \in K_0(\calT). \]
+	Furthermore, by the distinguished triangle
+	\[ x \to 0 \to \Sigma x \to 0 \]
+	given by shifting the cone of the identity, we see that
+	\[ \forall x\in\calT,\quad [\Sigma x] = -[x]. \]
+	As a result, we could've instead defined \(K_0(\calT)\) as the commutative monoid whose elements are isomorphism classes of objects in \(\calT\) and addition
+	is given by taking direct sums, modulo the distinguished triangle relations. The above calculation would then show that it is automatically a group.
+\end{remark}
+
+While this definition seems perfectly good, it has a ``flaw'' of sorts which means one has to be careful when applying it. The below is an example of the
+famous ``Eilenberg swindle''.
+
+\begin{proposition}
+	Let \(\calT\) be a triangulated category admitting infinite coproducts. Then \(K_0(\calT) \cong 0\).
+\end{proposition}
+\begin{proof}
+Let \(x\in\calT\). Simply observe that
+\[ [x^{\oplus\N}] = [x\oplus x^{\oplus\N}] = [x] + [x^{\oplus\N}] \]
+and therefore \([x] = 0\).
+\end{proof}
+
+\begin{remark}
+	Because of this result, one often has to jump through some hoops, placing finiteness conditions on one's objects, in order to get a non-trivial \(K_0\)-group. For the sake
+	of this discussion, let us assume that we have a sensible understanding of the derived category \(\sfD(\calA)\) of an Abelian category \(\calA\).
+	A common fix is to consider the full subcategory of compact objects.
+
+	Rather remarkably, the vast majority of \(K_0\)-groups of interest can be formed using the above machinery by choosing an appropriate triangulated category. Some
+	exceptions where it is tricker are in the world of operator algebras.
+\end{remark}
+
+To get a small taste for how \(K\)-theory works, let's prove an easy result.
+\begin{proposition}
+	Let \(F\!:\calT\to\calT'\) be a triangulated functor of triangulated categories. Then \(F\) induces a group homomorphism
+	\[ K_0(F)\!:K_0(\calT)\to K_0(\calT'). \]
+\end{proposition}
+\begin{proof}
+The recipe for the morphims is simple:
+\[ K_0(F)\!: [x]\mapsto [Fx]. \]
+We must show that this is well-defined and a group homomorphism. However, this is a trivial matter since \(F\) preserves distinguished triangles:
+\[ x \to y \to z \to \Sigma x \quad \leadsto \quad Fx \to Fy \to Fz \to \Sigma Fx \]
+means that
+\[ [y] = [x] + [z] \quad \leadsto \quad [Fy] = [Fx] + [Fz]. \]
+\end{proof}
+
+There is an independent way one can define the \(K_0\)-group of an Abelian category. We include it here so we can prove a similar result as above, except about cohomological functors.
+\begin{definition}
+	Let \(\calA\) be an Abelian category. Then \(K_0(\calA)\) is the quotient of the free Abelian group on the isomorphism classes of \(\calA\) by the relation
+	\[ [y] = [x] + [z] \quad\text{if}\quad \exists\text{s.e.s } 0 \to x \to y \to z \to 0. \]
+\end{definition}
+\begin{remark}
+	The Eilenberg swindle works just as well for Abelian categories as it does for triangulated ones. As a result, one sees that whenever \(\calA\) admits
+	infinite (co)products, one will have \(K_0(\calA)=0\). For example, \(K_0(\Mod_\Z) = 0\). On the other hand, as mentioned earlier, these kinds of ``issues''
+	can be fixed by considering compact objects. In the case of this example, the compact objects are exactly the finitely generated Abelian groups.
+\end{remark}
+
+In a sense, the below will illustrate how \(K_0(\calT)\) acts as a receptacle for Euler characteristics, supposing the reader is familiar with the latter (and setting aside the fact
+that it is, in a sense, by definition).
+
+\begin{lemma}
+	Consider a long exact sequence of the form
+	\[ 0 \to w^0 \overset{d^0}\to w^1 \overset{d^1}\to \cdots \overset{d^{n-1}}\to w^n \overset{d^n}\to 0 \]
+	in an Abelian category \(\calA\). Then
+	\[ [w^0] = \sum_{i=1}^n(-1)^i[w^i] \in K_0(\calA). \]
+\end{lemma}
+\begin{proof}
+At any stage of the exact sequence, we can extract an exact sequence
+\[ 0 \to \img{d^{i-1}} \to w^i \to \img{d^i} \to 0 \]
+and thus have
+\[ [w^i] = [\img{d^{i-1}}] + [\img{d^i}] \implies [\img{d^{i-1}}] = [w^i] - [\img{d^i}]. \]
+At \(i=1\), this says \([w^0] = [w^1] - [\img{d^1}]\). Continuing inductively, one gets the result.
+\end{proof}
+
+\begin{proposition}
+	Let \(H\!:\calT\to\calA\) be a cohomological functor, and assume that for all \(x\in\calT\), at most a finite number of the objects \(H\Sigma^ix\), \(i\in\Z\), are non-zero.
+	Then \(H\) induces a group homomorphism
+	\[ K_0(\calT) \to K_0(\calA),\quad [x]\mapsto \sum_{i\in\Z} (-1)^i[H\Sigma^ix]. \]
+\end{proposition}
+\begin{proof}
+To see this, just note that if we have a distinguished triangle
+\[ x \to y \to z \to \Sigma x \]
+then we have a long exact sequence
+\[ \cdots \to H\Sigma^{i-1}z \to H\Sigma^ix\to H\Sigma^iy\to H\Sigma^iz \to H\Sigma^{i+1} x \to \cdots \]
+which by our assumption has only finitely many non-zero terms. For the sake of simplicity, we assume everything lies in the range \([0,n]\), i.e.
+\[ 0 \to Hx\to Hy\to Hz \to H\Sigma x \to \cdots \to H\Sigma^ny \to H\Sigma^n z \to 0. \]
+Applying the lemma, we see that
+\[ [Hx] = [Hy] - [Hz] + [H\Sigma x] - [H\Sigma y] + [H\Sigma z] - [H\Sigma^2x] + \cdots \]
+and upon rearranging terms, one has
+\[ \sum_{i=0}^n (-1)^i[H\Sigma^iy] = \sum_{i=0}^n (-1)^i[H\Sigma^ix] + \sum_{i=0}^n (-1)^i[H\Sigma^iz] \]
+as desired.
+\end{proof}
+
+\begin{remark}
+	Just to give some clarity: at the start of the appendix, we mentioned that what we have done above can be easily modified to give a definition of \(K_0\) for Quillen exact categories.
+	The way to do this is to take the free Abelian group on the isomorphism classes, as always, and then quotient that by the obvious relations imposed by the admissible
+	exact sequences.
+\end{remark}

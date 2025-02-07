@@ -1,0 +1,260 @@
+%!TEX root = ../lectures.tex
+
+\section{Gluing t-structures}
+In Lecture \ref{lecture:localization-sequences-of-triangulated-categories}, we framed \emph{recollements} of triangulated categories as exhibiting how a triangulated category
+is glued together from two smaller pieces. The sense in which this could be considered true was only somewhat hinted at, as in reality it is largely speaking a heuristic,
+but in this lecture we will see a concrete way this rears its head in practice.
+
+The theory of t-structures (covered in Lecture \ref{lecture:abstract-cohomology-through-t-structures}) was introduced originally in \cite{faisceaux-pervers}, which in fact also
+introduced the theory of recollements. The concrete application they had in mind was the construction of a particular Abelian category of \emph{perverse sheaves,} obtained
+by \emph{gluing} t-structures in a recollement. The theory required to do this is what we cover in this lecture.
+
+\subsection{t-Exactness}
+A triangulated functor between triangulated categories is sometimes referred to as an \emph{exact} functor. We've avoided the usage of this term, as it may present confusion,
+but the intuition comes from the fact that it preserves ``homotopy exact sequences'' (i.e.\ distinguished triangles). However, there are other exactness phenomena that arise
+naturally, such as some functors preserving complexes living in particular degrees. The theory of t-structures provides a convenient setting in which to phrase these
+properties more generally.
+
+\begin{definition}
+	Let \(F\!:\calT_1 \to \calT_2\) be a triangulated functor of triangulated categories with t-structures \((\calT^{\leq 0}_i,\calT^{\geq 0})_i\), \(i=1,2\).
+	\begin{enumerate}[label=(\arabic*)]
+		\item We say \(F\) is \emph{left t-exact} if \(F(\calT^{\geq 0}_1) \subseteq \calT^{\geq 0}_2\).
+		\item We say \(F\) is \emph{right t-exact} if \(F(\calT^{\leq 0}_1) \subseteq \calT^{\leq 0}_2\).
+		\item We say \(F\) is \emph{t-exact} if it is both left t-exact and right t-exact.
+	\end{enumerate}
+\end{definition}
+
+\begin{lemma}
+	Let \(F\!:\calT_1 \to \calT_2\) be a triangulated functor of triangulated categories with t-structures \((\calT^{\leq 0}_i,\calT^{\geq 0}_i)\), \(i=1,2\).
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(F\) is left t-exact, then for all \(n\in\Z\) we have \(F(\calT^{\geq n}_1) \subseteq \calT^{\geq n}_2\).
+		\item If \(F\) is right t-exact, then for all \(n\in\Z\) we have \(F(\calT^{\leq n}_1) \subseteq \calT^{\leq n}_2\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+Statements (1) and (2) are dual, so it suffices to prove (1). We have \(\calT^{\geq n}_i = \Sigma^{-n}\calT^{\geq 0}_i\), and since \(F\) is triangulated, we thus have
+\[ F(\calT^{\geq n}_1) = F(\Sigma^{-n}\calT^{\geq 0}_1) = \Sigma^{-n}F(\calT^{\geq 0}_1) \subseteq \Sigma^{-n}\calT^{\geq 0}_2 = \calT^{\geq n}_2 \]
+as desired.
+\end{proof}
+
+\begin{remark}
+	The property of being, say, right t-exact can be pictured (and thus related intuitively to ordinary exactness of functors) in terms of the following:
+	\[ F(\cdots \to \bullet \to \bullet \to 0\to 0 \to\cdots) = \cdots \to \bullet \to \bullet \to 0\to 0 \to\cdots. \]
+	In contexts where a t-structure is present, it is often of central interest, and whether a functor is t-exact or not can have significant impact. For example,
+	you may have an equivalence \(\calT \simeq \calT'\) of triangulated categories, but if both have ``natural'' t-structures on them and the equivalence does not preserve them, then
+	that could present difficulties if one is relying on e.g.\ ``boundedness'' assumptions in one's work.
+\end{remark}
+
+\subsection{t-Compatible exact sequences}
+The notion of a functor being t-exact describes a way in which it is compatible with some specified t-structures. Naturally, in the presence of an exact sequence, this leads us to the following definition.
+\begin{definition}
+	We say an exact sequence
+	\[ \calT_1 \overset{i}\to \calT \overset{p}\to \calT_2 \]
+	of triangulated categories with t-structures is \emph{t-compatible} if \(i\) and \(p\) are t-exact.
+\end{definition}
+\begin{proposition}
+	Consider a t-compatible exact sequence
+	\[ \calT_1 \overset{i}\to \calT \overset{p}\to \calT_2 \]
+	of triangulated categories with t-structures. Then
+	\begin{align*}
+		i(\calT_1^{\leq 0}) &= \calT^{\leq 0}\cap i(\calT_1), & \calT_2^{\leq 0} &= p(\calT^{\leq 0}), \\
+		i(\calT_1^{\geq 0}) &= \calT^{\geq 0}\cap i(\calT_1), & \calT_2^{\geq 0} &= p(\calT^{\geq 0}).
+	\end{align*}
+\end{proposition}
+\begin{proof}
+It suffices to show the equalities on one row, as the other is dual. We begin with the equality on the left. It is clear that \(i(\calT_1^{\leq 0}) \subseteq \calT^{\leq 0}\cap i(\calT_1)\)
+since \(i\) is t-exact. Conversely, let \(x\in\calT^{\leq 0}\cap i(\calT_1)\), and write \(x \cong i(x_1)\). We show that \(\tau^{\geq 0}x_1 \cong 0\). To this end, consider the distinguished triangle
+\[ \tau^{\leq 0}x_1 \to x_1 \to \tau^{\geq 1}x_1 \to \Sigma \tau^{\leq 0}x_1. \]
+By t-exactness, we have \(i(\tau^{\leq 0}x_1) \in \calT^{\leq 0}\) and \(i(\tau^{\geq 1}x_1) \in \calT^{\geq 1}\). Since \(i\) is a triangulated functor, we thus see that the induced triangle
+\[ i(\tau^{\leq 0}x_1) \to x \to i(\tau^{\geq 1}x_1) \to \Sigma i(\tau^{\leq 0}x_1) \]
+has left term in \(\calT^{\leq 0}\) and right term in \(\calT^{\geq 1}\). By uniqueness, we see that \(i(\tau^{\geq 1}x_1) \cong \tau^{\geq 1}x\), but since \(x\in\calT^{\leq 0}\), we thus
+have \(i(\tau^{\geq 1}x_1)\cong 0\). Therefore, \(\tau^{\geq 1}x_1 \cong 0\) on account of \(i\) being fully faithful.
+
+We must now show that \(p(\calT^{\leq 0}) = \calT_2^{\leq 0}\). By t-exactness, it is clear that \(p(\calT^{\leq 0}) \subseteq \calT_2^{\leq 0}\), so let us prove the converse inclusion.
+Pick \(x_2 \in \calT_2^{\leq 0}\). Since \(p\) is essentially surjective, write \(x_2 \cong p(x)\) for some \(x\in\calT\). Consider the distinguished triangle
+\[ \tau^{\leq 0}x \to x \to \tau^{\geq 1}x \to \Sigma\tau^{\leq 0}x. \]
+Applying \(p\), we get
+\[ p(\tau^{\leq 0}x) \to x_2 \to p(\tau^{\geq 1}x) \to \Sigma p(\tau^{\leq 0}x). \]
+where the left term is in \(\calT_2^{\leq 0}\) and the right term is in \(\calT_2^{\geq 1}\), hence, similarly as before, \(p(\tau^{\geq 1}x) \cong \tau^{\geq 1}x_2 \cong 0\).
+Finally, we just note that this implies \(p(\tau^{\leq 0}x) \cong x_2\), so we are done.
+\end{proof}
+\begin{remark}
+	Oberve that we also prove that \(i\circ\tau^{\leq 0} \cong \tau^{\leq 0}\circ i\) and \(p\circ \tau^{\leq 0} \circ \tau^{\leq 0}\circ p\), along with the dual versions.
+\end{remark}
+
+The proposition says that in a t-compatible exact sequence, the t-structures on the left and right terms are completely determined by the functors \(i\) and \(p\), along
+with the t-structure on the middle term. The converse is also true.
+\begin{proposition}\label{prop:t-compatible-exact-sequence-middle-formula-from-sides}
+	Consider a t-compatible exact sequence
+	\[ \calT_1 \overset{i}\to \calT \overset{p}\to \calT_2 \]
+	of triangulated categories with t-structures. Then
+	\begin{align*}
+		\calT^{\leq 0} &= \{ x\in\bperp{i(\calT_1^{\geq 1})}\phantom{.}\hspace{0.8mm} \mid p(x)\in\calT^{\leq 0} \},\\
+		\calT^{\geq 0} &= \{ x\in i(\calT_1^{\leq -1})^\perp \mid p(x)\in\calT^{\geq 0} \}.
+	\end{align*}
+\end{proposition}
+
+To prove this, we need a preparatory lemma.
+\begin{lemma}\label{lemma:t-compatible-exact-sequence-right-aisle-criterion}
+	Consider a t-compatible exact sequence
+	\[ \calT_1 \overset{i}\to \calT \overset{p}\to \calT_2 \]
+	of triangulated categories with t-structures, and let \(y\in\calT\). Then \(p(y)\in\calT_2^{\leq 0}\) if and only if \(\tau^{\geq 1}y \in i(\calT_1^{\geq 1})\).
+\end{lemma}
+\begin{proof}
+We consider the distinguished triangle
+\[ \tau^{\leq 0}y \to y \to \tau^{\geq 1}y \to \Sigma\tau^{\leq 0}y \]
+which we note, by the same arguments as before, is sent by \(p\) to
+\[ \tau^{\leq 0}p(y) \to p(y) \to \tau^{\geq 1}p(y) \to \Sigma\tau^{\leq 0}p(y). \]
+Now we see that
+\[ p(y)\in\calT_2^{\leq 0} \iff \tau^{\geq 1}p(y) \cong 0 \iff \tau^{\geq 1}y \in \ker{p} = i(\calT_1). \]
+Since \(\tau^{\geq 1}y \in \calT^{\geq 1}\) and \(\calT^{\geq 1}\cap i(\calT_1) = i(\calT_1^{\geq 1})\), we are done.
+\end{proof}
+
+\begin{proof}[Proof of Proposition \ref{prop:t-compatible-exact-sequence-middle-formula-from-sides}]
+We prove the first equality, since the second is dual.
+
+Let \(x\in\calT^{\leq 0}\). Since \(i(\calT_1^{\geq 1})\subseteq\calT^{\geq 0}\), we see that
+\[ \forall y_1\in\calT_1^{\geq 1},\quad \calT(x,i(y_1)) \cong 0 \]
+so that \(x\in\bperp{i(\calT_1^{\geq 1})}\). That \(p(x)\in\calT_2^{\leq 0}\) follows by t-exactness. This shows the \(\subseteq\) inclusion.
+
+Conversely, suppose that \(x\in\bperp{i(\calT_1^{\geq 1})}\) and \(p(x)\in\calT_2^{\leq 0}\). Applying Lemma \ref{lemma:t-compatible-exact-sequence-right-aisle-criterion}, we see that
+\(\tau^{\geq 1}x \in i(\calT_1^{\geq 1})\), and therefore
+\[ \calT(x,\tau^{\geq 1}x) \cong 0 \]
+by the orthogonality assumption. Therefore, Lemma \ref{lemma:t-structure-aisle-from-trivial-mapping-to-truncation} says that \(x\in\calT^{\leq 0}\) as desired.
+\end{proof}
+\begin{corollary}
+	Consider an exact sequence
+	\[ \calT_1 \to \calT \to \calT_2 \]
+	where \(\calT_1\) and \(\calT_2\) have t-structures on them. Then there is at most one t-structure on \(\calT\) for which the sequence is t-compatible.
+\end{corollary}
+
+\subsection{Gluing in a t-compatible recollement}
+To collect what we have proven: in a t-compatible exact sequence
+\[ \calT_1 \to \calT \to \calT_2, \]
+the t-structures on the left/right terms uniquely determine the one in the middle, and vice versa. The question we now ask is: what if we drop the t-structure on \(\calT\)?
+
+More precisely, the problem is as follows. Suppose we have t-structures on the \(\calT_i\), \(i=1,2\). Is it possible to find a t-structure on \(\calT\) such that the exact sequence
+becomes t-compatible? A priori, there is no good answer to this, other than ``in general, no.'' Of course, we know that if one exists, it is unique and given by an explicit formula by
+Proposition \ref{prop:t-compatible-exact-sequence-middle-formula-from-sides}. The trouble is in showing that this formula actually produces a t-structure.
+The point of this final part of the lecture is that the situation is considerably different when the exact sequence is a recollement.
+Throughout, let us fix a recollement
+\begin{diagram*}[column sep=large]
+	\calT_1\ar[r,"i" description,""{below,name=A},""{above,name=AA}] &
+		\calT \ar[r,"p" description,""{below,name=C},""{above,name=CC}]\ar[l,bend left,shift left,"i_R",""{above,name=B}]\ar[l,bend right,shift right,"i_L"',""{below,name=BB}] &
+		\calT_2 \ar[l,bend left,shift left,"p_R",""{above,name=D}]\ar[l,bend right,shift right,"p_L"',""{below,name=DD}]
+		\ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+		\ar[from=AA,to=BB,symbol=\vdash]\ar[from=CC,to=DD,symbol=\vdash]
+\end{diagram*}
+where \(\calT_1\) and \(\calT_2\) have t-structures on them. Our goal is the following.
+\begin{theorem}\label{thm:t-structure-gluing-in-recollement}
+	Define the full subcategories
+	\begin{align*}
+		\calT^{\leq 0} &:= \{ x \in \calT \mid i_L(x) \in \calT_1^{\leq 0},\, p(x)\in\calT_2^{\leq 0} \}, \\
+		\calT^{\geq 0} &:= \{ x \in \calT \mid i_R(x) \in \calT_1^{\geq 0},\, p(x)\in\calT_2^{\geq 0} \}.
+	\end{align*}
+	Then \((\calT^{\leq 0},\calT^{\geq 0})\) is a t-structure on \(\calT\), and is the unique t-structure making the above sequence t-compatible.
+\end{theorem}
+
+
+\begin{lemma}\label{lemma:t-structure-gluing-recollement-adjoints-preserve}
+	With the notation from Theorem \ref{thm:t-structure-gluing-in-recollement}, we have
+	\[ p_L(\calT_2^{\leq 0}) \subseteq \calT^{\leq 0},\quad p_R(\calT_2^{\geq 0}) \subseteq \calT^{\geq 0} \]
+	and
+	\[ i(\calT_1^{\leq 0})\subseteq \calT^{\leq 0},\quad i(\calT_1^{\geq 0})\subseteq\calT^{\geq 0}. \]
+\end{lemma}
+\begin{proof}
+We focus on the incluions on the left, as the others are dual; we prove the bottom one and leave the top as an exercise. If \(x_1\in\calT_1^{\leq 0}\),
+then \(i(x_1)\) satisfies
+\[ i_Li(x_1) \cong x_1 \in \calT_1^{\leq 0},\quad \text{and} \quad p(x_1) \cong 0 \in\calT_2^{\leq 0}. \]
+Therefore, \(i(x_1)\in\calT^{\leq 0}\), so \(i(\calT_1^{\leq 0})\subseteq\calT^{\leq 0}\).
+\end{proof}
+\begin{exercise}
+	Prove the rest of Lemma \ref{lemma:t-structure-gluing-recollement-adjoints-preserve}.
+\end{exercise}
+
+With the lemma in place, we can prove the gluing theorem.
+
+\begin{proof}[Proof of Theorem \ref{thm:t-structure-gluing-in-recollement}]
+Let us begin by proving (T2). Let \(x\in\calT^{\leq 0}\). We must show that \(\Sigma x \in\calT^{\leq 0}\). However,
+\[ i_L(\Sigma x) \cong \Sigma i_L(x) \in \calT_1^{\leq -1} \subseteq \calT_1^{\leq 0} \]
+and
+\[ p(\Sigma x) \cong \Sigma p(x) \in \calT_2^{\leq -1} \subseteq \calT_2^{\leq 0}. \]
+Therefore, \(\Sigma\calT^{\leq 0}\subseteq\calT^{\leq 0}\). Showing that \(\Sigma^{-1}\calT^{\geq 0}\subseteq\calT^{\geq 0}\) is similar.
+
+We now prove (T1). Let \(x\in\calT^{\leq 0}\) and \(y\in\calT^{\geq 0}\). By the remarks of Section \ref{subsection:recollements}, we have a distinguished triangle
+\[ p_Lp(x) \to x \to ii_L \to \Sigma p_Lp(x). \]
+Applying \(\calT(-,\Sigma^{-1}y)\) and using adjointness, we get the exact sequences
+\begin{diagram*}[cramped]
+	\calT(ii_L(x),\Sigma^{-1}y) \ar[d,"\sim" labl] \ar[r] & \calT(x,\Sigma^{-1}y) \ar[d,equal] \ar[r] & \calT(p_Lp(x),\Sigma^{-1}y) \ar[d,"\sim" labl] \\
+	\calT(i_L(x),\Sigma^{-1}i_R(y)) \ar[r] & \calT(x,\Sigma^{-1}y) \ar[r] & \calT(p(x),\Sigma^{-1}p(y))
+\end{diagram*}
+at which point we observe that the left and right terms of the bottom row are zero since \(i_R(y)\in\calT_1^{\geq 0}\) and \(p(y)\in\calT_2^{\geq 0}\). Therefore,
+\(\calT(x,\Sigma^{-1}y)\cong 0\) as desired.
+
+What remains now is (T3), which is the trickiest and most sophisticated part. Let \(x\in\calT\). We must find a distinguished triangle sandwiching \(x\)
+between an object of \(\calT^{\leq 0}\) and an object of \(\Sigma^{-1}\calT^{\geq 0}\). Let us attempt an approximation first: project down to \(\calT_2\) using \(p\),
+extract a distinguished triangle there, then apply \(p_R\) to get a distinguished triangle
+\[ p_R\tau^{\leq 0}p(x) \to p_Rp(x) \to p_R\tau^{\geq 1}p(x) \to \Sigma p_R\tau^{\leq 0}p(x). \]
+We now take the cocone of the composition \(x \to p_Rp(x) t\o p_R\tau^{\geq 1}p(x)\) to get a distinguished triangle
+\[ x' \to x \to p_R\tau^{\geq 1}p(x) \to \Sigma x'. \]
+This is almost what we want, as Lemma \ref{lemma:t-structure-gluing-recollement-adjoints-preserve} suggests, but we don't really have control over the left term and can't say much about it. So, let's do basically the same trick
+to get a map \(x' \to i\tau^{\geq 1}i_L(x')\), and take the cocone to get a distinguished triangle
+\[ a \to x' \to i\tau^{\geq 1}i_L(x') \to \Sigma a. \]
+Finally, lets take the cone of the composition \(a \to x' \to x\) to get a distinguished triangle
+\[ a \to x \to b \to \Sigma a. \]
+With these steps done, we may now present the crux of the argument.
+
+Applying (TR4) to the composition \(a \to x' \to x\) yields a distinguished triangle
+\[ i\tau^{\geq 1}i_L(x') \to b \to p_R\tau^{\geq 1}p(x) \to \Sigma i\tau^{\geq 1}i_L(x'). \]
+Hitting this with \(p\) yields
+\[ 0 \to p(b) \iso \tau^{\geq 1}p(x) \to 0. \]
+Hitting it with \(i_R\), on the other hand, yields
+\[ \tau^{\geq 1}i_L(x') \iso i_R(b) \to 0 \to \Sigma \tau^{\geq 1}i_L(x'). \]
+We conclude that \(b\in\calT^{\geq 1}\). It remains to see that \(a\in\calT^{\leq 0}\). To show this, apply \(i_L\) to the triangle defining \(a\), to get
+\[ i_L(a) \to i_L(x') \to \tau^{\geq 1}i_L(x') \to \Sigma i_L(a). \]
+By uniqueness of cocones (up to non-canonical isomorphism), this implies that \(i_L(a)\cong\tau^{\leq 0}i_L(x')\in\calT_1^{\leq 0}\). Finally,
+applying \(p\) to the triangle defining \(b\), and using that \(p(b)\cong \tau^{\geq 1}p(x)\), yields
+\[ p(a) \to p(x) \to \tau^{\geq 1}p(x) \to \Sigma p(a) \]
+which implies that \(p(a) \cong \tau^{\leq 0}p(x) \in\calT_2^{\leq 0}\). Therefore, \(a\in\calT^{\leq 0}\) and we are done.
+\end{proof}
+
+\begin{example}
+	Here is a simple application of Theorem \ref{thm:t-structure-gluing-in-recollement}. Consider any old recollement
+	\begin{diagram*}[column sep=large]
+		\calT'\ar[r,"i" description,""{below,name=A},""{above,name=AA}] &
+			\calT \ar[r,"p" description,""{below,name=C},""{above,name=CC}]\ar[l,bend left,shift left,"i_R",""{above,name=B}]\ar[l,bend right,shift right,"i_L"',""{below,name=BB}] &
+			\calT'' \ar[l,bend left,shift left,"p_R",""{above,name=D}]\ar[l,bend right,shift right,"p_L"',""{below,name=DD}]
+			\ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+			\ar[from=AA,to=BB,symbol=\vdash]\ar[from=CC,to=DD,symbol=\vdash]
+	\end{diagram*}
+	Recall that we may put certain \emph{trivial} t-structures on \(\calT'\) and \(\calT''\). For any triangulated category \(\calD\), let us write
+	\[ t_1(\calD) := (\calD,0),\quad t_2(\calD) := (0,\calD). \]
+	Gluing \(t_1(\calT')\) and \(t_1(\calT'')\), or \(t_2(\calT')\) and \(t_2(\calT'')\), does nothing interesting: we just get \(t_1(\calT)\) or \(t_2(\calT)\).
+	On the other hand, gluing \(t_1(\calT')\) with \(t_2(\calT'')\), we get the t-structure
+	\begin{align*}
+		\calT^{\leq 0}_{1,2} &= \{ x\in\calT \mid i_L(x)\in\calT',\, p(x) = 0 \} \\
+		&= \ker{p} = i(\calT'),\\
+		\calT^{\geq 0}_{1,2} &= \{ x\in\calT \mid i_R(x) = 0,\, p(x)\in\calT'' \} \\
+		&= \ker{i_R} = i(\calT')^\perp.
+	\end{align*}
+	In other words, we get the t-structure \((i(\calT'),i(\calT')^\perp)\) on \(\calT\). In light of our results on t-structures, in particular Corollary \ref{corollary:t-structure-orthogonality},
+	this yields another proof that \(\bperp{(i(\calT')^\perp)} = i(\calT')\) when one is in a recollement situation. Explicitly, one applies the corollary and uses the fact
+	that \(\Sigma^{-1}i(\calT')^\perp = i(\calT')^\perp\).
+\end{example}
+\begin{example}
+	If we have a recollement
+	\begin{diagram*}[column sep=large]
+		\calT_1\ar[r,"i" description,""{below,name=A},""{above,name=AA}] &
+			\calT \ar[r,"p" description,""{below,name=C},""{above,name=CC}]\ar[l,bend left,shift left,"i_R",""{above,name=B}]\ar[l,bend right,shift right,"i_L"',""{below,name=BB}] &
+			\calT_2 \ar[l,bend left,shift left,"p_R",""{above,name=D}]\ar[l,bend right,shift right,"p_L"',""{below,name=DD}]
+			\ar[from=B,to=A,symbol=\vdash]\ar[from=D,to=C,symbol=\vdash]
+			\ar[from=AA,to=BB,symbol=\vdash]\ar[from=CC,to=DD,symbol=\vdash]
+	\end{diagram*}
+	with t-structures on \(\calT_1\) and \(\calT_2\), then we can observe that for all \(n\in\Z\), \((\calT_i^{\leq n},\calT_i^{\geq n})\) also defines
+	a t-structure on \(\calT_i\). As a result, for any pair of integers \((n_1,n_2)\in\Z\times\Z\), we can produce a t-structure
+	\begin{align*}
+		\calT^{\leq 0}_{n_1,n_2} &= \{ x\in\calT \mid i_L(x)\in\calT_1^{\leq n_1},\, p(x)\in\calT_2^{\leq n_2} \}, \\
+		\calT^{\geq 0}_{n_1,n_2} &= \{ x\in\calT \mid i_R(x)\in\calT_1^{\geq n_1},\, p(x)\in\calT_2^{\geq n_2} \}.
+	\end{align*}
+\end{example}
+

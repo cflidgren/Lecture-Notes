@@ -1,0 +1,526 @@
+%!TEX root = ../lectures.tex
+
+\section{Ind-categories \& compactness}
+Recall that, in topology, there is the notion of a \emph{compact topological space.} This is, by definition, a topological space \(X\) such that any open cover has a finite subcover. In other words,
+it is a space whose topology is in some sense ``finitary,'' and the space itself is not too big. More precisely, we can always understand some potentially infinite collection of data on \(X\)
+in terms of a finite subset.
+
+Inspired by the topological notion of compactness, we may produce a \emph{categorical} notion of compact objects which is similar in terms of intuition.
+
+\subsection{Compact objects}
+\begin{construction}
+	Let \(\calC\) be a locally small category, let \(\kappa\) be an infinite regular cardinal, let \(I\) be a \(\kappa\)-filtered category, and suppose \(\calC\) admits \(I\)-shaped colimits. For a diagram \(D\!:I\to\calC\),
+	we consider the colimit cone
+	\[ D\To \projlim{D} \]
+	and note, for \(x\in\calC\), that applying \(\calC(x,-)\) yields a cone
+	\[ \calC(x,D)\To \calC(x,\projlim{D}) \]
+	which induces a canonical morphism
+	\[ \projlim\calC(x,D)\to\calC(x,\projlim{D}) \]
+	which, for clarity, we also write as
+	\[ \projlim_{i\in I}\calC(x,D(i))\to\calC(x,\projlim_{i\in I}{D(i)}). \]
+\end{construction}
+\begin{definition}
+	Let \(\calC\) be a locally small category, let \(\kappa\) be an infinite regular cardinal, and let \(x\in\calC\). We say \(x\) is \(\kappa\)\emph{-compact} if, for any diagram \(D\!:I\to\calC\) where \(I\) is \(\kappa\)-filtered,
+	the canonical map
+	\[ \projlim_{i\in I}\calC(x,D(i))\to\calC(x,\projlim_{i\in I}{D(i)}) \]
+	is an isomorphism. We say \(x\) is \emph{compact} if it is \(\aleph_0\)-compact (i.e.\ \(\omega\)-compact).
+
+	We denote by \(\calC^\kappa\) the full subcategory of \(\calC\) spanned by the \(\kappa\)-compact objects.
+\end{definition}
+\begin{remark}
+	One can rephrase \(\kappa\)-compactness as follows: \(x\in\calC\) is \(\kappa\)-compact if for any \(\kappa\)-filtered diagram \(D\!: I\to\calC\) and morphism
+	\[ x \to \injlim_{i\in I}D(i) \]
+	there is some \(i'\in I\) such that the above morphism factors uniquely as
+	\begin{diagram*}[row sep=small]
+		x \ar[rr]\ar[dr,dashed] & & \injlim_{i\in I}D(i)\\
+		 & D(i')\ar[ur] &
+	\end{diagram*}
+	where the morphism \(D(i')\to\injlim_{i\in I}D(i)\) is the canonical morphism induced by universal property. Note the similarity to the concept of compactness in \emph{additive categories}
+	explored in Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}.
+\end{remark}
+\begin{example}\label{example:compact-objects-in-Set}
+	The \(\kappa\)-compact objects in \(\Set\) are precisely the \(\kappa\)-small sets. Indeed, let \(A\) be some set, and assume it is \(\kappa\)-compact. Let \(\calS_A\) be the poset of
+	\(\kappa\)-small subsets of \(A\). Note that
+	\[ \injlim_{A'\in\calS_A}{A'} = \bigcup_{A'\in\calS_A} A' = A. \]
+	This is just the statement that every set is the union of its \(\kappa\)-small subsets. Now, since \(A\) is \(\kappa\)-compact, we get a factorization through some \(\kappa\)-small set \(A'\)
+	\begin{diagram*}
+		A \ar[rr,equal]\ar[dr,dashed,"p"'] & & A\\
+		& A'\ar[ur,hook,"i"'] &
+	\end{diagram*}
+	and in particular, \(i\circ p = \id_A\). The map \(i\), as indicated, is injective, but because it factors the identity, it must also be surjective, hence a bijection.
+	That is, we get \(i\!:A'\iso A\), so \(A\) is \(\kappa\)-small. For the converse, by Proposition \ref{prop:compact-objects-closed-under-sufficiently-small-colimits-and-retracts}\ref{prop:compact-objects-closure-props:item:colimits}
+	below the \(\kappa\)-compact objects are closed under \(\kappa\)-small colimits, e.g.\ disjoint unions of \(<\kappa\) points.
+\end{example}
+\begin{example}
+	The compact objects in \(\Top\) are the finite discrete spaces. This is a bit harder to show, but we sketch the argument. First of all, if \(X\in\Top\) is compact,
+	then \(X\) is finite: if \(X'\) is the topological space with underlying set \(X\) equipped with the indiscrete topology, then one may check that \(X'\) is the colimit
+	of its finite subsets (with the indiscrete topology). Thus, the same trick as in \(\Set\) shows that \(X\) is finite. 
+
+	To see that \(X\) is discrete, one constructs a sequence of spaces \(Y_n\) with underlying set \(\Z_{\geq n}\times\{0,1\}\) and topology given by the sets \(U_{n,m} = \Z_{\geq m}\times\{0\}\cup\Z_{\geq n}\times\{1\}\),
+	for \(m\geq n\). These have canonical maps \(Y_{n}\to Y_{n+1}\), and one checks that \(Y_{\infty} = \injlim_nY_n\) is given by the set \(\{0,1\}\) with the indiscrete topology, the canonical map \(Y_n\to Y_{\infty}\) being
+	the projection onto the second component. For any (!) subset \(U\subseteq X\), one may then consider the trivially continuous map \(1_U\!:X\to Y_{\infty}\) and factor it through some \(Y_n\) by compactness;
+	projecting onto the first component, one can take an appropriate inverse image to see that \(U\) is open.
+\end{example}
+\begin{exercise}
+	Consider an adjunction
+	\begin{tikzcd}[cramped]
+		\calD\ar[from=r,bend right,"L"',""{name=A,below}] & \calC. \ar[from=l,bend right,"R"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	\begin{enumerate}[label=(\arabic*)]
+	\item Assume that \(\calC\), \(\calD\) admit \(\kappa\)-filtered colimits, and \(R\) commutes with \(\kappa\)-filtered colimits. Show that \(L\) preserves \(\kappa\)-compact objects, i.e.\ that it
+	restricts to a functor \(\calC^\kappa\to\calD^\kappa\).
+	\item Let \(\Bbbk\) be a field. Show that the forgetful functor \(U\!:\Vect_\Bbbk\to\Set\) preserves filtered colimits. Deduce using (1) that finite-dimensional
+	vector spaces over \(\Bbbk\) are compact.
+	\item Show that, in fact, the compact objects in \(\Vect_\Bbbk\) are exactly the finite-dimensional spaces.
+	\end{enumerate}
+\end{exercise}
+
+We now turn to trying to characterize the compact objects in certain nice classes of categories. To do this, we will need to investigate a closure property that the category \(\calC^\kappa\)
+of \(\kappa\)-compact objects in a category \(\calC\) satisfies.
+\begin{definition}
+	Let \(\calC\) be a category. An object \(x\in\calC\) is a \emph{retract} of \(y\in\calC\) if there is a diagram
+	\begin{diagram*}
+		x\ar[r]\ar[rr,bend left,"\id_x"] & y \ar[r] & x.
+	\end{diagram*}
+	We say that a full subcategory \(\calC'\subseteq\calC\) is \emph{closed under retracts} if, whenever \(y\in\calC'\) and \(x\) is a retract of \(y\), we have \(x\in\calC'\).
+\end{definition}
+\begin{lemma}\label{lemma:isomorphisms-closed-under-retracts}
+	Let \(\calC\) be a category, and consider the category \(\Mor(\calC)\) of morphisms in \(\calC\), i.e.\ the functor category \(\Fun([1], \calC)\). Then the full subcategory
+	of \(\Mor(\calC)\) spanned by the isomorphisms is closed under retracts.
+\end{lemma}
+\begin{proof}
+The claim is that in a diagram
+\begin{diagram*}
+	x\ar[r,"a"]\ar[d,"f"']\ar[rr,bend left,"\id_x"] & x'\ar[d,"g"] \ar[r,"b"] & x\ar[d,"f"] \\
+	y\ar[r,"a'"]\ar[rr,bend right,"\id_y"'] & y' \ar[r,"b'"] & y
+\end{diagram*}
+wherein the middle vertical arrow \(g\) is an isomorphism, all vertical arrows are isomorphisms.
+We claim that the inverse of \(f\) is given by \(b\circ g^{-1}\circ a'\). To see this, we compute
+\[ f\circ b \circ g^{-1} \circ a' = b' \circ a' = \id_y \]
+and
+\[ b\circ g^{-1} \circ a' \circ f = b \circ a = \id_x \]
+as desired.
+\end{proof}
+\begin{proposition}\label{prop:compact-objects-closed-under-sufficiently-small-colimits-and-retracts}
+	Let \(\calC\) be a locally small category. Recall that 
+	Now, let \(\kappa\) be an infinite regular cardinal, and suppose that \(\calC\) admits \(\kappa\)-filtered colimits. Then
+	\begin{enumerate}[label=(\arabic*)]
+	\item\label{prop:compact-objects-closure-props:item:colimits} \(\calC^\kappa\) is closed under \(\kappa\)-small colimits in \(\calC\).
+	\item\label{prop:compact-objects-closure-props:item:retracts} \(\calC^\kappa\) is closed under retracts, i.e.\ if \(c'\in\calC\) is \(\kappa\)-compact and \(c\in\calC\) is a retract of \(c'\), then \(c\) is \(\kappa\)-compact.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+\ref{prop:compact-objects-closure-props:item:colimits} Suppose we have a \(\kappa\)-filtered diagram \(C\!:I\to\calC\) and a \(\kappa\)-small diagram \(J\to\calC^\kappa\). Then, by the definition
+of \(\kappa\)-compactness and Theorem \ref{thm:filtered-colimits-commute-with-finite-limits-in-set}, we have
+\begin{align*}
+	\injlim_{i\in I}\calC(\injlim_{j\in J}C(j),D(i)) &\cong \injlim_{i\in I}\projlim_{j\in J}\calC(C(j),D(i))\\
+	&\cong \projlim_{j\in J}\injlim_{i\in I}\calC(C(j),D(i)) \\
+	&\cong \projlim_{j\in J}\calC(C(j),\injlim_{i\in I}D(i)) \cong \calC(\injlim_{j\in J}C(j),\injlim_{i\in I}D(i))
+\end{align*}
+as desired.
+
+\ref{prop:compact-objects-closure-props:item:retracts} Let \(D\!: I\to\calC\) be a \(\kappa\)-filtered diagram, let \(y\) be \(\kappa\)-compact, and let \(x\) be a retract of \(y\). This data then induces a retraction
+\begin{diagram*}
+	\injlim_{i\in I}\calC(x,D(i)) \ar[r]\ar[d] & \injlim_{i\in I}\calC(y,D(i))\ar[d,"\sim" labl] \ar[r] & \injlim_{i\in I}\calC(x,D(i))\ar[d] \\
+	\calC(x,\injlim_{i\in I}D(i))\ar[r] & \calC(y,\injlim_{i\in I}D(i)) \ar[r] & \calC(x,\injlim_{i\in I}D(i))
+\end{diagram*}
+and thus, by Lemma \ref{lemma:isomorphisms-closed-under-retracts}, we are done.
+\end{proof}
+
+\begin{remark}
+	Though the notion of compactness in this lecture may seem irreconcilably different from the one in Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}, the one here
+	actually implies the one there. The reason for this is the following trick: one can write small coproducts as filtered colimits of finite coproducts. In particular, let \(I\) be some set,
+	and consider a collection of objects \(\{y_i\}_{i\in I}\) in an additive category \(\calC\) admitting filtered colimits indexed by \(I\). Then one can consider the (obviously filtered) poset \(P\) given by all finite subsets of \(I\),
+	and the induced diagram \(P\to\calC\) given by
+	\[ (J\subseteq I) \mapsto \bigoplus_{j\in J} y_j. \]
+	Taking the colimit of this diagram, one can fairly easily check that
+	\[ \coprod_{i\in I} y_i = \injlim_{\substack{J\subseteq I \\ J\text{ finite}}}\left(\bigoplus_{j\in J}y_j\right). \]
+	In particular, if \(x\in\calC\) is compact in the sense described in this lecture, then we get
+	\begin{diagram*}
+		x\ar[rr]\ar[dr,dashed] & & \coprod_{i\in I}y_i\ar[d,equal] \\
+		& \bigoplus_{j\in J}y_j\ar[r] & \injlim_{J\subseteq I}\left(\bigoplus_{j\in J}y_j\right)
+	\end{diagram*}
+	so \(x\) is also compact in the sense given in Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}.
+\end{remark}
+
+\subsection{Ind-categories}
+To give examples of \(\kappa\)-compact objects, we will provide a construction which associates to any category \(\calC\) a category \(\Ind_\kappa(\calC)\) which contains \(\calC\) as a full subcategory (up to equivalence)
+and in which every object of \(\calC\) becomes \(\kappa\)-compact. It is based on taking \(\calC\) and formally cocompleting it with respect to \(\kappa\)-filtered colimits. The construction
+is also of independent interest, as it plays a role in numerous techniques of category theory. For example, the Freyd--Mitchell embedding theorem (that any Abelian category may be embedded into
+a module category) makes use of the embedding \(\calC\inj\Ind(\calC)\) (or, in actuality, a small adjustment of it), at which point one applies the result in Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}.
+
+\begin{definition}
+	Let \(\calC\) be a locally small category, and let \(\kappa\) be an infinite regular cardinal. We define the category
+	\[ \Ind_\kappa(\calC) \subseteq \Fun(\calC^\op,\Set) \]
+	as the full subcategory of \(\Fun(\calC^\op,\Set)\) spanned by functors isomorphic to a \(\kappa\)-filtered small colimit of representable functors.
+\end{definition}
+\begin{remark}
+	Observe that, since the point-category \([0]\) is \(\kappa\)-filtered for all \(\kappa\), every representable functor is an object of \(\Ind_\kappa(\calC)\). In particular, the Yoneda embedding
+	factors as
+	\[ \calC \inj \Ind_\kappa(\calC) \subseteq \Fun(\calC^\op,\Set). \]
+	In this way, we may identify \(\calC\) with a full subcategory of \(\Ind_\kappa(\calC)\).
+\end{remark}
+\begin{lemma}\label{lemma:ind-category-admits-filtered-colimits}
+	Let \(\calC\) be a locally small category, and let \(\kappa\) be an infinite regular cardinal. Then \(\Ind_\kappa(\calC)\) admits small \(\kappa\)-filtered colimits, and the canonical inclusion
+	\[ \Ind_\kappa(\calC) \inj \Fun(\calC^\op,\Set) \]
+	preserves with them.
+\end{lemma}
+
+We defer a proof of this lemma for a later lecture, as it combines a few foundational categorical ingredients that we have not yet introduced, and which are not the focus of our attention at the moment.
+\begin{proposition}\label{prop:ind-compact-objects-are-retracts-of-representables}
+	Let \(\calC\) be a locally small category, and let \(\kappa\) be an infinite regular cardinal. Then an object \(A\in\Ind_\kappa(\calC)\) is \(\kappa\)-compact if
+	and only if it is a retract of a representable functor. That is, \(\Ind_\kappa(\calC)^\kappa\) is the smallest full subcategory of \(\Ind_\kappa(\calC)\) which
+	contains all representable functors and which is closed under retracts.
+\end{proposition}
+\begin{proof}
+We begin by showing that for \(x\in\calC\), the functor \(h_x\in\Ind_\kappa(\calC)\) is \(\kappa\)-compact. This follows simply by the fact that colimits in functor categories are
+computed point-wise. First, note that the inclusion \(\Ind_\kappa(\calC)\subseteq\Fun(\calC^\op,\Set)\) preserves \(\kappa\)-filtered colimits. Thus, we may compute
+\begin{align*}
+	\PSh(\calC)(h_x, \injlim_i D(i)) \cong (\injlim_i D(i))(x) = \injlim_i D(i)(x) \cong \injlim_i\PSh(\calC)(h_x,D(i))
+\end{align*}
+as desired. It now follows from Proposition \ref{prop:compact-objects-closed-under-sufficiently-small-colimits-and-retracts} that the retract of any representable functor is \(\kappa\)-compact.
+
+Conversely, we must show that any \(\kappa\)-compact \(A\in\Ind_\kappa(\calC)\) is the retract of a representable functor. By definition,
+\[ A \cong \injlim_{i\in I} h_{x_i} \]
+but, on the other hand, the compactness of \(A\) thus means that we may find some \(j\in I\) and a factorization
+\begin{diagram*}
+	A\ar[rr,equal]\ar[dr] & & A \\
+	& h_{x_j}\ar[ur] & 
+\end{diagram*}
+so that \(A\) is a retract of \(h_{x_j}\).
+\end{proof}
+
+
+\subsection{Idempotent completeness}
+The above result establishes that the embedding \(\calC\inj\Ind_\kappa(\calC)\) factors through the \(\kappa\)-compact objects
+\[ \calC\inj\Ind_\kappa(\calC)^\kappa\subseteq\Ind_\kappa(\calC). \]
+An interesting question to ask is under what circumstances this induces an equivalence between \(\calC\) and \(\Ind_\kappa(\calC)^\kappa\). Since we know that the latter
+is the ``closure'' of \(\calC\) with respect to retracts in \(\Ind_\kappa(\calC)\), in order for this equivalence to hold, we must know that the retract of a representable is
+a representable. In order to find conditions enabling this, we will pass through a slightly different concept which is closely related to retracts: idempotents.
+\begin{definition}
+	Let \(\calC\) be a category. An endomorphism \(e\!:x\to x\) in \(\calC\) is an \emph{idempotent} if
+	\[ e^2 = e. \]
+\end{definition}
+\begin{example}
+	Let \(\calC\) be a category, and consider a retraction
+	\[ y \overset{a}\to x\overset{b}\to y. \]
+	Then the morphism \(e := a\circ b\!: c\to c\) is an idempotent. In particular,
+	\[ e^2 = e\circ e = (a \circ b) \circ (a\circ b) = a\circ \id_{y} \circ b = e. \]
+\end{example}
+\begin{definition}
+	We say that an idempotent \(e\!:x\to x\) in a category \(\calC\) \emph{splits into a retraction} if there is a retraction
+	\[ y \overset{a}\to x\overset{b}\to y \]
+	such that \(e = a\circ b\).
+\end{definition}
+
+\begin{lemma}\label{lemma:idempotent-splitting-uniqueness}
+	Let \(\calC\) be a category, and let \(e\!:x\to x\) be an idempotent in \(\calC\). Suppose that \(e\) splits into a retraction in two ways:
+	\begin{align*}
+	y &\overset{a}\to x\overset{b}\to y, \\
+	y' &\overset{a'}\to x\overset{b'}\to y'.
+	\end{align*}
+	Then the morphisms \(b'\circ a\!:y\to y'\) and \(b\circ a'\!:y'\to y\) are inverse to each other, and we have an isomorphism of retractions
+	\begin{diagram*}
+		y \ar[r,"a"]\ar[d,"\sim" labl, "b'\circ a"'] & x \ar[r,"b"]\ar[d,equal] & y\ar[d,"\sim" labl,"b'\circ a"'] \\
+		y' \ar[r,"a'"] & x \ar[r,"b'"] & y'
+	\end{diagram*}
+	In particular, \(y\cong y'\). In other words, splittings of idempotents into retractions are unique.
+\end{lemma}
+\begin{proof}
+The first assertion is just a computation: since, by assumption, we have \(e = a\circ b = a'\circ b'\), we may write
+\[ b'\circ a \circ b \circ a' = b'\circ e\circ a' = b'\circ a'\circ b'\circ a' = \id_{y'}. \]
+The other composition is similar (indeed, just swap the roles of the morphisms). That the diagram commutes is verified in an essentially identical manner.
+\end{proof}
+
+What we are looking for is a condition which ensures that the retract of a representable functor is representable. As it turns out, the above uniqueness in splitting an idempotent into
+a retraction means that the splitting condition itself can be exploited for precisely this purpose:
+\begin{lemma}\label{lemma:retract-of-representable-is-representable-if-idempotent-splits}
+	Let \(\calC\) be a locally small category, and let \(F\!:\calC^\op\to\Set\) be a functor. Suppose that \(F\) is the retract of a representable functor
+	\[ F \overset{a}\to h_x \overset{b}\to F. \]
+	If the idempotent \(e\!:x\to x\) given by applying the Yoneda lemma to
+	\[ a\circ b\!:h_x\to h_x \]
+	splits into a retraction, then \(F\) is representable.
+\end{lemma}
+\begin{proof}
+If the idempotent \(e\!:x\to x\) splits into a retraction
+\[ y \overset{i}\to x \overset{p}\to y, \]
+then we get a second splitting of \(a\circ b\) into a retraction
+\[ h_{y} \to h_x \to h_{y} \]
+which by the uniqueness in Lemma \ref{lemma:idempotent-splitting-uniqueness} means that \(A\cong h_{y}\).
+\end{proof}
+
+Clearly, in some generic category, not all idempotents split into retractions. However, there are conditions which ensure that a given idempotent does (in fact, which completely characterize this). We will need to
+know one of them in order to justify a definition.
+\begin{proposition}\label{prop:idempotents-split-iff-equalizer-exists}
+	Let \(\calC\) be a category, and let \(e\!:x\to x\) be an idempotent in \(\calC\). Then the following are equivalent:
+	\begin{enumerate}[label=(\roman*)]
+	\item The idempotent \(e\) splits into a retraction.
+	\item The equalizer
+	\begin{diagram*}
+		\eq(e,\id_x) \ar[r,hook] & x\ar[r,shift left,"e"]\ar[r,shift right,"\id_c"'] & x
+	\end{diagram*}
+	exists.
+	\item The coequalizer
+	\begin{diagram*}
+		x\ar[r,shift left,"e"]\ar[r,shift right,"\id_x"'] & x \ar[r, two heads] & \coeq(e,\id_x)
+	\end{diagram*}
+	exists.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+The only case we will care about is (ii) \(\Rightarrow\) (i).
+
+Suppose we are given the existence of the equalizer. Then, since \(e^2 = e = e\circ\id\), we get an induced morphism
+\begin{diagram*}
+	& x\ar[d,"e"]\ar[dl,dashed,"p"'] & \\
+	\eq(e,\id_x) \ar[r,hook,"i"] & x\ar[r,shift left,"e"]\ar[r,shift right,"\id_x"'] & x.
+\end{diagram*}
+The desired retraction is now
+\begin{diagram*}
+	\eq(e,\id_x) \ar[r,hook,"i"] & x \ar[r,"p"] & \eq(e,\id_x).
+\end{diagram*}
+Indeed, by definition, we have \(p\circ i = e\). Furthermore, by definition of the equalizer and since \(i\) is always a monomorphism, we have
+\[ i\circ (p \circ i) = e\circ i = i \implies p\circ i = \id \]
+as desired.
+\end{proof}
+\begin{exercise}
+	Prove the rest of Proposition \ref{prop:idempotents-split-iff-equalizer-exists}.
+\end{exercise}
+
+\begin{proposition}\label{prop:idempotent-completion}
+	Let \(\calC\) be a locally small category, and let \(\overline{\calC}\) denote the smallest full subcategory of \(\Fun(\calC^\op,\Set)\) which is closed under retracts and contains the representable functors.
+	Then every idempotent in \(\overline{\calC}\) splits into a retraction, and the Yoneda embedding
+	\[ \calC\inj\overline{\calC} \]
+	is an equivalence if and only if every idempotent in \(\calC\) splits into a retraction.
+\end{proposition}
+\begin{proof}
+That every idempotent in \(\overline{\calC}\) splits into a retraction is clear since they split in \(\Fun(\calC^\op,\Set)\) by Proposition \ref{prop:idempotents-split-iff-equalizer-exists} and since
+the retract of a retract of a representable functor is a retract of a representable functor. For the second statement: clearly, if the functor is an equivalence, every idempotent in \(\calC\) splits;
+conversely, if every idempotent in \(\calC\) splits, then given some retraction
+\[ A \to h_x \to A \]
+we may apply Lemma \ref{lemma:retract-of-representable-is-representable-if-idempotent-splits} to see that \(A\) is representable.
+\end{proof}
+
+\begin{definition}
+	Let \(\calC\) be a category. We say \(\calC\) is \emph{idempotent complete} if every idempotent in \(\calC\) splits into a retraction. If \(\calC\) is locally small, we call
+	\(\overline{\calC}\) the \emph{idempotent completion} (alternatively, the \emph{Cauchy} completion) of \(\calC\), so that \(\calC\) is idempotent complete if and only if it is equivalent to its
+	idempotent completion.
+\end{definition}
+
+Together with the intuition from Lemma \ref{lemma:retract-of-representable-is-representable-if-idempotent-splits}, Proposition \ref{prop:idempotent-completion} justifies the above definition as reasonable.
+Furthermore, they make it clear that this is exactly the condition we were looking for as a nice way of formulating when retracts of representables are representable.
+
+\begin{proposition}
+	Let \(\calC\) be a locally small category, and let \(\kappa\) be an infinite regular cardinal. If \(\calC\) is idempotent complete, then the embedding
+	\[ \calC\inj\Ind_\kappa(\calC) \]
+	induces an equivalence \(\calC\simeq\Ind_\kappa(\calC)^\kappa\) between \(\calC\) and the \(\kappa\)-compact objects of \(\Ind_\kappa(\calC)\). In particular, one obtains an equivalence
+	\[ \Ind_\kappa(\calC) \simeq \Ind_\kappa(\Ind_\kappa(\calC)^\kappa). \]
+\end{proposition}
+\begin{proof}
+By Proposition \ref{prop:ind-compact-objects-are-retracts-of-representables}, an object \(A\) of \(\Ind_\kappa(\calC)\) is \(\kappa\)-compact if and only if it is the retract of a representable functor.
+Applying Lemma \ref{lemma:retract-of-representable-is-representable-if-idempotent-splits}, we see that \(A\) is representable if and only if \(A\) is \(\kappa\)-compact.
+\end{proof}
+
+
+\subsection{Appendix: Filtered colimits}
+Here we give a definition which, in a sense, captures the notion of taking ``unions'' in a category.
+\begin{definition}
+	Let \(\kappa\) be a small infinite regular cardinal. We say a small category \( I \) is \(\kappa\)\emph{-filtered} if any diagram \( J\to I\) for which \(|{\Mor( J)}| < \kappa\) has a cocone, i.e.\ admits
+	an extension
+	\begin{diagram*}
+		 J\ar[r]\ar[d] &  I \\
+		 J^\triangleright \ar[ur]
+	\end{diagram*}
+	We say \( I\) is \emph{filtered} if it is \(\aleph_0\)-filtered.
+	We say that a category \(\calC\) \emph{admits} \(\kappa\)\emph{-filtered colimits} if every diagram \( I\to\calC\) where \( I\) is \(\kappa\)-filtered has a colimit.
+\end{definition}
+\begin{remark}
+	When \(\kappa=\aleph_0\), \(\kappa\)-filteredness can be phrased as follows:
+	\begin{enumerate}[label=(\alph*)]
+	\item \( I\) is non-empty.
+	\item For all pairs of objects \(i,j\in I\), there is an object \(k\in I\) and morphisms \(i\to k\), \(j\to k\), as in the diagram
+	\begin{diagram*}
+		& k & \\
+		i\ar[ur,dashed] & & j \ar[ul,dashed]
+	\end{diagram*}
+	\item For any two parallel morphisms \(f,g\!:i\to j\), there is an object \(k\in I\) and a morphism \(h\!:j\to k\) such that \(h\circ f = h\circ g\), as in the diagram
+	\begin{diagram*}
+		& k & \\
+		i\ar[ur,dashed]\ar[rr,shift left,"f"]\ar[rr,shift right,"g"'] & & j \ar[ul,dashed,"h"']
+	\end{diagram*}
+	\end{enumerate}
+	To prove this, one must simply check that these conditions are enough to build the desired extensions of any given finite diagram in \( I\), and this is not so hard.
+\end{remark}
+\begin{example}
+	Any category which has a final object is \(\kappa\)-filtered for all \(\kappa\).
+\end{example}
+\begin{example}
+	Any category \( I\) which admits \(\kappa\)-small colimits, i.e.\ colimits indexed by categories \( J\) with \(|{\Ob( J)}| < \kappa\), is \(\kappa\)-filtered.
+\end{example}
+\begin{example}\label{example:poset-filtered}
+	A partially ordered set \((P,\leq)\), when regarded as a category, is \(\kappa\)-filtered if and only if \(P\) is \(\kappa\)-directed. A partially ordered set is \(\kappa\)-directed
+	if any collection \(\{ x_{s} \}_{s\in S}\) indexed by some set \(S\) with \(|S| < \kappa\) has an upper bound, i.e.\ there exists an element \(x_\infty\in P\) such that \(x_s \leq x_\infty\) for all \(s\in S\).
+\end{example}
+\begin{example}
+	Let \(\kappa\) be an infinite regular cardinal. As special cases of Example \ref{example:poset-filtered}, we have:
+	\begin{enumerate}[label=(\alph*)]
+	\item The partially ordered set \(\{\beta \mid \beta < \kappa\}\) is \(\kappa\)-filtered as a category.
+	\item The partially ordered set \(\{ S\in 2^\kappa \mid |S| < \kappa \}\) is \(\kappa\)-filtered as a category. In particular, note that for any collection of \(\kappa\)-small
+	subsets of \(\kappa\) indexed by a \(\kappa\)-small set, taking the union yields yet another \(\kappa\)-small subset by the regularity of \(\kappa\).
+	\item Let \(X\) be a topological space. Then the partially ordered set of open subsets of \(X\) is \(\kappa\)-filtered.
+	\end{enumerate}
+\end{example}
+\begin{example}
+	Let \(\kappa\) be an infinite regular cardinal, let \(S\) be a set (as large as we want), and let \(\{  I_s \}_{s\in\calS}\) be an \(S\)-indexed collection
+	of \(\kappa\)-filtered categories. Then the product
+	\[ \prod_{s\in S} I_s \]
+	is \(\kappa\)-filtered.
+\end{example}
+\begin{remark}\label{remark:filteredness-is-ordered}
+	Let \(\kappa' < \kappa\) be two infinite regular cardinals. If \( I\) is \(\kappa\)-filtered, then it is also \(\kappa'\)-filtered.
+\end{remark}
+
+\begin{proposition}
+	Consider a \(\kappa\)-filtered category \( I\) and a diagram \(D\!: I\to\Set\) in the category of small sets. We may then compute the colimit as
+	\[ \injlim_{i\in I}D(i)\cong\left(\coprod_{i\in I}D(i)\right)/\sim \]
+	where \(\sim\) is the equivalence relation given by \( (i, d) \sim (i',d') \) if and only if there is some \(k\in I\) and \(f\!:i\to k\), \(g\!:i'\to k\) such that \(D(f)(d) = D(g)(d')\).
+\end{proposition}
+\begin{proof}
+First, a point of emphasis: it is non-trivial that the described relation is an equivalence relation, and this is really the non-trivial part of the proof. Supposing it is, that this
+is the colimit follows quite easily. Thus, we show that \(\sim\) is an equivalence relation. Furthermore, by Remark \ref{remark:filteredness-is-ordered}, it suffices to show this for \(\kappa = \aleph_0\).
+\begin{itemize}[label=\(\star\)]
+\item (Reflexivity) For all \((i,d)\), we have \((i,d)\sim(i,d)\). This follows by noting that \(\id_i\!:i\to i\) does the job.
+\item (Symmetry) Suppose that \((i,d)\sim (i',d')\). Clearly \((i',d')\sim (i,d)\) by swapping the roles of the data showing the former.
+\item (Transitivity) Suppose that \((i,d)\sim (i',d')\) is exhibited by \(f\!:i\to k\), \(g\!:i'\to k\), and \((i',d') \sim (i'', d'')\) is exhibited by \(f'\!:i'\to k'\), \(g'\!:i''\to k'\).
+Extend the data using that \( I\) is filtered:
+\begin{diagram*}
+	 & & k'' & &\\
+	 & k\ar[ur,dashed,"h"] & & k'\ar[ul,dashed,"h'"'] & \\
+	i\ar[ur,"f"] & & i'\ar[ul,"g"']\ar[ur,"f'"] & & i''\ar[ul,"g'"']
+\end{diagram*}
+and note that
+\[ D(h\circ f)(d) = D(h\circ g)(d') = D(h'\circ f')(d') = D(h'\circ g')(d'') \]
+so that \((i,d)\sim (i'',d'')\) as desired.
+\end{itemize}
+This completes the proof.
+\end{proof}
+\begin{remark}
+	For an arbitrary colimit, the above argument fails, since the proof of transitivity crucially relies on the diagram being filtered. However, one can still compute the colimit by taking the equivalence relation
+	\emph{generated} by the given relation.
+\end{remark}
+
+\begin{construction}
+	Let \(\calC\), \(I\) and \(J\) be categories, and consider a diagram \(D:I\times J \to \calC\). From this, we can extract two other diagrams. In particular, there are isomorphisms
+	\[ \Fun(J,\Fun(I,\calC)) \cong \Fun(I\times J,\calC)\cong \Fun(I,\Fun(J,\calC)) \]
+	from which we obtain diagrams
+	\[ D'\!:J \to \Fun(I,\calC),\quad D''\!:I\to\Fun(J,\calC) \]
+	corresponding to \(D\). Explicitly, \(D'\) is given on objects by \(D'(j) = D(-,j)\), and \(D''\) is given by \(D''(i) = D(i,-)\). Suppose \(\calC\) admits \(I\)-shaped limits and \(J\)-shaped colimits.
+	We may then have functors
+	\[ \projlim\!:\Fun(I,\calC)\to\calC,\quad\injlim\!:\Fun(J,\calC)\to\calC. \]
+	Consider the colimit of \(D'\). We have
+	\begin{center}\(\forall (j\to j')\in J,\quad\)
+	\begin{tikzcd}
+		D'(j)\ar[r]\ar[d] & \injlim{D'} \\
+		D'(j')\ar[ur]
+	\end{tikzcd}\(\quad\leadsto\quad\)
+	\begin{tikzcd}
+		\projlim{D'(j)}\ar[r]\ar[d] & \projlim(\injlim{D'}) \\
+		\projlim{D'(j')}\ar[ur]
+	\end{tikzcd}
+	\end{center}
+	but also
+	\begin{diagram*}
+		\projlim{D(-,j)}\ar[r,equal]\ar[d] & \projlim{D'(j)}\ar[r] & \projlim(\injlim{D'}) \\
+		\injlim_J\projlim_I{D(-,j)}\ar[r,equal] & \injlim(\projlim{D''})\ar[ur,dashed]
+	\end{diagram*}
+	so we get a canonical map
+	\[ \injlim(\projlim{D''})\to\projlim(\injlim{D'}). \]
+\end{construction}
+
+\begin{definition}
+	We say that \(I\)-shaped limits and \(J\)-shaped colimits \emph{commute} in \(\calC\) if for all \(D\!:I\times J\to\calC\), the canonical morphism
+	\[ \injlim_{j\in J}\projlim_{i\in I}{D(i,j)}\to\projlim_{i\in I}\injlim_{j\in J}{D(i,j)} \]
+	is an isomorphism.
+\end{definition}
+
+The following is a fundamental result about \(\kappa\)-filtered colimits in the category of sets, and it is one of the major reasons that \(\kappa\)-filtered colimits
+are useful.
+\begin{theorem}\label{thm:filtered-colimits-commute-with-finite-limits-in-set}
+	Let \(\kappa\) be an infinite regular cardinal. Then \(\kappa\)-filtered colimits commute with \(\kappa\)-small limits in \(\Set\). More precisely, let \(I\) be a \(\kappa\)-small category, let \( J\) be a \(\kappa\)-filtered category, and
+	consider a diagram \(D\!: I\times J\to\Set\). Then the canonical map
+	\[ \injlim_{j\in J}\projlim_{i\in I} D(i,j) \to \projlim_{i\in I}\injlim_{j\in J} D(i,j) \]
+	is an isomorphism (i.e.\ a bijection).
+\end{theorem}
+\begin{proof}
+Fundamentally, this is just a computation. One computes the left and right sets, and deduce from their explicit forms that they are isomorphic. First of all, for a fixed \(j\in J\),
+we can compute the limit as
+\[ \projlim_{i\in I}D(i,j) \cong \left\{(x_i)_{i\in I}\in\prod_{i\in I}D(i,j) \bigmid \forall(\varphi\!:i\to i')\in I,\, D(\varphi,j)(x_i) = x_{i'} \right\}. \]
+Now, as \(J\) is filtered, we can therefore compute the colimit as
+\[ \injlim_{j\in J}\projlim_{i\in I}D(i,j) \cong \left(\coprod_{j\in J}\left\{(x_i)_{i\in I}\in\prod_{i\in I}D(i,j) \bigmid \forall(\varphi\!:i\to i')\in I,\, D(\varphi,j)(x_i) = x_{i'} \right\}\right)/\sim \]
+where \(\sim\) identifies \((x_{i})_{i\in I}\in\projlim_{i\in I}D(i,j)\) with \((y_i)_{i\in I}\in\projlim_{i\in I}D(i,j')\) if and only if there are some
+\[ \psi\!:j\to j'',\quad\psi'\!:j'\to j''\]
+such that
+\[ \forall i\in I,\quad D(i,\psi)(x_i) = D(i,\psi')(y_i). \]
+This computes one side. For the other side, again since \(J\) is filtered, for a fixed \(i\in I\) we may compute the colimit as
+\[ \injlim_{j\in J}D(i,j) \cong \left(\coprod_{j\in J}D(i,j)\right)/\simeq_i \]
+where the equivalence relation is defined by \(D(i,j)\ni x \simeq_i y\in D(i,j')\) if and only if there is some \(\phi\!:j\to j''\) and \(\phi'\!:j'\to j''\) such that \( D(i,\phi)(x) = D(i,\phi')(y). \)
+Now we can take the limit to get
+\[ \projlim_{i\in I}\injlim_{j\in J}D(i,j) \cong \left\{ ([j_i,x_i])_{i\in I} \in\prod_{i\in I} \left(\coprod_{j\in J}D(i,j)\right)/\simeq_i \bigmid \forall(\varphi\!:i\to i'),\, [j_i,D(\varphi,j_i)(x_i)] = [j_{i'},x_{i'}] \right\} \]
+where the canonical map can now be given by
+\[ \alpha\!:\injlim_{j\in J}\projlim_{i\in I}D(i,j) \to \projlim_{i\in I}\injlim_{j\in J}D(i,j),\quad [j,(x_i)_{i\in I}] \mapsto ([j,x_i])_{i\in I}. \]
+One may wish to sanity-check that this is well-defined (and this is not hard). Now it is just a matter of checking that \(\alpha\) is injective and surjective, which
+is where one critically uses the assumption that \(I\) is \(\kappa\)-small and \(J\) is \(\kappa\)-filtered (though we have already partly used the latter in order to compute the colimit).
+
+We construct an inverse \(\beta\) to \(\alpha\). Hence, consider an element \(([j_i,x_i^0])_{i\in I}\in\projlim_{i\in I}\injlim_{j\in J}D(i,j)\). By the assumption that \(I\) is \(\kappa\)-small
+and \(J\) is \(\kappa\)-filtered, the elements \(j_i\in J\), \(i\in I\) have a common join \(j\in J\) with morphisms \(\phi_i\!:j_i\to j\). We set \(x_i = D(i,\phi_i)(x_i^0)\), so we have
+\[ \forall i\in I,\quad [j_i,x_i^0] = [j,x_i],\quad \text{i.e.\ } x_i^0 \simeq_i x_i. \]
+It follows that \(([j_i,x_i^0])_{i\in I} = ([j,x_i])_{i\in I}\). We define \(\beta\) by
+\[ \beta\!: ([j_i,x_i^0])_{i\in I} = ([j,x_i])_{i\in I} \mapsto [j,(x_i)_{i\in I}]. \]
+We need to show that this is well-defined. If we have \(([j,x_i])_{i\in I} = ([j',y_i])_{i\in I}\), then we find \(\psi_i\!:j\to j''_0\), \(\psi_i'\!:j'\to j''_0\) such that
+\(D(i,\psi_i)(x_i) = D(i,\psi_i')(y_i)\). However, since \(J\) is \(\kappa\)-filtered, we may find a cone for the diagram given by the \(\psi_i\), \(\psi_i'\), which will provide a morphism
+\(\phi\!:j''_0 \to j'' \) which equalizes all the \(\psi_i\) and all the \(\psi_i'\). We set \(\psi = \phi\circ\psi_i\), \(\psi' = \phi\circ\psi_i'\). Then \(D(i,\psi)(x_i) = D(i,\psi')(y_i)\)
+so that \([j,(x_i)_{i\in I}] = [j',(y_i)_{i\in I}]\).
+
+Now we need to ensure that the \((x_i)_{i\in I}\) coming from \(\beta\) can be picked to actually form an element of \(\projlim_{i\in I}D(i,j)\). By assumption, we have that
+\begin{align*}
+	\forall (\varphi\!:i\to i'),\hspace{3cm} [j, D(\varphi,j)(x_i)] &= [j,x_{i'}] \\
+	\leadsto\quad \forall (\varphi\!:i\to i'),\, \exists (\phi^{\varphi}_1,\phi^{\varphi}_2\!: j\to j'),\quad (D(i,\phi^\varphi_1)\circ D(\varphi,j))(x_i) &= D(i,\phi^\varphi_2)(x_{i'}).
+\end{align*}
+However, again, since \(I\) is \(\kappa\)-small (hence has fewer than \(\kappa\) arrows) and \(J\) is \(\kappa\)-filtered, we can take a cone for the diagram given by the \(\phi^\varphi_k\)
+to get a morphism \(\psi\!:j'\to j''\) for which \(\psi\circ\phi^\varphi_1 = \psi\circ\phi^\varphi_2\) for all \(\varphi\). Let \(\phi = \psi\circ\phi_1^\varphi\). We see that
+\[ ([j,x_i])_{i\in I} = ([j'',D(i,\phi)(x_i)])_{i\in I} \]
+and
+\[ \forall (\varphi\!:i\to i'),\quad (D(\varphi,j'')\circ D(i,\phi))(x_i) = (D(i,\phi)\circ D(\varphi,j''))(x_i) = D(i,\phi)(x_{i'}) \]
+so that \((D(i,\phi)(x_i))_{i\in I}\in\projlim_{i\in I}D(i,j)\). We conclude that \(\beta\) can be made into a well-defined function, and it is quite clear that it
+is inverse to \(\alpha\).
+\end{proof}
+
+We can extend this slightly, using the results we've proven about reflective subcategories.
+\begin{definition}
+	A \emph{Grothendieck topos} is a Giraud subcategory of a presheaf category (with values in \(\Set\)).
+\end{definition}
+\begin{corollary}
+	Let \(\calC\) be a Grothendieck topos. Then \(\calC\) admits all small limits and colimits, and filtered colimits commute with finite limits in \(\calC\).
+\end{corollary}
+\begin{proof}
+Let \(\iota\!:\calC\inj\PSh(\calC_0)\) be the inclusion, with reflector \(\pi\!:\PSh(\calC_0)\to\calC\). From Theorem \ref{thm:filtered-colimits-commute-with-finite-limits-in-set}, we know that filtered colimits
+commute with finite limits in \(\Set\), and hence this is also true in \(\PSh(\calC_0)\) since (co)limits are computed pointwise. By Theorem \ref{thm:limits-and-colimits-in-reflective-subcategories}, all
+limits and colimits that \(\PSh(\calC_0)\) admits, i.e.\ all small limits and colimits, are also admitted by \(\calC\), and the diagram
+\begin{diagram*}
+	\Fun(J,\calC)\ar[r,"\injlim"]\ar[d,"\iota\circ"] & \calC \\
+	\Fun(J,\PSh(\calC_0))\ar[r,"\injlim"] & \PSh(\calC_0)\ar[u,"\pi"]
+\end{diagram*}
+commutes (potentially up to natural isomorphism). By assumption, when \(J\) is filtered, all the functors preserve finite limits, so we are done.
+\end{proof}
+\begin{remark}
+	Of course, if one can arrange for the reflector \(\pi\) to commute with larger limits, then one can deduce that more filtered colimits commute with certain limits.
+\end{remark}
+\begin{remark}
+	The definition of a Grothendieck topos given above is only one of many possible definitions. We have chosen the one that fits us best in this situation, but in general
+	one can characterize them
+	\begin{enumerate}[label=(\arabic*)]
+	\item in another \emph{concrete way,} as sheaves on sites, or
+	\item \emph{abstractly,} as categories satisfying the \emph{Giraud axioms.}
+	\end{enumerate}
+	We may cover this more thoroughly in another lecture.
+\end{remark}

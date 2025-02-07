@@ -1,0 +1,602 @@
+%!TEX root = ../lectures.tex
+
+\section{Homotopical algebra through deformations}
+In Lecture \ref{section:localization-of-categories}, we covered the basic theory of how to localize categories at certain morphisms; in other words, we take a category \(\calC\) and
+a collection of morphisms \(W\subseteq\Mor(\calC)\) and ask for a universal choice of category \(\calC[W^{-1}]\) wherein the morphisms in \(W\) become invertible. The most basic functoriality
+properties of this construction demand that these morphisms are appropriately preserved: if we have pairs \((\calC,W)\) and \((\calC',W')\), and a functor \(F\!:\calC\to\calC'\) such that \(F(W)\subseteq W'\),
+then we have an induced functor making the diagram
+\begin{diagram*}
+	\calC\ar[r,"F"]\ar[d,"Q"'] & \calC'\ar[d,"Q'"] \\
+	\calC[W^{-1}]\ar[r,dashed] & \calC'[W'^{-1}]
+\end{diagram*}
+commute. This follows by the universal property, since if \(F(W)\subseteq W'\) then \(Q'F(W)\) consists of invertible morphisms.
+
+In practice, it is very rare to have a functor that behaves like this. In most situations, the functor \(F\) will fail to preserve weak equivalences, and so there is no immediate way
+to produce a functor between the localizations. Of course, one still wants to do this, for example to get functors between derived categories: if \(F\!:\calA\to\calA'\) is a functor
+between Abelian categories, it induces a functor \(F\!:\Ch(\calA)\to\Ch(\calA')\), and one would like to obtain from this some kind of functor \(\sfD(\calA)\to\sfD(\calA')\). Instinctually,
+one would look to the universal property for this kind of thing, but that doesn't work, so another approach is required. That is the topic of this lecture.
+
+There are various approaches to derived functors, and they may be covered on many different levels depending on one's preferences. Here, we follow one which is particularly beautiful, and also
+somewhat rare, provided in \cite{riehl-categorical-homotopy-theory}. It leads to a very clear presentation of the ideas behind the construction of derived functors,
+removing many technical aspects, thought with the downside that it is not entirely practical.
+
+\subsection{Homotopical structures \& derived functors}
+\begin{definition}
+	Let \(\calC\) be a category. A \emph{wide subcategory} of \(\calC\) is a subcategory containing all objects of \(\calC\).
+\end{definition}
+\begin{definition}
+	A \emph{relative category} is a pair \((\calC,W)\) consisting of a category \(\calC\) and a wide subcategory \(W\subseteq\calC\).
+	\begin{enumerate}[label=(\arabic*)]
+		\item We say \((\calC,W)\) is a \emph{pseudo-homotopical category} if \(W\) contains all isomorphisms and satisfies the \(2\)-out-of-\(3\) property: for any two morphisms
+		\(x\overset{f}\to y\overset{g}\to z\), if any two of \(f\), \(g\), or \(g\circ f\) are in \(W\) then so is the third.
+		\item We say \((\calC,W)\) is a \emph{homotopical category} if \(W\) satisfies the \(2\)-out-of-\(6\) property: for any three composable morphisms
+		\begin{diagram*}[cramped,row sep=small, column sep=large]
+			  & y\ar[ddrr,"hg"] & & \\
+			x\ar[ur,"f"]\ar[ddrr,"gf"']\ar[drrr,near start,"hgf"] & & & \\
+			  & &   & w \\
+			  & & z\ar[ur,"h"']\ar[from=uuul,crossing over,"g" near end] &
+		\end{diagram*}
+		if \(hg\in W\) and \(gf\in W\), all other arrows in the 3-simplex above are in \(W\).
+	\end{enumerate}
+	The morphisms in \(W\) are called \emph{weak equivalences.}
+\end{definition}
+\begin{remark}
+	The notion of a relative category is almost exactly what was implicitly studied in Lecture \ref{section:localization-of-categories}. Indeed, the wide subcategory \(W\) can be specified by giving
+	a collection of morphisms containing all identities and which is closed under composition.
+\end{remark}
+\begin{remark}
+	Any homotopical category is a pseudo-homotopical category; the 2-out-of-3 property follows by replacing appropriate arrows by identities. Furthermore, if \((\calC,W)\) is a homotopical category, applying the 2-out-of-6 property yields
+	that \(W\) contains all isomorphisms: if \(f\!:x\iso y\), then one can consider the 3-simplex formed by
+	\[ x\overset{f}\to y\overset{f^{-1}}\to x\overset{f}\to y \]
+	and note that the partial compositions are the identities, which are in \(W\).
+
+	Any category \(\calC\) can be promoted to a homotopical category in a trivial way by letting \(W\) be the largest groupoid contained in \(\calC\), i.e.\ the subcategory given by all the isomorphisms.
+\end{remark}
+\begin{notation}
+	Let \((\calC,W)\) be a relative category. The localization \(W^{-1}\calC\) is sometimes denoted by \(\ho(\calC,W)\) (or \(\ho(\calC)\) if \(W\) is left implicit), and is called the \emph{homotopy category} of \((\calC,W)\).
+
+	We will typically leave the wide subcategory \(W\) implicit in the notation.
+\end{notation}
+
+A functor \(\calC\to\calD\) between (pseudo-)homotopical categories is called \emph{homotopical} if if sends weak equivalences to weak equivalences. Trivially, a homotopical
+functor induces a functor \(\ho(\calC)\to\ho(\calD)\). When the functor fails to be homotopical, however, it is not clear what to do in
+order to obtain a functor on the level of homotopy categories. Derived functors are an attempt to formalize the notion of a \emph{best approximation} of the functor on this level.
+
+
+There are many technically different definitions of derived functors at our level of generality, and they are not necessarily equivalent. We take the conventions used \cite{riehl-categorical-homotopy-theory},
+as they seem reasonable enough, and also correspond in a straightforward way to e.g.\ what is used in \cite{kashiwara-schapira-book}.
+\begin{definition}
+	Let \(F\!:\calC\to\calD\) be a functor between relative categories. A \emph{total left derived functor} \(\bfL F\) of \(F\) is a right Kan extension
+	\begin{diagram*}
+		\calC\ar[r,"F"]\ar[d,"\gamma"'] & \calD\ar[d,"\delta"] \\
+		\ho(\calC)\ar[r,dashed,"\bfL F"] & \ho(\calD)\ar[from=l,to=u,Rightarrow,shorten=2mm]
+	\end{diagram*}
+	of the composition \(\calC\overset{F}\to\calD\to\ho(\calD)\) along the localization functor \(\calC\to\ho(\calC)\). We say that the total derived functor \(\bfL F\) is \emph{absolute}
+	if the right Kan extension above is absolute.
+
+	A \emph{left derived functor} of \(F\) is a pair \((\bbL F,\lambda)\) of a homotopical functor \(\bbL F\!:\calC\to\calD\) and a natural transformation \(\lambda\!:\bbL F\To F\)
+	such that the induced functor \(\delta\bbL F\!:\ho(\calC)\to\ho(\calD)\) defines a total left derived functor
+	\begin{diagram*}
+		\calC\ar[r,"F"]\ar[d,"\gamma"'] & \calD\ar[d,"\delta"] \\
+		\ho(\calC)\ar[r,dashed,"\delta\bbL F"'] & \ho(\calD)\ar[from=l,to=u,Rightarrow,"\delta\lambda"',shorten=2mm]
+	\end{diagram*}
+	of \(F\). We say \(\bbL F\) is an \emph{absolute} left derived functor if the above total left derived functor is absolute.
+\end{definition}
+\begin{exercise}
+	Dualize the above notions to define \emph{(absolute) (total) right derived functors.}
+\end{exercise}
+
+As bare Kan extensions are not particularly well-behaved, nor are derived functors, and establishing their existence is generally very hard. Absolute derived functors exhibit far more desirable properties.
+\begin{proposition}
+	Consider an adjunction
+	\begin{diagram*}[cramped]
+		\calC\ar[r,bend left,"F",""{name=A,below}] & \calD \ar[l,bend left,"G",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{diagram*}
+	between relative categories, and assume that \(F\) admits an absolute total left derived functor and \(G\) admits an absolute total right derived functor. Then the adjunction
+	descends to an adjunction
+	\begin{diagram*}[cramped,column sep=large]
+		\ho(\calC)\ar[r,bend left,"\bfL F",""{name=A,below}] & \ho(\calD). \ar[l,bend left,"\bfR G",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{diagram*}
+\end{proposition}
+\begin{proof}
+We have that the diagrams
+\begin{center}
+	\begin{tikzcd}
+		\calC\ar[r,"F"]\ar[d,"\gamma"'] & \calD\ar[d,"\delta"] \\
+		\ho(\calC)\ar[r,"\bfL F"] & \ho(\calD)\ar[from=l,to=u,Rightarrow,"\alpha",shorten=4mm]
+	\end{tikzcd}\quad\quad
+	\begin{tikzcd}
+		\calC\ar[from=r,"G"']\ar[d,"\gamma"'] & \calD\ar[d,"\delta"] \\
+		\ho(\calC)\ar[from=r,"\bfR G"'] & \ho(\calD)\ar[from=ul,Rightarrow,"\beta",shorten=4mm]
+	\end{tikzcd}
+\end{center}
+provide a right and left absolute Kan extensions, respectively. Using the Kan extensions \((\bfL F,\alpha)\) and \((\bfR G,\beta)\) are absolute, we see that the pairs
+\[ (\bfR G\bfL F, \bfR G\bfL F\gamma\overset{\bfR G\alpha}\To \bfR G\delta F),\quad (\bfL F\bfR G, \bfL\gamma G \overset{\bfL F\beta}\To \bfL F\bfR G \delta ) \]
+are left (resp.\ right) Kan extension along \(\gamma\) (resp.\ \(\delta\)). Now, hitting \(\beta\) with \(F\) and \(\alpha\) with G, and combining this with the
+adjunction \(F\ladj G\) (with unit/counit \(\eta\) and \(\varepsilon\)), we get composite natural transformations
+\begin{center}
+\begin{tikzcd}[column sep=small]
+	\gamma\ar[dr,dashed,Rightarrow,"\exists!"'] \ar[r,Rightarrow,"\gamma\eta"] & \gamma GF \ar[r,Rightarrow,"\beta F"] & \bfR G \delta F \\
+	& \bfR G\bfL F\gamma\ar[ur,Rightarrow,"\bfR G\alpha"'] &
+\end{tikzcd}\quad\quad
+\begin{tikzcd}[column sep=small]
+	\bfL F\gamma G\ar[dr,Rightarrow,"\bfL F\beta"'] \ar[r,Rightarrow,"\alpha G"] & \delta FG \ar[r,Rightarrow,"\delta\varepsilon"] & \delta \\
+	& \bfL F\bfR G\delta \ar[ur,Rightarrow,dashed,"\exists!"'] &
+\end{tikzcd}
+\end{center}
+producing unique dashed natural transformations by universality. By the universal property of the localization, these correspond uniquely to natural transformations
+\[ \eta'\!:\1\To \bfR G \circ \bfL F,\quad \varepsilon'\!:\bfL F\circ\bfR G\To\1. \]
+
+We must show that the natural transformations \(\eta'\) and \(\varepsilon'\) satisfy the triangle identities. Observe that by universal property of the localization and of right Kan extensions,
+the commutativity of the below left diagram
+\begin{center}
+	\begin{tikzcd}[column sep=small]
+		& \bfL F \bfR G \bfL F\ar[dr,Rightarrow,"\varepsilon'\bfL F"] & \\
+		\bfL F\ar[rr,equal]\ar[ur,Rightarrow,"\bfL F\eta'"] & & \bfL F
+	\end{tikzcd}\(\quad \leftrightsquigarrow \quad\)
+	\begin{tikzcd}[column sep=small]
+		& \bfL F \bfR G \bfL F\gamma \ar[dr,Rightarrow,"\varepsilon'\bfL F \gamma "] & & \\
+		\bfL F \gamma \ar[rr,equal]\ar[ur,Rightarrow,"\bfL F\eta'\gamma"] & & \bfL F\gamma\ar[r,Rightarrow,"\alpha"] & \delta F
+	\end{tikzcd}
+\end{center}
+is equivalent to the two obvious compositions in the above right diagram being equal. Now, applying \(\bfL F\) on the left to the diagram defining \(\eta'\) and \(F\) on the right to the diagram defining \(\varepsilon'\),
+as well as using the naturality of \(\varepsilon'\) and \(\alpha\), we see that the diagram
+\begin{diagram*}[row sep=large]
+	& \delta F\ar[r,Rightarrow,"\delta F\eta"] & \delta F G F \ar[dr,Rightarrow,"\delta\varepsilon F"] & \\
+	\bfL F\gamma\ar[r,Rightarrow,"\bfL F\gamma\eta"]\ar[dr,Rightarrow,"\bfL F\eta'\gamma"']\ar[ur,Rightarrow,"\alpha"] & \bfL F\gamma GF\ar[r,Rightarrow,"\bfL F\beta F"]\ar[ur,Rightarrow,"\alpha G F"] & \bfL  F\bfR G\delta F\ar[r,Rightarrow,"\varepsilon'\delta F"] & \delta F \\
+	& \bfL F\bfR G\bfL F\gamma\ar[r,Rightarrow,"\varepsilon'\bfL F\gamma"']\ar[ur,Rightarrow,"\bfL F\bfR G\alpha"'] & \bfL F \gamma\ar[ur,Rightarrow,"\alpha"'] &
+\end{diagram*}
+commutes. The identity then follows from the triangle identity \(\varepsilon F \circ F\eta = \id_F\). The other case is handled similarly.
+\end{proof}
+\begin{exercise*}
+	In the diagram at the end of the above proof there are two squares. It is claimed that they commute by naturality. Check this.
+\end{exercise*}
+
+\subsection{Deformations}
+While a typical functor \(\calC\to\calD\) between (pseudo-)homotopical categories fails to be homotopical, there are usually subcategories of \(\calC\) on which the functor does preserve weak equivalences.
+Restricted to such subcategories, it is straightforward to compute the derived functor, as it is simply induced by universal property. However, the resulting functor of course need not be related
+to the original, due to the restriction step.
+
+In favourable situations, \emph{every} object in \(\calC\) can be replaced by one from a subcategory on which a functor acts homotopically. In even more favourable situations, this can be done functorially. This
+is captured in the following definition.
+\begin{definition}
+	Let \((\calC,W)\) be a relative category,
+	\begin{enumerate}[label=(\arabic*)]
+	\item Consider two functors \(F,G\!:\calD\to\calC\). A natural transformation \(\eta\!:F\To G\) is a \emph{natural weak equivalence} if all components
+	are weak equivalences, i.e.\ \(\forall x\in\calD,\, \eta_x\in W\).
+	\item A \emph{left deformation} of \(\calC\) is a pair \((Q,q)\) consisting of a functor \(Q\!:\calC\to\calC\) and a natural weak equivalence \(q\!:Q\To\1\). Dually, a right deformation
+	is a pair \((R,r)\) consisting of a functor \(R\!:\calC\to\calC\) and a natural weak equivalence \(r\!:\1\To Q\).
+	\item Let \((Q,q)\) be a left deformation. A full subcategory \(\calC_Q\) of \(\calC\) which contains the image of \(Q\) is called a \emph{category of} \(Q\)\emph{-cofibrant objects.} This is promoted to a relative category
+	by letting the weak equivalences be \(\calC_Q\cap W\).
+
+	Dually, let \((R,r)\) be a right deformation. A full subcategory \(\calC_R\) of \(\calC\) which contains the image of \(R\) is called a \emph{category of} \(R\)\emph{-fibrant objects.} This is promoted to a relative
+	category by letting the weak equivalences be \(\calC_R\cap W\).
+	\item Consider another relative category \((\calC',W')\) and some functor \(F\!:\calC\to\calC'\). We say \(F\) is \emph{left deformable} if there is a left deformation \((Q,q)\) of \(\calC\)
+	and a category of \(Q\)-cofibrant objects \(\calC_Q\) such that \(F|_{\calC_Q}\!:\calC_Q\to\calD\) is homotopical, where \(\calC_Q\) is endowed with weak equivalences \(\calC_Q\cap W\).
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}\label{prop:deformation-is-homotopical-and-cofibrant-objects-homotopy-equivalence}
+	Let \((\calC,W)\) be a pseudo-homotopical category, and let \((Q,q)\) be a left deformation. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item The functor \(Q\) is homotopical.
+	\item For any category of \(Q\)-cofibrant objects \(\calC_Q\), the induced functor
+	\[ \ho(\calC_Q) \to \ho(\calC) \]
+	is an equivalence.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) Let \(f\!:x\to y\) be a weak equivalence. Then we have a diagram
+\begin{diagram*}
+	x\ar[r,"q_x"]\ar[d,"f"'] & Qx\ar[d,"Qf"] \\
+	y\ar[r,"q_y"] & Qy
+\end{diagram*}
+so by the 2-out-of-3 property, \(Qf\) is a weak equivalence. Hence \(Q\) is homotopical.
+
+(2) By the definition of the induced relative category structure on \(\calC_Q\), \(\calC_Q\inj\calC\) is homotopical, giving the induced functor
+\[ I\!:\ho(\calC_Q)\to\ho(\calC). \]
+On the other hand, by (1), \(Q\) is homotopical and so induces a functor
+\[ Q'\!:\ho(\calC)\to\ho(\calC_Q). \]
+Now, observe that both the composites
+\[ \calC_Q\inj\calC\overset{Q}\to\calC_Q,\quad \calC\overset{Q}\to\calC_Q\inj\calC \]
+have natural weak equivalences to \(\1_{\calC_Q}\) and \(\1_\calC\), respectively, formed from the natural weak equivalence \(q\!:Q\To\1\). On the level of the homotopy categories,
+these give rise to the desired natural isomorphisms
+\[ Q'I\cong\1_{\ho(\calC_Q)},\quad IQ'\cong\1_{\ho(\calC)} \]
+which yields the result.
+\end{proof}
+
+\subsection{Existence of absolute derived functors via deformations}
+Functors that admit left or right deformations are nice enough that they induce not only a total derived functor, but an \emph{absolute} total derived functor; even more,
+one gets a derived functor without even passing to the localization.
+\begin{theorem}
+	Let \(F\!:\calC\to\calD\) be a left deformable functor between pseduo-homotopical categories, with left deformation \((Q,q)\). Then \(F\) admits an absolute left derived functor
+	given by
+	\[ (\bbL F := FQ\!:\calC\to\calD, F q\!: FQ\To F). \]
+\end{theorem}
+\begin{proof}
+Let \(\gamma\!:\calC\to\ho(\calC)\) and \(\delta\!:\calD\to\ho(\calD)\) denote the localization functors. There are three steps to this proof.
+\begin{enumerate}[label=(\arabic*)]
+\item To check that \(\bfL F\) exists and is absolute, it suffices to work with \(\bbL F\) (as \(\bbL F = FQ\) is homotopical since \(Q\) is a deformation of a pseudo-homotopical category),
+functors \(H\!:\ho(\calD)\to\calE\), and to consider homotopical functors \(G\!:\calC\to\calE\) with natural transformations \(\sigma\!:G\To H\delta F\). This is by the universal property of localizations, and in
+particular, the isomorphism
+\[\gamma^*\!:\Fun(\ho(\calC),\calE)\cong\Fun_W(\calC,\calE),\]
+where \(W\) are the weak equivalences on \(\calC\).
+\item Factorizations exist. Let \(\sigma\!:G\To H\delta F\) be a natural transformation. Then, by naturality and \(G\) being homotopical,
+\begin{center}
+	\begin{tikzcd}
+		GQ\ar[d,Rightarrow,"Gq"']\ar[r,Rightarrow,"\sigma Q"] & H\delta F Q\ar[d,Rightarrow,"H\delta F q"] \\
+		G\ar[r,Rightarrow,"\sigma"] & H\delta F
+	\end{tikzcd}\(\quad\implies\quad \sigma = (G\overset{(Gq)^{-1}}\To GQ\overset{\sigma Q}\To H\delta FQ\overset{H\delta Fq}\To H\delta F)\)
+\end{center}
+which gives the desired factorization.
+\item Factorizations are unique: given another factorization as in the below left,
+\begin{center}
+	\begin{tikzcd}[cramped, column sep=small]
+		G\ar[dr,Rightarrow,"\sigma'"']\ar[rr,Rightarrow,"\sigma"] & & H\delta F \\
+		& H\delta F Q\ar[ur,Rightarrow,"H\delta F q"']&
+	\end{tikzcd}\(\quad\overset{Q}\leadsto\quad\)
+	\begin{tikzcd}[cramped, column sep=small]
+		GQ\ar[dr,Rightarrow,"\sigma'Q"']\ar[rr,Rightarrow,"\sigma Q"] & & H\delta F Q \\
+		& H\delta F Q^2\ar[ur,Rightarrow,"H\delta F qQ"']&
+	\end{tikzcd}
+\end{center}
+we get the above right diagram by applying \(Q\) on the right. Since \(qQ\) lives in a category of \(Q\)-cofibrant objects, \(FqQ\) is a natural weak equivalence. Therefore, \(H\delta FqQ\) is a natural isomorphism, so that
+\(\sigma'Q\) is uniquely determined. However, \(\sigma'\) is determined by \(\sigma'Q\), as demonstrated by the naturality square
+\begin{diagram*}
+	GQ\ar[d,Rightarrow,"Gq"']\ar[r,Rightarrow,"\sigma' Q"] & H\delta F Q^2\ar[d,Rightarrow,"H\delta F Q q"] \\
+	G\ar[r,Rightarrow,"\sigma'"] & H\delta F Q
+\end{diagram*}
+from which we conclude that \((FQ, F q)\) defines an absolute left derived functor.
+\end{enumerate}
+This completes the proof. Note that the above specializes to show that \((FQ, Fq)\) is a left derived functor by setting \(H = \id_{\ho(\calD)}\).
+\end{proof}
+\begin{remark}
+	In the above proof, the assumption that \(\calD\) is pseudo-homotopical can be weaked to it merely being a relative category. Indeed, the only aspect of the proof
+	that relies on a pseudo-homotopical assumption is that the deformation functor \(Q\!:\calC\to\calD\) is homotopical, which demands the 2-out-of-3 property. Obviously,
+	this does not involve \(\calD\).
+\end{remark}
+
+\subsection{Pseudofunctoriality}
+We have seen that left deformable functors \(F\!:\calC\to\calD\) between pseudo-homotopical categories admit absolute total left derived functors \(\bfL F\). This suggests
+that there should be some assignment \(\bfL\!:F\mapsto \bfL F\), which we may hope is functorial. However, this is not generally true: the composition of two absolute total left derived
+functors need not be a total left derived functor. On the other hand, with some mild assumptions in place, one can arrange for a form of weak functoriality.
+
+Recall that a (strict) 2-category is a category enriched in categories. The prototypical example of this is \(\underline{\Cat}\), the 2-category of categories (subject to some set-theoretical constraint).
+As this case is fairly clear, and all other examples we work with here will essentially be derived from it, we will not expound upon the definition any further for the moment.
+\begin{definition}
+	We define a 2-category \(\underline{\cat{LDef}}\) as follows.
+	\begin{itemize}[label=\(\star\)]
+	\item The objects are tuples \((\calC,W,Q,q,\calC_Q)\) consisting of a pseudo-homotopical category \((\calC,W)\), a left deformation \((Q,q)\) for \(\calC\), and
+	a choice of a distinguished category of \(Q\)-cofibrant objects \(\calC_Q\).
+	\item A 1-morphism \((\calC,W,Q,q,\calC_Q)\to(\calC',W',Q',q',\calC'_{Q'})\) consists of a left deformable functor \(F\!:\calC\to\calC'\) for which a choice
+	of left deformation is \(Q\), and such that \(F\) sends distinguished \(Q\)-cofibrant objects to distinguished \(Q\)-cofibrant objects, i.e.\ restricts to a functor \(\calC_Q\to\calC'_{Q'}\).
+	\item A 2-morphism \(F\To F'\) is a natural transformation, with no added compatibility required.
+	\end{itemize}
+\end{definition}
+
+\begin{theorem}\label{thm:deformable-functor-derived-functor-pseudofunctoriality}
+	There is a pseudofunctor
+	\[ \bfL\!: \underline{\cat{LDef}} \to \underline{\Cat} \]
+	which
+	\begin{enumerate}[label=(\arabic*)]
+	\item sends a tuple \((\calC,W,Q,q,\calC_Q)\) to \(\ho(\calC)\),
+	\item sends a left deformable functor \(F\!:(\calC,W,Q,q,\calC_Q)\to (\calC',W',Q',q',\calC'_{Q'})\) to its total left derived functor \(\bfL F\!:\ho(\calC)\to\ho(\calD)\), and
+	\item sends a natural transformation \(F\To F'\) to the induced natural transformation \(\bfL F\To\bfL F'\).
+	\end{enumerate}
+\end{theorem}
+
+For the purposes of explaining the above theorem, we include below the definition of a pseudofunctor between strict 2-categories. In the less strict setting of a bicategory,
+the definition is similar but with small variations (since e.g.\ the associativity of the composition there is up to natural isomorphism).
+
+\begin{definition}\label{definition:pseudofunctor}
+	A pseudofunctor \(P\!:\underline{\calC}\to\underline{\calD}\) between 2-categories consists of the following data and conditions.
+	\begin{enumerate}[label=(\arabic*)]
+	\item A function \(P\!:\Ob\underline{\calC}\to\Ob\underline{\calD}\).
+	\item For each pair of objects \((x,y)\) in \(\underline{\calC}\), a functor
+	\[ P_{x,y}\!:\underline{\calC}(x,y) \to \underline{\calD}(Px,Py). \]
+	\item For each triple of objects \((x,y,z)\) in \(\underline{\calC}\), two natural isomorphisms
+	\begin{center}
+		\begin{tikzcd}
+			\underline{\calC}(y,z)\times\underline{\calC}(x,y)\ar[r,"\circ"]\ar[d,"P\times P"'] & \underline{\calC}(x,z)\ar[d,"P"] \\
+			\underline{\calD}(Py,Pz)\times\underline{\calD}(Px,Py)\ar[r,"\circ"'] & \underline{\calD}(Px,Pz) \ar[from=l,to=u,Rightarrow,shorten=7mm]
+		\end{tikzcd}\quad\quad
+		\begin{tikzcd}
+			\text{[0]}\ar[r,"\id_x"]\ar[dr,bend right,"\id_{Px}"',""{name=A,right}] & \underline{\calC}(x,x) \ar[d,"P"] \\
+			& \underline{\calD}(Px,Px) \ar[from=A,to=u,Rightarrow,shorten=3mm]
+		\end{tikzcd}
+	\end{center}
+	with components
+	\[ Pg\circ Pf \overset{P_{g,f}}\Longrightarrow P(g\circ f),\quad \id_{Px}\overset{P_{\id_x}}\Longrightarrow P\id_x. \]
+	\item For each 1-morphism \(f\!:x\to y\) in \(\underline{\calC}\), the diagrams of 2-morphisms
+	\begin{center}
+		\begin{tikzcd}
+			\id_{Py}\circ Pf \ar[r,equal] \ar[d,Rightarrow,"P_{\id_y}Pf"'] & Pf \\
+			P\id_y\circ Pf\ar[r,Rightarrow,"P_{\id_y,f}"] & P(\id_y\circ f)\ar[u,equal]
+		\end{tikzcd}\quad\quad
+		\begin{tikzcd}
+			Pf\circ\id_{Px} \ar[r,equal] \ar[d,Rightarrow,"PfP_{\id_x}"'] & Pf \\
+			Pf\circ P\id_x\ar[r,Rightarrow,"P_{f,\id_x}"] & P(f\circ \id_x)\ar[u,equal]
+		\end{tikzcd}
+	\end{center}
+	commute.
+	\item For each triple of 1-morphisms \(x\overset{f}\to y\overset{g}\to z\overset{h}\to w\) in \(\underline{\calC}\), the diagram of 2-morphisms
+	\begin{diagram*}
+		Ph\circ (Pg\circ Pf)\ar[d,equal] \ar[r,Rightarrow,"PhP_{g,f}"] & Ph\circ P(g\circ f)\ar[r,Rightarrow,"P_{h,g\circ f}"] & P(h\circ(g\circ f))\ar[d,equal] \\
+		(Ph\circ Pg)\circ Pf\ar[r,Rightarrow,"P_{h,g}Pf"] & P(h\circ g)\circ Pf\ar[r,Rightarrow,"P_{h\circ g,f}"] & P((h\circ g)\circ f)
+	\end{diagram*}
+	commutes.
+	\end{enumerate}
+\end{definition}
+
+\begin{proof}[Proof of Theorem \ref{thm:deformable-functor-derived-functor-pseudofunctoriality}]
+The statement of the theorem provides us with (1) and (2) in Definition \ref{definition:pseudofunctor}. For simplicity, let us denote an object of \(\underline{\cat{LDef}}\) simply by \(\calC\), leaving
+all the other data implicit. We have to give natural isomorphisms
+\begin{center}
+	\begin{tikzcd}
+		\underline{\cat{LDef}}(\calC',\calC'')\times\underline{\cat{LDef}}(\calC,\calC')\ar[r,"\circ"]\ar[d,"\bfL\times\bfL"'] & \underline{\cat{LDef}}(\calC,\calC'')\ar[d,"\bfL"] \\
+		\underline{\Cat}(\ho(\calC'),\ho(\calC''))\times\underline{\Cat}(\ho(\calC,\ho(\calC'))\ar[r,"\circ"'] & \underline{\calC'}(\ho(\calC),\ho(\calC'')) \ar[from=l,to=u,Rightarrow,shorten=7mm]
+	\end{tikzcd}\quad\quad
+	\begin{tikzcd}
+		\text{[0]}\ar[r,"\id_x"]\ar[dr,bend right,"\id_{Px}"',""{name=A,right}] & \underline{\cat{LDef}}(\calC,\calC) \ar[d,"\bfL"] \\
+		& \underline{\Cat}(\ho(\calC),\ho(\calC)) \ar[from=A,to=u,Rightarrow,shorten=3mm]
+	\end{tikzcd}
+\end{center}
+and on components, these will be of the form
+\[ \bfL G \circ \bfL F \To \bfL(G\circ F),\quad \1_{\ho(\calC)} \To \bfL\1_\calC \]
+where \(F\!:\calC\to\calC'\) and \(G\!:\calC'\to\calC''\). Note that we have a natural transformation
+\[ \bbL G \bbL F = GQ'FQ \overset{Gq'FQ}\Longrightarrow GFQ = \bbL (GF). \]
+This is a natural weak equivalence since \(F\) maps \(\calC_Q\) to \(\calC'_{Q'}\), which \(G\) acts homotopically on; similarly, this is why \(GFQ = \bbL(GF)\). Secondly, note
+that
+\[ \bbL\1_{\calC} = Q \overset{q}\To \1_\calC \]
+is a natural weak equivalence. These two natural weak equivalences descend to the components
+\[ \mu_{G,F}\!:\bfL G \circ \bfL F \cong \bfL(G\circ F),\quad \alpha_\calC\!:\1_{\ho(\calC)} \cong \bfL\1_\calC \]
+that we want. We leave it to the reader to check that these components form natural isomorphisms.
+
+We now prove (4). For the left diagram, it suffices to check that \( q \bbL F = \1_\calC q FQ \), but this holds by definition. For the right diagram, we are comparing
+\(\bbL Fq\) and \(Fq\1_\calC Q\). That is, the natural transformations \(FQq\) and \(FqQ\). By naturality, \(q\circ qQ = q\circ Qq\), so for all \(x\in\calC\), we have
+\[ F(q)\circ F(q_{Qx}) = F(q)\circ F(Qq_x) \]
+which, if \(x\in\calC_Q\), implies that \(F(q_{Qx}) = F(Qq_x)\). In \(\ho(\calC)\), \(q\) provides an isomorphism between any object and a \(Q\)-cofibrant one, so this extends to everything in \(\ho(\calC)\).
+
+To prove (5), it suffices to show that
+\[ Hq''GFQ \circ HQ'' Gq'FQ = HGq'FQ\circ Hq''GQ'FQ. \]
+This follows by the naturality square
+% \begin{diagram*}
+% 	HQ''GQ'FQ \ar[r,Rightarrow,"HQ''Gq'FQ"]\ar[d,Rightarrow,"Hq''GQ'FQ"'] & HQ''GFQ \ar[d,Rightarrow,"Hq''GFQ"] \\
+% 	HGQ'FQ\ar[r,Rightarrow,"HGq'FQ"'] & HGFQ
+% \end{diagram*}
+\begin{diagram*}
+	Q''GQ' \ar[r,Rightarrow,"Q''Gq'"]\ar[d,Rightarrow,"q''GQ'"'] & Q''G \ar[d,Rightarrow,"q''G"] \\
+	GQ'\ar[r,Rightarrow,"Gq'"'] & G
+\end{diagram*}
+which completes the proof.
+\end{proof}
+
+
+\subsection{Appendix: When functoriality fails}
+
+\begin{remark}
+	In the presence of a model structure, even without functorial (co)fibrant replacement, absolute derived functors can still be produced. However, it will usually fail to lift to a functor prior to localizing.
+	See \cite{426439} for a brief explanation, or \cite{cisinski-book} for a more detailed one, of how one would construct the left derived functor in such a situation.
+\end{remark}
+
+There is another approach to producing absolute total derived functors, taken in \cite{kashiwara-schapira-book}, which does not require a functorial deformation.
+Instead, they exploit the features of having a nicer collection of weak equivalences, namely a multiplicative system as defined in Lecture \ref{section:localization-of-categories}.
+
+In Proposition \ref{prop:deformation-is-homotopical-and-cofibrant-objects-homotopy-equivalence}, we see that categories of \(Q\)-cofibrant objects \(\calC_Q\) induce equivalences
+\(\ho(\calC_Q)\simeq\ho(\calC)\). Similarly, in the situation where you have a \emph{potentially non-functorial} left deformation (so, for every object \(x\in\calC\) an object \(Qx\in\calC_Q\) and a weak equivalence
+\(Qx\to x\)), but the weak equivalences \(W\) form a right multiplicative system, one can still get such an equivalence (and use it to compute the total derived functor, and show it is absolute).
+
+We take for granted the following lemma.
+
+\begin{lemma}
+	Let \(\varphi\!:J\to I\) be a functor, and assume that \(I\) is filtered, \(\varphi\) is fully faithful, and for any \(i\in I\) there is some \(j\in J\) with a morphism \(i\to\varphi(j)\). Then
+	\(J\) is filtered, and \(\varphi\) is cofinal.
+\end{lemma}
+\begin{proof}
+See \cite[Prop.\ 3.2.4]{kashiwara-schapira-book}.
+\end{proof}
+
+We consider the situation of a right multiplicative system (and constructing right derived functors), leaving the other case implicit by duality.
+
+\begin{proposition}
+	Let \((\calC,W)\) be a relative category such that \(W\) forms a right multiplicative system. Let \(\calC'\) be a full subcategory of \(\calC\), and set \(W' := \calC'\cap W\).
+	\begin{enumerate}[label=(\arabic*)]
+	\item Assume that for all \(f\!:x\to y\) in \(W\) with \(x\in\calC'\), there is some \(g\!:y\to z\) such that \(z\in\calC'\) and \(g\circ f \in W\). Then \(W'\) is a right multiplicative system,
+	and the induced map \(\ho(\calC')\to\ho(\calC)\) is fully faithful.
+	\item Assume that for all \(x\in\calC\) there is some \(x'\in\calC'\) and a weak equivalence \(x\to x'\). Then \(W'\) is a right multiplicative system, and \(\ho(\calC')\to\ho(\calC)\) is an equivalence.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) First, we show that \(W'\) is a right multiplicative system. For this, both (M1) and (M2) follow by applying them in \(\calC\) then using the given assumption to move them back to \(\calC'\).
+
+Now, the inclusion \(\calC'\inj\calC\) is homotopical, hence induces a functor \(\ho(\calC')\to\ho(\calC)\). On the level of Hom-sets, this is given by the canonical map
+\[ \injlim_{(y\to y')\in W'^{y/}}\calC(x,y') \to \injlim_{(y\to y')\in W^{y/}}\calC(x,y') \]
+coming from the inclusion \(W'^{y/} \inj W^{y/}\). The inclusion is seen to be cofinal by applying the above lemma; indeed, given some \(y\to y'\) in \(W^{y/}\), we find some \(y'\to y''\) with \(y''\in\calC'\)
+and for which the composition is in \(W\), i.e.\ in \(W'\). In particular, the canonical map above is an isomorphism.
+
+(2) The criterion in (1) is clearly satisfied, so \(W'\) is a right multiplicative system and the functor \(\ho(\calC')\to\ho(\calC)\) is fully faithful. However, by assumption it is also essentially surjective,
+hence an equivalence.
+\end{proof}
+
+We may think of the above proposition as saying that when we can produce non-functorial replacements in the context of a right multiplicative system, this can be promoted to a functorial
+scheme on the level of the homotopy categories. Indeed, by taking a quasi-inverse of the inclusion \(\ho(\calC')\inj\ho(\calC)\), which is an equivalence, we get a functor
+\[ Q\!:\ho(\calC)\to\ho(\calC') \]
+and we may even compose this with the canonical localization functor to get a homotopical functor \(\calC\to\ho(\calC')\), which is very close to a deformation.
+
+\begin{lemma}\label{lemma:kan-extension-criterion}
+	Consider functors
+	\[ \calC\overset{Q}\longto\calC'\overset{G}\longto\calA. \]
+	Assume that for any \(x\in\calC'\), there is some \(y\in\calC\) with a morphism \(s\!:x\to Qy\) such that the following conditions are satisfied.
+	\begin{enumerate}[label=(\alph*)]
+	\item \(G(s)\) is an isomorphism.
+	\item For any \(y'\in\calC\) and any morphism \(t\!:x\to Qy'\), there is some \(y''\in\calC\) and morphisms \(s'\!:y'\to y''\), \(t'\!:y\to y''\) such that \(G(s')\) is an isomorphism and the diagram
+	\begin{diagram*}
+		x\ar[r,"s"]\ar[d,"t"'] & Qy\ar[d,"Qt'"] \\
+		Qy'\ar[r,"Qs'"] & Qy''
+	\end{diagram*}
+	commutes.
+	\end{enumerate}
+	Then \(G\) is an absolute right Kan extension of \(GQ\) along \(Q\).
+\end{lemma}
+\begin{proof}
+Here, the proposed structural natural transformation exhibiting \(G\) as \(\Ran_Q(GQ)\) is just the identity. As a result, what we have to show is that
+\[ Q_*\!:\Fun(\calC',\calA)(F,G) \to \Fun(\calC,\calA)(FQ,GQ) \]
+is bijective.
+\begin{enumerate}[label=(\arabic*)]
+\item Injectivity: consider two natural transformations \(\theta,\theta'\!:F\To G\) for which \(\theta Q = \theta'Q\). For \(x\in\calC'\), pick some \(y\in\calC\) with a morphism \(s\!:x\to Qy\)
+for which \(Gs\) is an isomorphism. We have a diagram
+\begin{diagram*}[column sep=large]
+	Fx\ar[d,"Fs"']\ar[r,shift left,"\theta_x"]\ar[r,shift right,"\theta'_x"'] & Gx\ar[d,"Gs"] \\
+	FQy\ar[r,"\theta_{Qy} = \theta'_{Qy}"] & GQy
+\end{diagram*}
+which commutes, except for knowing that the two arrows at the top are identical. However, as \(Gs\) is invertible and the two arrows at the bottom agree, the arrows on top agree.
+
+\item Surjectivity: suppose we are given a natural transformation \(\theta\!:FQ\To GQ\). For each \(x\in\calC'\), choose a morphism \(s_x\!:x\to Qy\) satisfying (a) and (b), and set
+\[ \theta'_x := (Gs_x)^{-1}\circ\theta_y\circ Fs_x\!:Fx\to Gx. \]
+We want to show this is independent of the choices made for \(s_x\), and assembles into a natural transformation.
+
+Let \(f\!:x_1 \to x_2\) be a morphism in \(\calC'\), and consider any choices \(s_i\!:x_i\to Qy_i\) of morphisms satisfying (a) and (b); following the above, these yield morphisms
+\(\theta'_{x_i}\). Applying (b) to \(s_1\) and \(s_2\circ f\), we find morphisms
+\[ t_1\!:y_1 \to y_3,\quad t_2\!:y_2\to y_3 \]
+for which \(Gt_2\) is an isomorphism, and \(Qt_1\circ s_1 = Qt_2\circ s_2\circ f\). One then sees that in the diagram
+\begin{diagram*}
+	Fx_1\ar[rrrrr,"\theta'_{x_1}"]\ar[dddd,"Ff"']\ar[dr,"Fs_1"] &       &       &       &       & Gx_1\ar[dddd,"Gf"]\ar[dl,"\sim"',"Gs_1"] \\
+	     & FQy_1 \ar[rrr,"\theta_{y_1}"]\ar[dr,"FQt_1"] &       &       & GQy_1 \ar[dl,"GQt_1"] & \\
+	     &       & FQy_3\ar[r,"\theta_{y_3}"] & GQy_3 &       & \\
+	     & FQy_2 \ar[rrr,"\theta_{y_2}"]\ar[ur,"FQt_2"] &       &       & GQy_2 \ar[ul,"\sim"',"GQt_2"] & \\
+	Fx_2\ar[rrrrr,"\theta'_{x_2}"]\ar[ur,"Fs_2"] &       &       &       &       & Gx_2\ar[ul,"\sim"',"Gs_2"]
+\end{diagram*}
+all the inner diagrams commute, hence the outer diagram commutes. Taking \(f=\id_x\), we see that any two choices of \(s_x\) yield the same \(\theta'_x\), and in general, the above
+diagram shows we have a natural transformation.
+
+We see that \(\theta'Q = \theta\) by the independence of choices. In particular, for any \(Qy\), we may choose the identity \(Qy \to Qy\) to see that \(\theta'_{Qy} = \theta_y\).
+\end{enumerate}
+We conclude that \(G\) is a right Kan extension of \(GQ\) along \(Q\). To see that it is absolute, let \(H\!:\calA\to\calA'\) be another functor. Then
+\[ \calC\overset{Q}\longto\calC'\overset{HG}\longto\calA' \]
+satisfies hypotheses (a) and (b), since \(H\) preserves isomorphisms. Therefore, \(HG\) is the right Kan extension of \(HGQ\) along \(Q\), and we are done.
+\end{proof}
+
+\begin{theorem}\label{thm:right-multiplicative-system-right-derived-functor-exists}
+	Let \((\calC,W)\) be a relative category for which \(W\) forms a right multiplicative system. Consider a functor \(F\!:\calC\to\calD\), where \((\calD,E)\) is a relative category.
+	Assume that there is a full subcategory \(\calC'\inj\calC\) satisfying the following conditions, where \(W' := \calC'\cap W\):
+	\begin{enumerate}[label=(\alph*)]
+	\item For any \(x\in\calC\), there is a weak equivalence \(x\to x'\) where \(x'\in\calC'\).
+	\item For any \(s\in W'\), the morphism \(Fs\) is a weak equivalence in \(\calD\), i.e.\ \(Fs\in E\).
+	\end{enumerate}
+	Then \(F\) has an absolute total right derived functor \(\bfR F\) such that
+	\[ (\calC'\inj \calC \to \ho(\calC) \overset{\bfR F}\to \ho(\calD)) \cong (\calC'\inj\calC\overset{F}\to\calD\to\ho(\calD)). \]
+\end{theorem}
+\begin{proof}
+Let \(\iota\!:\calC'\inj\calC\) be the inclusion. By our assumptions, the functor \(\iota'\!:\ho(\calC')\to\ho(\calC)\) is an equivalence. Let \(Q\) be a quasi-inverse. Since \(F\) acts homotopically
+on \(\calC'\), we have an induced functor \(F'\!:\ho(\calC')\to\ho(\calD)\). For any \(H\!:\ho(\calD)\to\calE\), we then have the diagram
+\begin{diagram*}
+	\calC'\ar[r,hook,"\iota"]\ar[d,"\gamma'"'] & \calC\ar[r,"F"]\ar[d,"\gamma"'] & \calD\ar[d,"\delta"] &  \\
+	\ho(\calC')\ar[rr,bend right,"F'"']\ar[r,shift right,"\iota'"'] & \ho(\calC)\ar[l,shift right,"Q"']\ar[r,dashed] & \ho(\calD)\ar[r,"H"] & \calE.
+\end{diagram*}
+Now, for any \(G\!:\ho(\calC)\to\calE\) we have a chain of natural morphisms
+\begin{align*}
+	\Fun(\calC,\calE)(H\delta F,G\gamma) &\to \Fun(\calC',\calE)(H\delta F\iota,G\gamma\iota) \\
+	&\cong \Fun(\calC',\calE)(F'\gamma',G\iota'\gamma') \\
+	&\cong \Fun(\ho(\calC'),\calE)(HF',G\iota') \\
+	&\cong \Fun(\ho(\calC),\calE)(HF'Q,G).
+\end{align*}
+It thus suffices to check that the first morphism is an isomorphism. This follows by applying Lemma \ref{lemma:kan-extension-criterion}; indeed, it clearly applies to
+\[ \calC'\overset{\iota}\inj\calC\overset{\gamma}\to\ho(\calC) \]
+by our assumptions and property (M1) of being right multiplicative, so that \(\gamma\) is an absolute right Kan extension of \(\gamma\iota\) along \(\iota\). By
+absoluteness, \(HG\gamma\) is a right Kan extension of \(HG\gamma\iota\) along \(\iota\), which means precisely that the given morphism is bijective.
+
+Setting \(H=\id_{\ho(\calD)}\), we see that \(F'Q = \bfR F\) is a total right derived functor, and the above computation shows it is also absolute.
+\end{proof}
+
+In this setting, we still get pseudofunctoriality. We sketch how this is done.
+\begin{definition}
+	Define the strict 2-category \(\underline{\cat{LMul}}\) by the following.
+	\begin{itemize}[label=\(\star\)]
+	\item On objects: tuples \((\calC,W,\calC')\) where \((\calC,W)\) is a relative category with \(W\) a left multiplicative system, and \(\calC'\) is a subcategory of \(\calC\)
+	such that for all \(x\in\calC\) there is a weak equivalence \(x'\to x\) with \(x'\in\calC'\).
+	\item On 1-morphisms: a morphism \((\calC,w,\calC')\to(\calD,E,\calD')\) is a functor \(F\!:\calC\to\calD\) such that \(F\calC' \subseteq \calD'\) and \(F|_{\calC'}\) is homotopical.
+	\item On 2-morphisms: just take natural transformations.
+	\end{itemize}
+	Dually, define \(\underline{\cat{RMul}}\).
+\end{definition}
+\begin{theorem}
+	We have pseudofunctors
+	\[ \bfL\!:\underline{\cat{LMul}}\to\underline{\Cat},\quad \bfR\!:\underline{\cat{RMul}}\to\underline{\Cat} \]
+	which
+	\begin{enumerate}[label=(\arabic*)]
+	\item send objects \((\calC,W,\calC')\) to \(\ho(\calC) = \calC[W^{-1}]\),
+	\item send 1-morphisms \(F\) to \(\bfL F\) and \(\bfR F\), respectively, and
+	\item send 2-morphisms \(F\To F'\) to the induced natural transformations \(\bfL F\To\bfL F'\) and \(\bfR F\To\bfR F'\), respectively.
+	\end{enumerate}
+\end{theorem}
+\begin{proofsketch}
+We examine the case of \(\underline{\cat{RMul}}\). There is lots of data to produce, and we only do one part, which is to give the natural isomorphism
+\[ \bfR G\circ \bfR F \cong \bfR(G\circ F). \]
+Let \(F\!:\calC\to\calD\) and \(G\!:\calD\to\calE\) be 1-morphisms in \(\underline{\cat{RMul}}\), and let \(\gamma\!:\calC\to\ho(\calC)\), \(\gamma'\!:\calD\to\ho(\calD)\) and \(\gamma''\!:\calE\to\ho(\calE)\)
+be the localization functors. Then we have canonical natural transformations
+\[ \gamma''\circ G\To \bfR G \circ \gamma',\quad \gamma'\circ F\To \bfR F\circ \gamma, \]
+and thus may form the composite
+\[ \gamma''\circ G\circ F \To \bfR G\circ\gamma'\circ F \To \bfR G\circ \bfR F\circ \gamma \]
+which induces a canonical natural transformation
+\[ \sigma\!: \bfR(G\circ F)\To\bfR G\circ\bfR F. \]
+We must show this is a natural isomorphism, i.e.\ show that for all \(x\in\ho(\calC)\), \(\sigma_x\) is an isomorphism. Write \(x\cong \gamma(x_0)\), and choose a weak equivalence \(x_0\to x_0'\)
+with \(x_0'\in\calC'\). The crux is that then \(\bfR Fx \cong Fx_0'\), and since \(F\calC'\subseteq\calD'\), we also have \(\bfR G(Fx_0') \cong GFx_0' \). Thus, \(\sigma_x\) factors
+as a composition of isomorphisms, and as such is an isomorphism.
+% consider the diagram
+% \begin{diagram*}
+% 	& \calC'\ar[dl,hook]\ar[rr,"F|_{\calC'}"]\ar[dd] & & \calD'\ar[dl,hook]\ar[rr,"G|_{\calD'}"]\ar[dd] & & \calE'\ar[dl,hook]\ar[dd] \\
+% 	\calC\ar[dd] & & \calD\ar[from=ll,crossing over,"F" near end] & & \calE\ar[from=ll,crossing over,"G" near end] & \\
+% 	& \ho(\calC')\ar[rr,dashed,"F'" near start]\ar[dl,shift right] & & \ho(\calD')\ar[rr,dashed,"G'" near start]\ar[dl,shift right,"\iota'"'] & & \ho(\calE')\ar[dl,shift right,"\iota''"'] \\
+% 	\ho(\calC)\ar[rr,dashed,"\bfR F"]\ar[ur,shift right,"Q"'] & & \ho(\calD)\ar[from=uu,crossing over]\ar[rr,dashed,"\bfR G"]\ar[ur,shift right,"Q'"'] & & \ho(\calE)\ar[from=uu,crossing over]\ar[ur,shift right,"Q''"'] &
+% \end{diagram*}
+% where one notes that \(\bfR F = \iota'F'Q\) and \(\bfR G = \iota'' G' Q'\). By the assumptions on \(F\) and \(G\), we have an induced functor \(\ho(\calC')\to\ho(\calE')\) coming from the composition \(G|_{\calD'}\circ F|_{\calC'}\)
+% and it is exactly the composition \(G'\circ F'\) (by uniqueness). Now,
+% \[ \bfR G\circ \bfR F = \iota''G'Q' \circ \iota'F'Q \cong \iota''G'F'Q = \bfR(G\circ F). \]
+% This gives us our desired natural transformation.
+\end{proofsketch}
+
+
+\subsection{Appendix: Kan extensions}
+Kan extensions formalize the notion of a universal best approximation of an extension of a functor along another functor.
+\begin{definition}
+	Let \(F\!:\calC\to\calE\), \(K\!:\calC\to\calD\) be functors. A \emph{left Kan extension} of \(F\) along \(K\) is a functor is given by the data of a functor and natural transformation
+	\begin{diagram*}[cramped]
+		\calC\ar[rr,"F",""{below,name=A}]\ar[dr,"K"'] & & \calE \\
+		& \calD\ar[ur,"\Lan_K{F}"'] & \ar[from=A,to=l,Rightarrow,"\eta",shorten=2mm]
+	\end{diagram*}
+	universal in the sense that any other functor with this data factors uniquely as below:
+	\begin{center}
+	\begin{tikzcd}
+		\calC\ar[rr,"F",""{below,name=A}]\ar[dr,"K"'] & & \calE \\
+		& \calD\ar[ur,"G"'] & \ar[from=A,to=l,Rightarrow,"\sigma",shorten=2mm]
+	\end{tikzcd}\(\quad=\quad\)
+	\begin{tikzcd}
+		\calC\ar[rr,"F",""{below,name=A}]\ar[dr,"K"'] & & \calE \\
+		& \calD\ar[ur,bend left,"\Lan_K{F}" description,""{right,name=B}]\ar[ur,shift right,bend right,"G"',""{right,name=C}] & \ar[from=A,to=l,Rightarrow,shift right,"\eta"',shorten=2mm]\ar[from=B,to=C,Rightarrow,"\exists!"']
+	\end{tikzcd}
+	\end{center}
+	i.e.\ there is a unique natural transformation \(\sigma'\!:\Lan_K{F}\to G\) such that \(\sigma = \sigma'K\circ\eta=\sigma\).
+
+	The dual notion of a \emph{right Kan extension} \((\Ran_K{F},\varepsilon)\) of \(F\) along \(K\) is given by reversing the directions of the natural transformations.
+\end{definition}
+
+Note that a functor which has a genuine extension ``on the nose'' may not have an actual Kan extension, as the aforementioned extension may not be appropriately universal.
+
+\begin{exercise*}
+	Let \(\calC\) be a category, and let \(x\!:[0]\to\calC\) be the functor picking out an object \(x\in\calC\); accordingly, let \(*\!:[0]\to\Set\) be the functor picking out a one-point set.
+	Show that the left Kan extension \(\Lan_x{*}\) is given by \(\calC(x,-)\).
+\end{exercise*}
+
+Left (or right) Kan extensions on their own are not generally very well-behaved. On the other hand, there are slight variations on the notion which has more desirable properties.
+
+\begin{definition}
+	Consider functors \(F\!:\calC\to\calE\) and \(K\!:\calC\to\calD\). A functor \(G\!:\calE\to\calE'\) is said to \emph{preserve} the left Kan extension \((\Lan_K{F},\eta)\) of \(F\) if
+	\((G\circ\Lan_K{F},G\eta)\) is a left Kan extension of \(G\circ F\) along \(K\),
+	\begin{diagram*}[cramped]
+		\calC\ar[rr,"F",""{below,name=A}]\ar[dr,"K"'] & & \calE\ar[r,"G"] & \calE'. \\
+		& \calD\ar[ur,"\Lan_K{F}"']\ar[urr,shift right,bend right,"\Lan_K{GF}"'] & \ar[from=A,to=l,Rightarrow,"\eta"',shorten=2mm] &
+	\end{diagram*}
+	One says that the left Kan extension \((\Lan_K{F},\eta)\) is \emph{pointwise} if it is preserved by all corepresentable functors \(\calE(x,-)\), \(x\in\calE\), and \emph{absolute} if it preserved by all functors with domain \(\calE\).
+\end{definition}
+
+All concepts in 1-category theory can be expressed in terms of Kan extensions. Notably, (co)limits and adjoints can be formulated in this language.

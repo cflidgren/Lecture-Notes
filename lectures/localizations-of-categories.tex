@@ -1,0 +1,451 @@
+%!TEX root = ../lectures.tex
+
+\section{Localizations of categories}\label{section:localization-of-categories}
+Localization is the procedure by which one formally inverts morphisms in a category. It's a ``categorification'' of the analogous process for rings, and various deeply interesting
+categories in homological algebra and homotopy theory are formed in this way. We mainly follow \cite{krause-homological-theory-of-representations} and \cite{kashiwara-schapira-book}.
+
+\subsection{Weak \& strict localizations}
+\begin{definition}
+	Let \(\calC\) be a category, and let \(W\subseteq\Mor\calC\) be a set of morphisms in \(\calC\). A \emph{weak localization} of \(\calC\) with respect to \(W\)
+	is a category \(\calC_W\) together with a functor \(Q\!:\calC\to\calC_W\) satisfying the following properties:
+	\begin{enumerate}[label=(\arabic*)]
+	\item For any \(f\in\calS\), the morphism \(Q(f)\) in \(\calC_W\) is invertible.
+	\item For any category \(\calE\), composition with \(Q\) induces an equivalence
+	\[ (\circ Q)\!:\Fun(\calC_W,\calE) \iso \Fun_W(\calC,\calE) \]
+	where \(\Fun_W(\calC,\calE)\) denotes the full subcategory of \(\Fun(\calC,\calE)\) spanned by those functors sending morphisms in \(\calS\) to invertible morphisms in \(\calE\).
+	\end{enumerate}
+	We say that the pair \((\calC_W,Q)\) is a \emph{strict localization} if the equivalence in (2) is an isomorphism. A weak localization is unique up to canonical equivalence, while
+	a strict localization is unique up to canonical isomorphism.
+\end{definition}
+\begin{remark}\label{remark:1-categorical-property-of-localization}
+	The universal property of the localization means that given any functor \(F\!:\calC\to\calE\) sending morphisms in \(W\) to isomorphisms in \(\calE\), there is an essentially unique factorization
+	\begin{diagram*}
+		\calC\ar[d,"Q"']\ar[dr,"F",""{name=A,left}] & \\
+		\calC_W\ar[r,dashed,"F'"'] & \calE\ar[from=l,to=A,symbol=\cong]
+	\end{diagram*}
+	through \(Q\!:\calC\to\calC_W\) up to natural isomorphism. In the strict case, the difference comes down to demanding that \(F'\) is genuinely unique and that the diagram commutes on the nose, i.e.\ that \(F'\circ Q = F\).
+	Clearly, any strict localization is also a weak localization.
+\end{remark}
+\begin{lemma}\label{lemma:1-strict-localization-is-2-strict-localization}
+	Let \(\calC\) be a category, and let \(W\) be some collection of morphisms in \(\calC\). Then a pair \((\calC_W,Q\!:\calC\to\calC_W)\) is a strict localization of \(\calC\) with respect to \(W\) if and only if
+	it satisfies the following a priori weaker property described above: for all categories \(\calE\) with a functor \(F\!:\calC\to\calE\) inverting morphisms in \(W\), there is a unique functor \(F'\!:\calC_W\to\calE\)
+	such that \(F = F'\circ Q\).
+\end{lemma}
+\begin{proof}
+Condition (2) of being a strict localization, the isomorphism \((\circ Q)\!:\Fun(\calC_W,\calE)\iso\Fun_W(\calC,\calE)\), clearly implies the ``weaker'' condition, since it is just a specialization
+to the objects of the aforementioned categories. For the converse, we are given that \((\circ Q)\) is bijective on objects, and need to show that it is fully faithful. For this, suppose we have
+\(F,G\in\Fun_W(\calC,\calE)\) and a natural transformation \(\sigma\!:F\To G\). This corresponds uniquely to a functor \(\sigma'\!:\calC\to\Fun(\2,\calE)\) under the isomorphisms of categories
+\[ \Fun(\2,\Fun(\calC,\calE)) \cong \Fun(\2\times\calC,\calE)\cong\Fun(\calC,\Fun(\2,\calE)). \]
+Explicitly, \(\sigma'\) is given by the assignment \(\calC\ni x \mapsto (Fx\overset{\sigma_x}\to Gx) \) on objects, and on morphisms \(f\!:x\to y\) is sent to the square
+\begin{diagram*}
+	Fx\ar[r,"\sigma_x"]\ar[d,"F(f)"'] & Gx\ar[d,"G(f)"] \\
+	Fy\ar[r,"\sigma_y"] & Gy
+\end{diagram*}
+and in particular, it is clear that for all \(f\in W\), the morphism \(\sigma'(f)\) in \(\Fun(\2,\calE)\) is invertible. Therefore, we obtain a unique functor \(\tau'\!:\calC_W\to\Fun(\2,\calE)\)
+such that \(\sigma' = \tau'\circ Q\). Now \(\tau'\) corresponds uniquely to a natural transformation \(\tau\!:FQ\To GQ\) in \(\Fun(\calC_W,\calE)\) for which \(\tau = Q\sigma\).
+\end{proof}
+\begin{remark}
+	The above argument actually has almost nothing to do with the specific situation at hand. Instead, it is really a statement about particular 2-categories.
+\end{remark}
+\begin{exercise}
+	Let \(\calC\) be a category, and \(W\subseteq\Mor(\calC)\). Let \((\calC_W,Q)\) be a strict localization of \(\calC\) with respect to \(W\). Show that \(Q\) is bijective on objects. Hint: consider the category
+	\(\calC'\) whose objects are those of \(\calC\), and where all objects are isomorphic by a unique isomorphism.
+\end{exercise}
+\begin{exercise}
+	Prove the rest of Remark \ref{remark:1-categorical-property-of-localization}.
+\end{exercise}
+\begin{notation}
+	The localization of a category \(\calC\) with respect to \(W\) is variously denoted \(\calC_W\), \(\calC[W^{-1}]\), and \(W^{-1}\calC\).
+\end{notation}
+
+Since strict localizations are automatically also weak localizations, it suffices to construct strict ones in all situations of interest in order to know that all weak localizations
+also exist. It turns out that this is possible, through a construction originally due to Gabriel \& Zisman. The idea is that we want morphisms in \(\calC[W^{-1}]\) to represent
+fractions
+\[ f_1s_1^{-1}f_2s_2^{-1}\cdots f_ns_n^{-1}, \]
+where the \(f_i\) are just ``arbitrary'' morphisms and \(s_i\in W\). If there was some commutation relationship, this could be collapsed down to just \(fs^{-1}\), which we'll look
+at later, but in general there is no way around having arbitrarily long chains. This same issue is present when localizing noncommutative rings.
+\begin{construction}\label{construction:gabriel-zisman-localization}
+	Let \(\calC\) be a category, and let \(W\subseteq\Mor(\calC)\). We construct a category \(\calC[W^{-1}]\) and functor \(Q\!:\calC\to\calC[W^{-1}]\) as suggested in \cite{krause-homological-theory-of-representations}.
+	Consider the quiver \(\sfC\) with vertices \(\Ob(\calC)\), and edges given by the disjoint union of \(\Mor(\calC)\) where \(W^- := \{ s^{-1}\!: y\to x \mid W\ni s\!:x\to y \}\) consists
+	of edges labeled \(s^{-1}\) for all \(s\in W\), and which are reversed in direction compared to their corresponding element of \(W\). Let \(\calP\) be the path category of \(\sfC\), and
+	denote the composition (i.e.\ concatenation) in \(\calP\) by \(\circ_\calP\). We let \(\calC[W^{-1}]\) be the quotient of \(\calP\) given by the equivalence relation on the morphisms generated by
+	the following relations:
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(g\circ_\calP f = g\circ f\) for all \(f\!:x\to y\), \(g\!:y\to z\) in \(\calC\).
+	\item Let \(\id^\calP_x\) denote the identity of \(x\) in \(\calP\). Then we demand \(\id^\calP_x = \id_x\).
+	\item For all \(W\ni s\!:x\to y\), we have \(s^{-1}\circ_\calP s = \id_x\), \(s\circ_\calP s^{-1} = \id_y\).
+	\end{enumerate}
+	The functor \(Q\!:\calC\to\calC[W^{-1}]\) is the identity on objects, and on morphisms is the composition
+	\[ \Mor(\calC)\inj \Mor(\calC)\amalg W^- \to \Mor(\calP) \sur \Mor(\calC[W^{-1}]). \]
+	Explicitly, this means the following: the objects of \(\calC[W^{-1}]\) are just the objects of \(\calC\), while a morphism from \(x\) to \(y\) is an equivalence class of a zigzagging sequence of morphisms, e.g.
+	\[ x \longto \bullet \overset{\in W}\longot\bullet\longto\cdots\overset{\in W}\longot\bullet\longto y. \]
+	Two such sequences are equivalent if they can be related
+	\begin{enumerate}[label=(\arabic*')]
+	\item by composing adjacent arrows going the same direction,
+	\item by removing identities,
+	\item by removing instances of \(\bullet \overset{s}\longto \bullet \overset{s}\longot \bullet \) and \(\bullet \overset{s}\longot \bullet \overset{s}\longto \bullet \) whenever \(s\in W\), or
+	\item through the existence of a commutative diagram
+	\begin{diagram*}[cramped, row sep=tiny]
+		 & \bullet\ar[dd] & \bullet\ar[l,"\in W"']\ar[r]\ar[dd] & \cdots & \bullet\ar[l,"\in W"']\ar[dr]\ar[dd] & \\
+		x \ar[ur]\ar[dr] & & & & & y. \\
+		& \bullet & \bullet\ar[l,"\in W"']\ar[r] & \cdots & \bullet\ar[l,"\in W"']\ar[ur] &
+	\end{diagram*}
+	\end{enumerate}
+	One regards the ``empty zigzag'' as the identity morphism. The functor \(Q\) just sends a morphism \(f\!:x\to y\) to the ``trivial zigzag'' \(f\!:x\to y\).
+\end{construction}
+
+Note that this category can fail to be locally small: one can imagine non-equivalent morphisms from \(x\) to \(y\) in \(\calC[W^{-1}]\) having
+any object of \(\calC\) as an intermediate at some point, so that \(\calC[W^{-1}](x,y)\) may have as many morphisms as \(\calC\) does objects.
+
+\begin{theorem}
+	Let \(\calC\) be a category, and \(W\subseteq\Mor(\calC)\). Then the pair \((\calC[W^{-1}],Q)\) from Construction \ref{construction:gabriel-zisman-localization} is a strict localization
+	of \(\calC\) with respect to \(W\).
+\end{theorem}
+\begin{proof}
+Observe that for all \(s\in W\), the morphism \(Q(s)\) is invertible. Indeed, we have
+\[ (\bullet\overset{s}\longto\bullet)\circ(\bullet\overset{s}\longot\bullet) = \bullet\overset{s}\longot\bullet\overset{s}\longto\bullet = \bullet\overset{\id}\longto\bullet. \]
+with the other composition being the same. Let \(\calE\) be a category, and suppose we have a functor \(F\!:\calC\to\calE\) which inverts elements of \(W\). We need
+to produce a unique functor \(F'\!:\calC[W^{-1}]\to\calE\) for which \(F = F'Q\). For each object \(x\in\Ob(\calC[W^{-1}]) = \Ob(\calC)\), we are thus forced
+to set \(F'x := Fx\) since \(Q\) is the identity on objects. For morphisms, observe that every zigzag can be broken up as
+\[ \bullet \longto \bullet \longot \bullet \cdots \bullet \longot \bullet \longto \bullet = (\bullet\to \bullet)\circ(\bullet\ot\bullet)\circ\cdots\circ(\bullet\ot\bullet)\circ(\bullet\to\bullet). \]
+In particular, the value of \(F'\) at such a zigzag is determined by what it does to morphisms \(\bullet\to\bullet\) and \(\bullet\ot\bullet\). The former are exactly the morphisms
+in the image of \(Q\), hence we have \(F'(\bullet\to\bullet) = F(\bullet\to\bullet)\). For a morphism \((s\!:x\to y)\in W\), as remarked, we have that
+\[ Q(s)^{-1} = (y\overset{s}\longot x) \]
+and every zigzag of the form \(\bullet\ot\bullet\) arises in this way. In particular, forcibly we must have \(F'(Q(s)^{-1}) = (F'Q(s))^{-1}\). This completely determines the functor \(F'\)
+in a unique way; in particular, the value is given by
+\[ F'(\bullet \overset{f_1}\longto \bullet \overset{s_1}\longot  \cdots  \overset{s_n}\longot \bullet \overset{f_{n+1}}\longto \bullet)
+ = F(\bullet) \overset{Ff_1}\longto F(\bullet) \overset{F(s_1)^{-1}}\longto  \cdots  \overset{F(s_n)^{-1}}\longto F(\bullet) \overset{Ff_{n+1}}\longto F(\bullet). \]
+By Lemma \ref{lemma:1-strict-localization-is-2-strict-localization}, we are done, recognizing that the above is a well-defined functor since the value is invariant
+under the operations (1')--(3') described in Construction \ref{construction:gabriel-zisman-localization}.
+\end{proof}
+
+\subsection{Calculus of fractions}
+The construction of an arbitrary localization \(\calC[W^{-1}]\) can be quite hard to control the properties of. As noted, even when \(\calC\) is locally small, the result may not
+end up being so. It is therefore desirable to find conditions on \(W\) where the localization is more well-behaved. There are several ways of doing this; we
+will consider the \emph{calculus of fractions} approach, similar to the work of Ore on the localization of noncommutative rings: one can get control over localizations by imposing
+a ``weak'' commutation rule, collapsing an arbitrary zigzag
+\[ \bullet \longto \bullet \longot  \cdots  \longot \bullet \longto \bullet \]
+into one of the form
+\[ \bullet \longto \bullet \longot \bullet\quad\text{or}\quad\bullet\longot\bullet\longto\bullet. \]
+\begin{definition}
+	Let \(\calC\) be a category, and let \(W\) be a collection of morphisms closed under composition and containing all identity morphisms. We say that \(\calC\) is a \emph{right multiplicative system} (or
+	has a \emph{left calculus of fractions}) if it satisfies the following two conditions:
+	\begin{enumerate}[label=(M\arabic*)]
+	\item For any diagram of solid arrows
+	\begin{diagram*}
+		x\ar[r,"f"]\ar[d,"s\in W"'] & y \ar[d,dashed,"t\in W"] \\
+		x' \ar[r,dashed,"g"] & y'
+	\end{diagram*}
+	with \(s\in W\), there are dashed arrows as displayed.
+	\item For any solid diagram
+	\begin{diagram*}
+		x'\ar[r,"s"] & x\ar[r,shift left,"f"]\ar[r,shift right,"g"'] & y \ar[r,dashed,"t"] & y'
+	\end{diagram*}
+	there is a dashed arrow as displayed.
+	\end{enumerate}
+	We say that \(W\) is a \emph{left multiplicative system} (or has a \emph{right calculus of fractions}) if \(W^\op\) is a right multiplicative system in \(\calC^\op\).
+\end{definition}
+\begin{remark}
+	The terminology is very scattered, and most sources tend to pick arbitrarily what things they call \emph{left} and \emph{right.}
+\end{remark}
+\begin{remark}
+	The way to interpret (M1) is that it allows us to commute a fraction \(fs^{-1}\) into \(t^{-1}g\).
+\end{remark}
+
+To any collection of arrows \(W\) in a category \(\calC\), we can associate some categories and functors.
+\begin{definition}
+	Let \(\calC\) be a category, and let \(W\) be a collection of morphisms in \(\calC\). We define the category
+	\begin{align*}
+		W_{/x} &:= \{ s\!:x'\to x\mid s\in W \},\\
+		W_{/x}( (s\!:x'\to x), (t\!:x''\to x) ) &:= \left\{ f\in\calC(x',x'')\,\left\vert %
+																		\begin{tikzcd}[column sep=small, ampersand replacement=\&]
+																		x'\ar[rr,"f"] \& \& x''\\
+																		 \& x\ar[from=ul,"s"']\ar[from=ur,"t"] \&
+																		\end{tikzcd} \text{ commutes}\right. \right\},\\
+		\pi_{/x}\!:W_{/x}&\to \calC,\quad ( s\!:x'\to x ) \mapsto x'.\\
+	\end{align*}
+	Note that this is a full subcategory of the slice \(\calC/x\).
+
+	Dually, we define the full subcategory \(W^{x/}\) of \(x/\calC\) by
+	\begin{align*}
+		W^{x/} &:= \{ s\!:x\to x'\mid s\in W \},\\
+		W^{x/}( (s\!:x\to x'), (t\!:x\to x'') ) &:= \left\{ f\in\calC(x',x'')\,\left\vert %
+																		\begin{tikzcd}[column sep=small, ampersand replacement=\&]
+																		 \& x\ar[dl,"s"']\ar[dr,"t"] \& \\
+																		x'\ar[rr,"f"] \& \& x''
+																		\end{tikzcd} \text{ commutes}\right. \right\},\\
+		\pi^{x/}\!:W^{x/}&\to\calC,\quad ( s\!:x\to x' ) \mapsto x'.
+	\end{align*}
+\end{definition}
+
+\begin{proposition}
+	Let \(\calC\) be a category, let \(W\) be a collection of morphisms in \(\calC\), and let \(x\in \calC\).
+	\begin{enumerate}[label=(\arabic*)]
+	\item Suppose \(W\) is a right multiplicative system. Then \(W^{x/}\) is filtered.
+	\item Suppose \(W\) is a left multiplicative system. Then \(W_{/x}\) is cofiltered.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+Statement (2) is formally dual to (1), so we prove only (1). Since \(W\) contains the identities, \(W^{x/}\) is non-empty. To show that \(W^{x/}\) is filtered,
+it suffices to prove the following:
+\begin{enumerate}[label=(\alph*)]
+\item Any two objects in \(W^{x/}\) map to a common object: let \(s\!:x\to x'\) and \(t\!:x\to x''\) be objects of \(W^{x/}\). By (M1), we obtain a diagram
+\begin{diagram*}
+	x\ar[r,"s"]\ar[d,"t"] & x'\ar[d,dashed,"t'"] \\
+	x''\ar[r,dashed,"s'"] & x'''
+\end{diagram*}
+where \(t'\in W\), so \(t'\circ s \in W\) by closure under composition, hence we may consider it as an element of \(W^{x/}\). By commutativity of the diagram, we have morphisms \(s\to t'\circ s\) and \(t\to t'\circ s\).
+\item Any two parallel arrows in \(W^{x/}\) are equalized by some morphism: If we have parallel arrows \(f,g\!:s\to t\), we apply (M2) to obtain
+\begin{diagram*}[cramped,column sep=small]
+	& x\ar[dl,"s"]\ar[dr,"t"] & & \\
+	x'\ar[rr,shift left,"f"]\ar[rr,shift right,"g"'] & & x''\ar[r,dashed,"t'"] & x'''
+\end{diagram*}
+where now \(t'\circ t \in W\). We obtain a morphism \(t'\!: t\to t'\circ t\) which equalizes \(f,g\).
+\end{enumerate}
+We conclude that \(W^{x/}\) is filtered.
+\end{proof}
+
+This category being filtered means we can drastically simplify the morphisms in the localization not only in their form but also in terms of their equivalence relation.
+To prove this, we will basically do another construction of the localization exploiting this property, and deduce by universal property that the aforementioned statement is true.
+Preliminarily, we make this definition:
+\begin{definition}
+	Let \(\calC\) be a category, and \(W\) be a right multiplicative system. We set
+	\[ \calC_W^r(x,y) := \injlim\calC(x,\pi^{y/}) = \injlim_{(y\to y')\in W^{y/}}\calC(x,y'). \]
+	That is, the colimit of the (filtered) diagram
+	\[ W^{y/}\xrightarrow{\pi^{y/}} \calC \xrightarrow{\calC(x,-)} \Set. \]
+	Dually, if \(W\) is a left multiplicative system, we set
+	\[ \calC_W^l(x,y) := \injlim\calC(\pi_{/x},y) = \injlim_{(x'\to x)\in W_{/x}}(x',y). \]
+	That is, the colimit of the (filtered) diagram
+	\[ (W_{/x})^\op \xrightarrow{\pi_{/x}^\op}\calC^\op\xrightarrow{\calC(-,y)}\Set \]
+	where we note that this is filtered since \(W_{/x}\) is cofiltered.
+\end{definition}
+\begin{remark}
+	Note that we have a canonical map
+	\[ \calC(x,y) \to \calC_W^r(x,y) \]
+	and
+	\[ \calC(x,y) \to \calC_W^l(x,y) \]
+	since \(\id_x\in W^{x/}\) and \(W_{/x}\).
+\end{remark}
+\begin{remark}
+	An element of \(\calC_W^r(x,y)\) consists of a choice of a morphism \(s\!:y\to y'\) and a morphism \(f\!:x\to y'\), i.e.\ a zig-zag
+	\[ x \to y' \ot y. \]
+	Since \(W^{y/}\) is filtered, we have an explicit description of the equivalence relation. Two such zig-zags are equivalent if and only if we have a commutative diagram
+	\begin{diagram*}
+		 & y'\ar[d,dashed] & \\
+		x\ar[ur,"f"]\ar[dr,"f'"'] & y''' & y\ar[ul,"s"']\ar[dl,"s'"]\ar[l,dashed,"\in W"'] \\
+		 & y''\ar[u,dashed] &
+	\end{diagram*}
+\end{remark}
+
+The idea is to show that this defines a category.
+
+\begin{theorem}\label{thm:right-multiplicative-system-localization-category}
+	Let \(\calC\) be a category, and \(W\) be a right multiplicative system. Then we have a category \(\calC_W^r\) whose objects are the same as \(\calC\), and Hom-sets are given by
+	\(\calC_W^r(-,-)\). Furthermore, the functor \(Q\!:\calC\to\calC_W^r\) induced by the canonical maps \(\calC(-,-)\to\calC_W^r(-,-)\) exhibits \(\calC_W^r\) as a strict
+	localization of \(\calC\) by \(W\).
+\end{theorem}
+
+To prove this, we need a lemma which is how we actually produce the composition law.
+\begin{lemma}\label{lemma:right-multiplicative-system-morphism-bijection}
+	Let \(\calC\) be a category, and let \(W\) be a right multiplicative system. Suppose we have a morphism \(s\!:x\to x'\) in \(W\). Then composition with \(s\) induces an
+	isomorphism
+	\[ s^*\!: \calC_W^r(x',y)\iso\calC_W^r(x,y). \]
+\end{lemma}
+\begin{proof}
+The map sends \(x'\to y'\ot y\) to \(x \to x' \to y' \ot y\), and that this is well-defined (i.e.\ respects the equivalence relation) is clear. We need to check that we get a bijection.
+\begin{enumerate}[label=(\alph*)]
+\item \(s^*\) is surjective: given a morphism \(x \to y' \ot y\), we apply (M1) to get
+\begin{diagram*}
+	& y'' & & \\
+	x'\ar[ur,dashed] & & y'\ar[ul,dashed] & \\
+	& x\ar[ul,"s"']\ar[ur] & & y\ar[ul]
+\end{diagram*}
+and this provides the desired preimage.
+\item \(s^*\) is injective: Suppose we have
+\[ x' \overset{f}\to y'\overset{t}\ot y,\quad x' \overset{f'}\to y''\overset{t'}\ot y \]
+and that these are sent to the same thing by \(s^*\). This means that we have a diagram
+\begin{diagram*}[column sep=large]
+	 & y'\ar[d,"q"] & \\
+	x\ar[ur,"f\circ s"]\ar[dr,"f'\circ s"'] & z & y\ar[ul,"t"']\ar[dl,"t'"]\ar[l,"\in W"'] \\
+	 & y''\ar[u,"q'"'] &
+\end{diagram*}
+and so, applying (M2) we get a morphism \(r\!:z\to z'\) in \(W\) such that
+\begin{diagram*}[column sep=large]
+	 & y'\ar[d,"r\circ q"] & \\
+	x'\ar[ur,"f"]\ar[dr,"f'"'] & z' & y\ar[ul,"t"']\ar[dl,"t'"]\ar[l,"\in W"'] \\
+	 & y''\ar[u,"r\circ q'"'] &
+\end{diagram*}
+commutes, so that the two morphisms we started with are the same.
+\end{enumerate}
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{thm:right-multiplicative-system-localization-category}]
+We split this into two parts.
+\begin{enumerate}[label=(\alph*)]
+\item \(\calC_W^r\) is a category: the composition
+\[ \calC_W^r(y,z) \times \calC_W^r(x,y) \to \calC_W^r(x,z) \]
+is given by
+\begin{align*}
+	\calC_W^r(y,z) \times \injlim_{\mathclap{(y\to y')\in W^{y/}}}\calC(x,y') &\cong \injlim_{y\to y'}\left(\calC_W^r(y,z) \times \calC(x,y')\right) \\
+	\intertext{since \(W^{y/}\) is filtered,}
+	&\cong \injlim_{y\to y'}\left(\calC_W^r(y',z) \times \calC(x,y')\right) \\
+	\intertext{by the lemma,}
+	&\cong \injlim_{y\to y'}\injlim_{z\to z'}\left(\calC(y',z') \times \calC(x,y')\right) \\
+	&\to \injlim_{y\to y'}\injlim_{z\to z'}\calC(x,z') \cong \calC_W^r(x,z).
+\end{align*}
+It is clear that this composition law has identity morphisms, given simply by
+\[ x\overset\id\to x \overset\id\ot x. \]
+One needs to check that it's associative, but for this, the proof of Lemma \ref{lemma:right-multiplicative-system-morphism-bijection}
+and the above tell us that composing three morphisms can be written in terms of a diagram
+\begin{diagram*}[cramped, sep=small]
+	& & & v & & & \\
+	& & u\ar[ur] & & u'\ar[ul] & & \\
+	& y'\ar[ur] & & z'\ar[ul]\ar[ur] & & w'\ar[ul] & \\
+	x\ar[ur] & & y\ar[ul]\ar[ur] & & z\ar[ul]\ar[ur] & & w\ar[ul]
+\end{diagram*}
+so we conclude that \(\calC_W^r\) is a category.
+\item \(\calC_W^r\) is a strict localization of \(\calC\) by \(W\): consider the functor \(Q\!:\calC\to\calC_W^r\) given by \(x\mapsto x\) and \((x\overset{f}\to y)\mapsto (x\overset{f}\to y\overset\id\ot y)\).
+One easily sees that if \(s\in W\), then \(Q(s)\) is invertible. Furthermore, if \(F\!:\calC\to\calD\) is a functor inverting morphisms in \(W\), then one can without much effort verify that the rule
+\[ x\mapsto Fx,\quad (x\overset{f}\to y'\overset{s}\ot y)\mapsto F(s)^{-1}\circ F(f) \]
+yields a unique well-defined functor \(F'\!:\calC_W^r\to\calD\) such that \(F'\circ Q = F\).
+\end{enumerate}
+This concludes the proof.
+\end{proof}
+\begin{exercise}
+	Verify the details in part (b) of the proof of Theorem \ref{thm:right-multiplicative-system-localization-category}.
+\end{exercise}
+\begin{corollary}
+	Let \(\calC\) be a category, and \(W\) be a right multiplicative system. Then there is a canonical isomorphism of categories \(\calC[W^{-1}]\cong\calC_W^r\). In particular,
+	for all \(x,y\in\calC\), the induced map
+	\[ \calC[W^{-1}](x,y) \to \calC_W^r(x,y) \]
+	is bijective.% In particular, \(\calC[W^{-1}]\) is locally small. % This last statement isn't quite true; you need the assumption that W^{y/} is cofinally small.
+\end{corollary}
+\begin{corollary}
+	Let \(\calC\) be a category, and let \(W\) be a collection of morphisms. Consider the functor \(Q\!:\calC\to\calC[W^{-1}]\).
+	\begin{enumerate}[label=(\arabic*)]
+	\item If \(W\) is a right multiplicative system, then \(Q\) preserves finite colimits.
+	\item If \(W\) is a left multiplicative system, then \(Q\) preserves finite limits.
+	\end{enumerate}
+\end{corollary}
+\begin{proof}
+Statement (2) is formally dual to (1), and (1) is a consequence of filtered colimits commuting with finite limits in \(\Set\).
+\end{proof}
+
+
+\subsection{Interaction with adjoints}
+\begin{construction}\label{construction:localization-of-adjoints}
+	Let \(\calC\) and \(\calC'\) be categories, and consider collections of morphisms \(W\subseteq\Mor(\calC)\) and \(W'\subseteq\Mor(\calC')\). Consider an adjunction
+	\begin{tikzcd}[cramped]
+		\calC\ar[r,bend left,"L",""{name=A,below}] & \calC' \ar[l,bend left,"R",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	and assume that \(L(W)\subseteq W'\) and \(R(W')\subseteq W\). By universal property, we obtain a pair of functors
+	\begin{diagram*}[row sep=large]
+		\calC\ar[r,bend left=20,"L",""{name=A,below}]\ar[d] & \calC'\ar[d] \ar[l,bend left=20,"R",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv] \\
+		\calC[W^{-1}]\ar[r,dashed,bend left=20,"L'"] & \calC'[W'^{-1}]. \ar[l,dashed,bend left=20,"R'"]
+	\end{diagram*}
+\end{construction}
+\begin{proposition}\label{prop:localization-of-adjoints}
+	Consider the situation in Construction \ref{construction:localization-of-adjoints}. Then \(L'\ladj R'\).
+\end{proposition}
+\begin{proof}
+Let \(\eta\!:\1\To RL\) and \(\varepsilon\!:LR\To\1\) be the unit and counit, respectively. We obtain natural transformations
+\[ \eta'\!:\1\To R'L',\quad \varepsilon\!:L'R'\To\1 \]
+which are given on components simply by \(\eta\) and \(\varepsilon\), i.e.\ \(\varepsilon'_x = (x\overset{\eta_x}\to RLx = R'L'x)\). To see that this defines natural transformations,
+note that since \(L\) and \(R\) send weak equivalences to weak equivalences, we have a commutative diagram
+\begin{diagram*}
+	x\ar[d]\ar[r,"\eta_x"] & RLx\ar[d] \\
+	\bullet\ar[r,"\eta"] & RL\bullet \\
+	\vdots\ar[u,"W\ni"]\ar[d] & \vdots\ar[u,"\in W"']\ar[d]\\
+	y\ar[r,"\eta_y"] & RLy
+\end{diagram*}
+in \(\calC\). This shows that
+\[ (x\overset{\eta_x}\to RLx \to RL\bullet \ot \cdots\to RLy) = (x\to\bullet\ot\cdots\to y\overset{\eta_y}\to RLy) \]
+so that the induced square commutes in \(\calC[W^{-1}]\). The same reasoning applies to \(\varepsilon'\). That the unit and counit \(\eta'\) and \(\varepsilon'\)
+satisfy the triange identities now follows trivially from the fact that the same holds of \(\eta\) and \(\varepsilon\).
+\end{proof}
+
+\subsection{Localizations of additive categories are additive}
+\begin{lemma}\label{lemma:product-of-localizations}
+	Let \(\calC\) and \(\calC\) be categories, along with collections of morphisms \(W\subseteq\Mod(\calC)\) and \(W'\subseteq\Mor(\calC')\). Then there is a canonical
+	isomorphism of categories
+	\[ (\calC\times\calC')[(W\times W')^{-1}] \cong \calC[W^{-1}]\times\calC'[W'^{-1}].\]
+\end{lemma}
+\begin{proof}
+Observe that we may compute
+\begin{align*}
+	\Fun(\calC[W^{-1}]\times\calC'[W'^{-1}],\calE) &\cong \Fun(\calC[W^{-1}],\Fun(\calC'[W'^{-1}],\calE))\\
+	&\cong \Fun_W(\calC,\Fun(\calC'[W'^{-1}],\calE))\\
+	&\cong \Fun_W(\calC,\Fun_{W'}(\calC',\calE))\\
+	&\cong \Fun_{W\times W'}(\calC\times\calC',\calE) \cong \Fun( (\calC\times\calC')[(W\times W')^{-1}],\calE )
+\end{align*}
+where we use the definition of a (strict) localization, and that \(\Fun_W(\calC,\Fun_{W'}(\calC',\calE)) \cong \Fun_{W\times W'}(\calC\times\calC',\calE)\) can be checked easily.
+\end{proof}
+\begin{corollary}\label{corollary:localization-admits-coproducts}
+	Let \(I\) be a finite set, and let \(\calC\) be a category admitting \(I\)-indexed coproducts. Suppose that \(W\subseteq\Mor(\calC)\) is a collection of morphisms containing
+	the coproducts \(\amalg_{i\in I}s_i\) of all \(I\)-indexed families of morphisms \(s_i\in W\). Then \(\calC[W^{-1}]\) admits \(I\)-indexed coproducts, and
+	\[ \calC\to\calC[W^{-1}] \]
+	preserves them.
+\end{corollary}
+\begin{proof}
+The functor sending an \(I\)-indexed tuple \((x_i)_{i\in I}\in\prod_{i\in I}\calC\) to its coproduct \(\coprod_{i\in I}x_i\) is the left adjoint of the constant functor
+\begin{diagram*}
+	\calC\ar[from=r,bend right,shift right,"\coprod_{i\in I}-"',""{name=A,below}] & \mathmakebox[\widthof{\calC}][l]{\prod_{i\in I}\calC} \ar[from=l,"\Delta"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+\end{diagram*}
+and so, applying Proposition \ref{construction:localization-of-adjoints} and Lemma \ref{lemma:product-of-localizations} we get
+\begin{diagram*}[column sep=large]
+	\calC\ar[from=r,bend right,shift right,"\coprod_{i\in I}-"',""{name=A,below}]\ar[d] & \mathmakebox[\widthof{\calC}][l]{\prod_{i\in I}\calC} \ar[from=l,"\Delta"',""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]\ar[d] \\
+	\mathmakebox[\widthof{\calC}][r]{\calC[W^{-1}]}\ar[from=r,bend right,shift right,dashed,""{name=C,below}] & \mathmakebox[\widthof{\calC}][l]{\prod_{i\in I}\calC[W^{-1}]} \ar[from=l,"\Delta"',""{name=D,above}]\ar[from=C,to=D,symbol=\dashv]
+\end{diagram*}
+which exhibits the existence of \(I\)-indexed coproducts in \(\calC[W^{-1}]\). It is clear from the commutativity of the diagram that \(\calC\to\calC[W^{-1}]\) preserves \(I\)-indexed coproducts.
+\end{proof}
+\begin{exercise}\label{exercise:localization-admits-products}
+	Use the same kind of argument to show that if \(\calC\) admits finite products, then so does \(\calC[W^{-1}]\) and the localization functor preserves them.
+\end{exercise}
+\begin{remark}
+	When the categories and collections of morphisms are more well-behaved, this can be extended to larger indexing sets \(I\). For example, when the pair \((\calC,W)\) comes from
+	a model category, or more generally a (co)fibration category, arbitrary products of the localizations are the localizations of the products. See \cite[Thm.\ 7.1.1]{radulescubanu2009cofibrationshomotopytheory}.
+\end{remark}
+\begin{lemma}\label{lemma:induced-additive-structure}
+	Let \(\calC\) be an additive category, let \(\calD\) be a category admitting finite products and coproducts, and suppose there is an essentially surjective
+	functor \(Q\!:\calC\to\calD\) which preserves finite products and coproducts. Then \(\calD\) is additive, and \(Q\) is an additive functor.
+\end{lemma}
+\begin{proof}
+We check the conditions in Remark \ref{remark:additive-internal-characterization}. Conditions (1) and (2) are already fulfilled.
+
+First, note that finite products and coproducts agree in \(\calD\): indeed, for \(x,y\in\calD\), we find \(x_0,y_0\in\calC\) such that \(x\cong Q(x_0)\), \(y\cong Q(y_0)\). Then
+\[ x\amalg y \cong Q(x_0)\amalg Q(y_0) \cong Q(x_0\amalg y_0) \cong Q(x_0\times y_0)\cong Q(x_0)\times Q(y_0) \cong x\times y \]
+as desired. This shows that (3) is satisfied.
+
+To prove that (4) holds, let \(x\in\calD\) and write \(x\cong Q(x_0)\). Since \(\calC\) is additive, we have a morphism \(a\!:x_0\to x_0\) such that
+\[ x_0\xrightarrow{\Delta_{x_0}} x_0\oplus x_0 \xrightarrow{(a,\id_{x_0})} x_0\oplus x_0 \xrightarrow{\nabla_x} x_0 \]
+is the zero map. Since \(Q\) preserves both products and coproducts, we see that
+\[ Qx_0\xrightarrow{\Delta_{Qx_0}} Qx_0\oplus Qx_0 \xrightarrow{(Qa,\id_{Qx_0})} Qx_0\oplus Qx_0 \xrightarrow{\nabla_{Qx_0}} Qx_0 \]
+is zero, so that \(x\cong Qx_0 \overset{Qa}\to Qx_0\cong x\) provides (4).
+\end{proof}
+
+\begin{theorem}\label{thm:localization-of-additive-is-additive}
+	Let \(\calC\) be an additive category, and let \(W\subseteq\Mor(\calC)\) be a collection of morphisms containing the identities and closed under direct sums of maps. Then
+	\(\calC[W^{-1}]\) is an additive category, and \(Q\!:\calC\to\calC[W^{-1}]\) an additive functor.
+\end{theorem}
+\begin{proof}
+Note that \(Q\) is an essentially surjective (in fact, bijective-on-objects) functor, and that by Corollary \ref{corollary:localization-admits-coproducts} and Exercise \ref{exercise:localization-admits-products}
+the localization admits finite products and finite coproducts which commute with \(Q\). Hence, by Lemma \ref{lemma:induced-additive-structure}, \(\calC[W^{-1}]\) is additive and \(Q\)
+is an additive functor.
+\end{proof}
+
+\begin{example}
+	Recall that we defined chain complexes in an Abelian category \(\calA\), and that given a chain complex \(x^\bullet\) one may form the cohomologies \(\HH^i(x^\bullet)\in\calA\).
+	A \emph{morphism} \(f\!:x^\bullet\to y^\bullet\) of chain complexes consists of a system of morphisms \((f^i\!:x^i\to y^i)\) such that
+	\begin{diagram*}[cramped]
+		\cdots \ar[r] & x^{i} \ar[r]\ar[d,"f^i"] & x^{i+1} \ar[r]\ar[d,"f^{i+1}"] & \cdots \\
+		\cdots \ar[r] & x^{i} \ar[r] & x^{i+1} \ar[r] & \cdots
+	\end{diagram*}
+	commutes. In particular, this defines a category \(\Ch(\calA)\), and one can check that it is Abelian. It is also not so hard to check that taking cohomology extends to a
+	collection of functors \(\HH^i\!:\Ch(\calA)\to\calA\). One says that a morphism \(f\!:x^\bullet\to y^\bullet\) of chain complexes is a \emph{quasi-isomorphism} if \(\HH^i(f)\) is an isomorphism for all \(i\in\Z\).
+
+	Let \(\Qis_\calA\subseteq\Mor(\Ch(\calA))\) denote the quasi-isomorphisms. The \emph{derived category} of \(\calA\) is the localization
+	\[ \sfD(\calA) := \Ch(\calA)[\Qis_\calA^{-1}]. \]
+	By the above theorem, this is an additive category. It is very important to note, however, that it is absolutely not an Abelian category; the structure it carries is instead
+	that of a \emph{triangulated category.} Tautologically, the functors \(\HH^i\!:\Ch(\calA)\to\calA\) descend to functors \(\HH^i\!:\sfD(\calA)\to\calA\) by universal property.
+\end{example}
+

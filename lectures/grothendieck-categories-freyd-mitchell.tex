@@ -1,0 +1,359 @@
+%!TEX root = ../lectures.tex
+
+\section{Grothendieck categories \& the Freyd--Mitchell embedding theorem}
+This lecture concerns properties of Grothendieck categories, with the motivating goal of sketching the famous result that any small Abelian category may be embedded inside a module category (over some typically noncommmutative ring).
+The fundamental strategy is to apply a result of the kind found in Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}, which we begin with below, and show
+that a suitable situation can be constructed for any small Abelian category through the use of Pro-categories (which are the duals of Ind-categories). In particular, one considers a composition
+\[ \calA\inj\Pro(\calA) \to \Mod_A \]
+for a suitable ring \(A\).
+
+\subsection{A criterion for embedding into a module category}
+In Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}, we provided a criterion for being equivalent to a particular module category.
+However, with some care, one can change the assumptions by dropping compactness to give a mere embedding, at least for small subcategories, which is good enough.
+
+The underlying reason we can drop a compactness condition is the following lemma, telling us that as long as we are only working with a small set of objects,
+we can get by with a finite amount of data.
+\begin{lemma}\label{lemma:small-set-quotients-of-projective-generator}
+	Let \(\calA\) be a locally small Abelian category with a projective generator, and let \(\calA'\subseteq\Ob(\calA)\) be a small set.
+	Then there is a projective generator \(p'\) of \(\calA\) such that each object in \(\calA'\) is a quotient of \(p'\).
+\end{lemma}
+\begin{proof}
+For any \(x\in\calA\), there is an epimorphism
+\[ \coprod_{p\to x}p\sur x. \]
+We thus set
+\[ p' := \coprod_{x\in\calA'}\coprod_{p\to x}p \]
+which exists, as \(\calA'\) is small. From this, we can componentwise define an epimorphism of the form \(p'\sur x\) for any \(x\in\calA'\), so that \(p'\) is a generator.
+Since coproducts of projectives are projective, \(p'\) is a projective generator.
+\end{proof}
+
+With this in place, we can basically run through a simplified version of the proof of Theorem \ref{thm:abelian-cat-with-compact-projective-generator}.
+
+\begin{theorem}\label{thm:embedding-of-small-category-into-module-category}
+	Let \(\calA\) be a locally small Abelian category with a projective generator, and let \(\calA'\subseteq\calA\) be a small Abelian subcategory.
+	Then there is a ring \(A\) and a fully faithful exact embedding
+	\[ \calA'\inj\Mod_A \]
+	of \(\calA'\) into the category of right modules over \(A\).
+\end{theorem}
+\begin{proof}
+By Lemma \ref{lemma:small-set-quotients-of-projective-generator}, we have a projective generator \(p\in\calA\) for which every \(x\in\calA'\) has a surjection
+\[ p\sur x. \]
+We let \(A = \End(p)\). By (1) in Theorem \ref{thm:abelian-cat-with-compact-projective-generator}, the functors
+\[ \calA(p,-)\!:\calA\to\Mod_A,\quad \leadsto\quad \calA(p,-)\!:\calA'\to\Mod_A \]
+are faithful. We need to show that the latter functor, i.e.\ the restriction of \(\calA(p,-)\) to \(\calA'\), is full. For this, we can essentially apply the same proof
+as (2) in Theorem \ref{thm:abelian-cat-with-compact-projective-generator}, except that we no longer need compactness. Consider an \(A\)-linear homomorphism
+\[ \varphi\!:\calA(p,x)\to\calA(p,y),\quad x,y\in\calA'. \]
+Consider an exact sequence
+\[ 0 \to \ker\pi\overset\kappa\inj p\overset\pi\sur x\to 0. \]
+We get a morphism \(\varphi(\pi)\!:p\to y\), and so we consider the situation
+\begin{diagram*}
+	& & p\ar[d,"\kappa\circ h"]\ar[dl,"h"'] & & \\
+	0\ar[r] & \ker\kappa\ar[r,hook,"\kappa"] & p\ar[r,two heads,"\pi"]\ar[d,"\varphi(\pi)"] & x\ar[r] & 0 \\
+	& & y & &
+\end{diagram*}
+where we need to check that for all \(h\!:p\to\ker\pi\), the composition satisfies \(\varphi(\pi)\circ\kappa\circ h = 0\). For this,
+\[ \varphi(\pi)\circ\kappa\circ h = \varphi(\pi\circ\kappa\circ h) = \varphi(0\circ h) = 0 \]
+so that \(\varphi(\pi)\circ\kappa = 0\). Thus, we get an induced map \(f\!:x\to y\) such that \(f\circ\pi = \varphi(\pi)\). To see that \(f_* = \varphi\), applying \(\calA(p,-)\) to our starting
+exact sequence yields that
+\[ \calA(p,p)\overset{\pi_*}\sur\calA(p,x) \]
+since \(p\) is projective, so it suffices to see that \(\varphi\circ\pi_* = f_*\circ \pi_*\). However, for any \(a\!:p\to p\), we have
+\[ (f_*\circ\pi_*)(a) = (f\circ\pi)_*(a) = \varphi(\pi)\circ a = \varphi(\pi\circ a) = (\varphi\circ\pi_*)(a). \]
+We conclude that \(\calA(p,-)\!:\calA'\to\Mod_{\End(p)}\) is fully faithful. It is, in addition, exact since \(p\) is projective.
+\end{proof}
+\begin{remark}
+	Note that in the above, by an \emph{Abelian subcategory,} we mean a subcategory which is Abelian and for which the inclusion functor is exact.
+\end{remark}
+
+\subsection{Grothendieck categories}
+\begin{definition}
+	A \emph{Grothendieck category} is a locally small Abelian category admitting a generator and small colimits, for which small filtered colimits are exact.
+\end{definition}
+
+\begin{definition}
+	Let \(\calC\) be a category, and let \(x\in\calC\). A \emph{subobject} of \(x\) is an equivalence class of monomorphisms \(y\inj x\), under the equivalence
+	relation \((y\inj x)\sim (y'\inj x)\) if and only if there is a commutative triangle
+	\begin{diagram*}[cramped, column sep=small]
+		y \ar[rr,"\sim"]\ar[dr,hook] & & y'\ar[dl,hook] \\
+		& x. &
+	\end{diagram*}
+	We write \(y\subseteq x\) to say that \(y\) is a subobject of \(x\), choosing a particular representative of the equivalence class. Dually, a \emph{quotient} of \(x\) is an equivalence class of epimorphisms \(x\sur y\).
+\end{definition}
+
+\begin{lemma}\label{lemma:faithful-functors-reflects-monomorphisms-epimorphisms}
+	Let \(F\!:\calC\to\calD\) be a faithful functor. Then \(F\) reflects monomorphisms and epimorphisms.
+\end{lemma}
+\begin{proof}
+We prove that it reflects monomorphisms, as the other case is dual. Let \(f\!:x\to y\) be a morphism in \(\calC\), and suppose that \(F(f)\) is monic. Note that
+\[ z \underset{b}{\overset{a}{\rightrightarrows}} x \overset{f}\to y \quad\leadsto\quad Fz \underset{Fb}{\overset{Fa}{\rightrightarrows}} Fx \overset{Ff}\to Fy \]
+so that \(Fa = Fb\), hence \(a=b\) since \(F\) is faithful.
+\end{proof}
+
+\begin{lemma}\label{lemma:generators-in-balanced-categories-detect-isomorphisms}
+	Let \(\calC\) be a balanced category, and let \(\calU\) be a small set of objects. Consider the following conditions.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\calU\) generate \(\calC\).
+	\item Suppose we have a morphism \(f\!:x\to y\) in \(\calC\). If
+	\[ \forall u\in\calU,\quad f_*\!:\calA(u,x)\iso\calA(u,y) \]
+	then \(f\) is an isomorphism.
+	\end{enumerate}
+	Then (1) implies (2), and if \(\calC\) admits equalizers then (2) implies (1).
+\end{lemma}
+\begin{proof}
+(1) implies (2): the statement that \(\calU\) is a small set of generators is the same as saying that the functor
+\[ \prod_{u\in\calU}\calC(u,-)\!:\calC\to\Set \]
+is faithful. By Lemma \ref{lemma:faithful-functors-reflects-monomorphisms-epimorphisms}, it therefore reflects epimorphisms and monomorphisms; since \(\calC\) and \(\Set\) are balanced,
+this means it is conservative. The condition (2) is exactly that \(f\) is sent to an isomorphism under the above functor.
+
+(2) implies (1): by assumption \(\prod_{u\in\calU}\calC(u,-)\) is a convervative functor; let \(f,g\!:x\to y\) be a pair of parallel arrows, and consider \(k\!:\eq(f,g)\inj x\).
+Since \(\prod_{u\in\calU}\calC(u,-)\) commutes with limits, we have
+\[ \prod_{u\in\calU}\calC(u,\eq(f,g)) \iso \eq((f_*)_{u\in\calU},(g_*)_{u\in\calU}). \]
+If we assume that \(f\circ h = g\circ h\) for all \(h\!:u\to x\), then the latter set is just \(\prod_{u\in\calU}\calC(u,x)\), so by conservativity we get that
+\(\eq(f,g)\iso x\), hence \(f=g\).
+\end{proof}
+
+% \begin{lemma}
+% 	Let \(\calA\) be a Grothendieck category with generator \(u\), and let \(\kappa\) be an infinite regular cardinal. Consider a small \(\kappa\)-filtered diagram \(D\!:I\to\calA\),
+% 	and an epimorphism \(\injlim{D}\sur y\). Assume that one of the following conditions hold:
+% 	\begin{enumerate}[label=(\alph*)]
+% 	\item \(\#\calA(u,y) < \kappa\), or
+% 	\item \(y\in\calA^\kappa\), i.e.\ \(y\) is \(\kappa\)-compact.
+% 	\end{enumerate}
+% 	Then there is some \(i\in I\) such that the induced map \(D(i)\to y\) is an epimorphism.
+% \end{lemma}
+% \begin{proof}
+% Set \(y_i := \img(D(i)\to y)\). This induces a new diagram \(D'\!:I\to\calA\). Since small filtered colimits are exact, they commute with taking images, so
+% \[ \injlim{D'} = \injlim_{i\in I}\img(D(i)\to y) \cong \img(\injlim{D}\sur y) \cong y. \]
+
+% (a) Let \(S = \injlim_{i\in I}\calA(y_i,u)\), viewed as a subset of \(\calA(u,y)\). By assumption, \(\#S \leq \#\calA(u,y) < \kappa\), so \(S\) is \(\kappa\)-compact
+% by the computation in Example \ref{example:compact-objects-in-Set}. Therefore,
+% \[ \injlim_{i\in I}\Set(S,\calA(u,y_i)) \cong \Set(S,\injlim_{i\in I}\calA(u,y_i)) = \Set(S,S). \]
+% We thus find some \(i_0\in I\) and morphism \(S\to \calA(y_{i_0},u)\) such that
+% \[ (S\to \calA(u,y_{i_0}) \inj S) = \id_S. \]
+% However, then the inclusion on the left is also surjective, so \(S = \calA(y_{i_0},u)\), from which we deduce that for any \((i_0\to i)\in I\), the induced map
+% \(\calA(u,y_{i_0})\to\calA(u,y_i)\) is bijective. Since \(u\) is a generator, we conclude by Lemma \ref{lemma:generators-in-balanced-categories-detect-isomorphisms} that \(y_{i_0}\iso y_i\), hence \(y_{i_0}\iso y\). But then
+% \[ \img(D(i)\to y) \cong y, \]
+% so \(D(i)\sur y\).
+
+% (b) If \(y\) is \(\kappa\)-compact, then
+% \[ \injlim_{i\in I}\calA(y,y_i) \iso \calA(y,y). \]
+% But then, once again, the identity factors as
+% \begin{diagram*}[cramped,column sep=small]
+% 	y\ar[rr,equal]\ar[dr] & & y \\
+% 	& y_i\ar[ur,hook] & 
+% \end{diagram*}
+% so the canonical inclusion \(y_i\inj y\) is an epimorphism. Since Abelian categories are balanced, this implies \(y_i\cong y\); as before, we conclude that \(D(i)\sur y\).
+% \end{proof}
+
+
+\begin{proposition}\label{prop:grothendieck-categories-small-set-of-subobjects}
+	Let \(\calA\) be a Grothendieck category, and let \(x\in\calA\). Then the set of subobjects of \(x\) and the set of quotients of \(x\) are small.
+\end{proposition}
+\begin{proof}
+Note that any Abelian category admits finite limits, since they admit finite products and equalizers. Now, denote by \(S(x)\) the set of subobjects of \(x\), and let \(u\in\calA\)
+be a generator. The functor \(\calC(u,-)\) provides a map
+\[ \rho\!: S(x) \to \calP(\calC(u,x)), \quad (x'\overset\iota\inj x)\mapsto\iota_*(\calC(u,x'))\subseteq\calC(u,x) \]
+where we note that \(\iota_*\) is injective since \(\iota\) is a monomorphism. By assumption, \(\calA\) is locally small, hence \(\calP(\calC(u,x))\) is small, so it suffices
+to see that the above map of sets \(\rho\) is injective.
+
+First of all, we have that \(\rho(x')\cong\calC(u,x')\) for any \(x'\subseteq x\). Let \(x'\subseteq x\) and \(x''\subseteq x\). The pullback \(x'\times_x x''\) is then also a subobject of \(x\),
+and if \(\rho(x') = \rho(x'')\) then
+\[ \calC(u,x'\times_xx'') \cong \calC(u,x')\times_{\calC(u,x)}\calC(u,x'') \cong \rho(x')\cap\rho(x'') = \rho(x') = \rho(x''). \]
+Applying Lemma \ref{lemma:generators-in-balanced-categories-detect-isomorphisms}, we see that \( x'\xleftarrow\sim x'\times_xx''\xrightarrow\sim x'' \) and in particular \(x'\cong x''\).
+
+To see that the set of quotients is small, note that \(f\!:x\to y\) is an epimorphism if and only if
+\[ 0\to \ker{f} \inj x \overset{f}\to y \to 0 \]
+is exact, which uniquely identifies \(y\) as the cokernel of \(\ker{f}\inj x\). In other words, quotients of \(x\) correspond to subobjects, which form a small set.
+\end{proof}
+
+\begin{proposition}\label{prop:grothendieck-category-injectives-detected-by-generator}
+	Let \(\calA\) be a Grothendieck category, and let \(\calU\) be some small set of generators. Let \(z\in\calA\). Then the following are equivalent:
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(z\) is injective.
+	\item For all \(u\in\calU\) and all subobjects \(v\subseteq u\), the restriction map
+	\[ \calA(u,z)\to\calA(v,z) \]
+	is surjective.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+Certainly (1) implies (2). Conversely, assume (2). We want to show that \(z\) is injective, so consider the situation
+\begin{diagram*}
+	x'\ar[r,hook,"f"]\ar[d,"h"'] & x\ar[dl,dashed,"\exists?"] \\
+	z
+\end{diagram*}
+where we want to find the dashed arrow. We consider the category \(\Delta(h)\) whose objects are diagrams \(D\) of the form
+\begin{diagram*}
+	x'\ar[r,hook,"k"]\ar[d,"h"']\ar[rr,bend left,"f"] & y\ar[dl,"g"]\ar[r,hook,"\ell"] & x \\
+	z
+\end{diagram*}
+which we denote \(D = (y,k,g,\ell)\), and a morphism \(D\to D' = (y',k',g',\ell')\) is a morphism \(t\!:y\to y'\) making the diagram
+\begin{diagram*}
+	y\ar[r,"t"] \ar[rr,bend left,hook,"\ell"]\ar[d,"g"'] &  y'\ar[r,hook,"\ell'"]\ar[dl,"g'"] & x \\
+	z
+\end{diagram*}
+commute. Note that \(t\) is automatically a monomorphism, and that since \(\ell'\) is a monomorphism, if a morphism \(D\to D'\) exists, then it is unique.
+Now, let \(\Sigma(h)\) be the set of isomorphism classes in \(\Delta(h)\); this is a small set by Proposition \ref{prop:grothendieck-categories-small-set-of-subobjects}.
+We turn it into a poset by letting \(D\leq D'\) if and only if there exists a morphism \(D\to D'\). One sees that \(\Delta(h)\simeq\Sigma(h)\).
+
+There is a functor \(\Delta(h) \to \calA\) given by sending \((y,k,g,\ell)\) to \(y\), which induces a functor \(\Sigma(h)\to\calA\). We can use this to see that any chain in \(\Sigma(h)\) has an upper bound: given a chain
+\[ \alpha\!:I\to\Sigma(h), \]
+since small filtered colimits are exact in \(\calA\), we may take the colimit of the induced diagram \(\alpha'\!:I\to\calA\), which is filtered, and hence the induced map \(\injlim\alpha' \to x\)
+is injective by exactness. Then \(\injlim\alpha'\) together with its canonically induced maps to \(x\) and \(z\) is an upper bound for the chain \(\alpha\).
+
+By Zorn's lemma, \(\Sigma(h)\) has a maximal element, say \((y_0,k_0,g_0,\ell_0)\). By Lemma \ref{lemma:generators-in-balanced-categories-detect-isomorphisms}, to check that \(y_0 \iso x\),
+it suffices to check that the injective maps
+\[ \forall u\in\calU,\quad \ell_*\!:\calC(u,y_0)\inj\calC(u,x) \]
+are also surjective. Thus, consider a morphism \(\varphi\!:u\to x\), and define an object \(y\in\calA\) by the pullback
+\begin{diagram*}
+	y\ar[dr,pullback]\ar[r,dashed]\ar[d,dashed] & y_0\ar[d,hook,"\ell"] \\
+	u\ar[r,"\varphi"] & x.
+\end{diagram*}
+Since \(\ell\) is monic, so is the induced map \(y\to u\). Now define an object \(y_1\in\calA\) by the pushout
+\begin{diagram*}
+	y\ar[r]\ar[d,hook] & y_0\ar[d,dashed] \\
+	u\ar[r,dashed] & y_1.\ar[ul,pushout]
+\end{diagram*}
+Expressing pullbacks in terms of equalizers, and that in terms of kernels, we have an exact sequence
+\[ 0 \to y \to y_0\oplus u \overset{r}\to x \]
+but doing the same for the definition of \(y_1\), one sees that \(y_1 \cong \img{r} \subseteq x\), and we deduce that the canonical map \(y_1\to x\) is monic. Now, \(y\) is also a
+subobject of \(u\), so by (2), the composite \(y\to y_0 \to z\) factors as in the diagram
+\begin{diagram*}
+	y\ar[r, hook]\ar[d] & u\ar[dr,"\varphi"]\ar[ddr,dashed]\ar[d] & \\
+	y_0\ar[r,hook]\ar[drr] & y_1\ar[dr,dashed] & x\ar[from=l,hook,crossing over] \\
+	& & z
+\end{diagram*}
+which induces the dashed arrow \(y_1\to z\) by universal property. This endows \(y_1\) with the structure of an object in \(\Delta(x)\), so by maximality
+of \(y_0\), we have that \(y_0\cong y_1\) so that \(\varphi\) factors through \(y_0\) as desired.
+\end{proof}
+
+The below theorem is the fruit of our labour, and it crucially relies essentially on the above proposition.
+
+\begin{theorem}
+	Let \(\calA\) be a Grothendieck category. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\calA\)	has enough injectives.
+	\item \(\calA\) has an injective cogenerator, i.e.\ \(\calA^\op\) has a projective generator.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+Let \(u\) be a generator of \(\calA\).
+
+(1) Let \(x\in\calA\). For any ordinal \(\alpha\), we define an object \(M_\alpha(x)\in\calA\), and we will do this in such a way that we can check condition (2) in
+Proposition \ref{prop:grothendieck-category-injectives-detected-by-generator}. We do this inductively; consider the set
+\[ I(x) := \{ (v,f)\mid v\subseteq u,\, f\!:v\to x \}. \]
+We define \(M_1(x)\) by the pushout
+\begin{diagram*}
+	\coprod_{(v,f)\in I(x)}v\ar[r]\ar[d,hook] & x\ar[d,dashed,hook] \\
+	\coprod_{(v,f)\in I(x)}u\ar[r,dashed] & M_1(x)
+\end{diagram*}
+so that \(M_1\) is the cokernel of the map
+\[ \coprod_{\mathclap{(v,f)\in I(x)}}v \to x\oplus \coprod_{(v,f)\in I}u \]
+induced by the maps \(f\!:v\to x\) and the inclusions \(v\subseteq u\). If \(f\!:v\to x\) is a morphism from a subobject of \(u\) to \(x\), then it extends to a map \(u\to M_1(x)\) in the obvious way.
+We have thus embedded \(x\) in some object \(M_1(x)\), but it is not good enough as it is not injective.
+
+We now define \(M_\alpha(x)\) for an ordinal \(\alpha\) through transfinite induction in such a way that there are monomorphisms
+\[ M_{\kappa'}(x) \inj M_{\kappa}(x) \]
+whenever \(\kappa' < \kappa < \alpha\), such that these are compatible with the ordering on ordinals. Assume that \(M_\beta\) and the above monomorphisms are defined for all \(\beta < \alpha\). If \(\alpha = \beta+1\),
+then set \(M_\alpha(x) := M_1(M_\beta(x))\); we get a monomorphism \(M_\beta(x)\inj M_{\alpha}(x)\) by the above. If \(\alpha\) is a limit ordinal, then \(\{ M_{\beta}(x)\mid \beta < \alpha \}\) defines a directed system
+and we let \(M_\alpha(x)\) be its colimit. For any \(\beta < \alpha\), the canonical map \(M_\beta(x)\to M_\alpha(x)\) is then a monomorphism.
+
+Now let \(\Omega\) be the smallest infinite ordinal whose cardinality is strictly greater than the cardinality of the set of subobjects of \(u\). We claim that \(M_\Omega(x)\) is injective.
+Let \(v\subseteq u\) be a subobject, and let \(f\!:v\to M_\Omega(x)\) be a morphism. One obtains a system of subobjects \(v_\kappa\subseteq u\), given by the pullback
+\begin{diagram*}
+	v_\kappa\ar[dr,pullback]\ar[r,dashed]\ar[d,hook,dashed] & M_\kappa(x) \ar[d,hook] \\
+	v\ar[r,"f"] & M_\Omega(x)
+\end{diagram*}
+and one sees that
+\[ \injlim_{\kappa < \Omega}v_\kappa = \injlim_{\kappa < \Omega}(v\times_{M_\Omega(x)}M_\kappa(x)) \cong v\times_{M_\Omega(x)}\injlim_{\kappa < \Omega}(M_\kappa(x)) = v\times_{M\Omega(x)}M_\Omega(x) = v \]
+since filtered colimits in \(\calA\) commute with finite limits. In particular, \(v_\Omega = v\). However, since \(\Omega\) is strictly larger than the number of subobjects of \(u\), there
+must be some \(\kappa < \Omega\) for which \(v = v_\kappa\), so \(f\!:v\to M_\Omega(x)\) factors through some map \(v\to M_\kappa(x)\), which we can then extend:
+\begin{diagram*}[cramped,sep=small]
+	v\ar[dd,hook]\ar[rr] & & M_\kappa(x)\ar[dd,hook]\ar[dl,hook] \\
+	& M_{\kappa+1}(x)\ar[dr,hook] & \\
+	u\ar[ur,dashed]\ar[rr,dashed] & & M_\Omega(x)
+\end{diagram*}
+so we conclude that \(M_\Omega(x)\) is injective by Proposition \ref{prop:grothendieck-category-injectives-detected-by-generator}.
+
+(2) By Proposition \ref{prop:grothendieck-categories-small-set-of-subobjects}, the generator \(u\) has a small set of quotients; hence there is a set \(Q\) of objects such that any quotient of \(u\) is isomorphic
+to an object in \(Q\). Let \(q_0 = \bigoplus_{z\in Q}z\), and consider an embedding \(q_0\inj q\) into an injective \(q\in\calA\), which exists by (1). We aim to show that \(q\) is a cogenerator. We begin by showing that
+\[ \calA(x,q)\cong 0\implies x\cong0. \]
+Suppose the left condition holds. For any map \(h\!:u\to x\), the below right map
+\[ \img{h} \inj x \quad\leadsto\quad \calA(x,q)\to\calA(\img{h},q) \]
+is surjective since \(q\) is injective. Therefore, if \(\calA(x,q)\cong 0\), we see that \(\calA(\img{h},q) \cong 0\). Now, \(\img{h}\) is a quotient of \(u\), hence isomorphic to some \(z\in Q\) and
+there is a monomorphism
+\[ \img{h} \iso z\inj q_0 \inj q. \]
+Therefore, \(\img{h} \cong 0\), so \(h=0\) and \(\calA(u,x)\cong 0 \cong \calA(u,0)\). We conclude that \(x\cong 0\).
+
+Finally, consider a morphism \(f\!:x\to y\) for which \(f^*\!:\calA(y,q)\iso\calA(x,q)\); it suffices to show that \(f\) is an isomorphism. Since \(\calA(-,q)\) is exact, we have an exact sequence
+\[ 0 \to \calA(\coker{f},q) \to \calA(y,q)\iso \calA(x,q)\to\calA(\ker{f},q)\to 0 \]
+which shows that \(\calA(\coker{f},q)\cong\calA(\ker{f},q)\cong 0\), so by what we have shown, \(\coker{f}\cong\ker{f}\cong 0\), so \(f\) is an isomorphism.
+\end{proof}
+\begin{exercise}
+	\begin{enumerate}[label=(\arabic*)]
+	\item Prove that in an Abelian category, the pushout of a monomorphism is a monomorphism
+	\begin{diagram*}
+		x\ar[r]\ar[d,hook] & y\ar[d,dashed,hook] \\
+		x'\ar[r,dashed] & y'\ar[ul,pushout]
+	\end{diagram*}
+	by proving that the above diagram is also a pullback diagram, and that in a pullback diagram the kernels of the vertical arrows agree.
+	\item Prove that in a Grothendieck category, the canonical maps to the colimit of a directed system whose transition maps are monic, are monic:
+	\begin{diagram*}[sep=small]
+		\cdots\ar[r,hook] & x_i\ar[r,hook]\ar[dr,hook] & \cdots \ar[r,hook] & x_{i'}\ar[dl,hook] \ar[r,hook] & \cdots \\
+		& & \injlim_{k\in I}x_k & &
+	\end{diagram*}
+	\end{enumerate}
+\end{exercise}
+
+\subsection{Closure properties of Ind-categories \& the Embedding Theorem (WIP)}
+\begin{theorem}
+	Let \(\calA\) be a small Abelian category. Then \(\Ind(\calA)\) is a Grothendieck category, and the inclusion \(\calA\inj\Ind(\calA)\) is exact.
+\end{theorem}
+
+Proving this is done by studying the closure properties of \(\Ind(\calA)\) under (co)limit constructions.
+\begin{proposition}
+	Let \(\calC\) be a locally small category, and assume that \(\calC\) admits finite limits. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\Ind(\calC)\) admits finite limits.
+	\item \(\Ind(\calC)\inj\PSh(\calC)\) preserves finite limits.
+	\item \(\calC\inj\Ind(\calC)\) preserves finite limits.
+	\item Filtered colimits in \(\Ind(\calC)\) are exact, i.e.\ commute with finite limits.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+We prove (1) and (2) simultaneously, afterwhich (3) follows by noting that the Yoneda embedding \(\calC\inj\PSh(\calC)\) preserves all small limits, and (4) follows
+by filtered colimits in \(\PSh(\calC)\) being exact (inheriting this property from \(\Set\)).
+
+We show that \(\Ind(\calC)\) admits binary products and equalizers. Thus, consider \(A,B\in\Ind(\calC)\), and write
+\[ A \cong \injlim_{i\in I}h_{D(i)},\quad B\cong \injlim_{j\in J}h_{D'(j)}  \]
+for some filtered diagrams \(D\!:I\to\calC\), \(D'\!:J\to\calC\). Then, in \(\PSh(\calC)\),
+\[ A\times B \cong \injlim_{(i,j)\in I \times J}h_{D(i)\times D'(j)} \in \Ind(\calC) \]
+so \(\Ind(\calC)\) admits binary products, computed in \(\PSh(\calC)\).
+
+To see that we have equalizers, fix some \(x\in\calC\), and consider the full subcategory \(\calC'\) of all \(A\in\PSh(\calC)\) for which the equalizer in \(\PSh(\calC)\) of any pairs of maps
+\(h_x \rightrightarrows A\) is in \(\Ind(\calC)\). Then \(\calC \inj \calC'\) since \(\calC\) admits finite limits, and \(\calC'\) is closed under filtered colimits. However, by universal property,
+we must then have that \(\calC'\simeq\Ind(\calC)\). Now we reverse the roles, and consider
+\end{proof}
+
+\begin{theorem}[Freyd--Mitchell embedding theorem]\label{thm:freyd-mitchell-embedding-theorem}
+	Let \(\calA\) be a small Abelian category. Then there is a ring \(A\) and a fully faithful exact functor
+	\[ \calA\inj\Mod_A. \]
+\end{theorem}
+\begin{proof}
+Note that \(\calA^\op\) is a small Abelian category, hence we can consider the embedding
+\[ \calA^\op\inj\Ind(\calA^\op). \]
+Taking the opposite, we get the embedding
+\[ \calA\inj\Pro(\calA). \]
+Now, \(\Ind(\calA^\op)\) is a Grothendieck category, hence has an injective cogenerator, so \(\Pro(\calA) := \Ind(\calA^\op)^\op\) is a locally small
+Abelian category with a projective generator. Applying Theorem \ref{thm:embedding-of-small-category-into-module-category}, we are done.
+\end{proof}
+
+\begin{remark}
+	While the embedding theorem itself only applies to small Abelian categories, it may still be utilized when working with potentially large ones. In practice,
+	one applies the theorem when diagram-chasing; thus, given a small diagram \(D\!:I\to\calA\), one may consider the smallest subcategory \(\calA'\) of \(\calA\) which
+	\begin{enumerate}[label=(\arabic*)]
+	\item is small,
+	\item is Abelian,
+	\item contains the image of \(D\), and for which
+	\item the inclusion \(\calA'\inj\calA\) is exact.
+	\end{enumerate}
+	Thus, one factors \(D\) as \(I\to\calA'\inj\calA\), and embeds \(\calA'\) in a module category wherein one can do as much chasing as one wants.
+\end{remark}
+

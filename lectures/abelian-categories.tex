@@ -1,0 +1,423 @@
+%!TEX root = ../lectures.tex
+
+\section{Abelian categories}
+\subsection{(Pre-)additive categories \& additive functors}
+\begin{definition}
+	A \emph{pre-additive category} is a category enriched in Abelian groups. In particular, a pre-additive category \(\calC\) consists of
+	\begin{enumerate}[label=(\arabic*)]
+	\item a set of objects \(\Ob(\calC)\),
+	\item for each pair of objects \((x,y)\in\Ob(\calC)\times\Ob(\calC)\), an Abelian group \(\Hom_{\calC}(x,y) = \calC(x,y)\), and
+	\item for each triple of objects \((x,y,z)\in \Ob(\calC)\times \Ob(\calC)\times \Ob(\calC)\) a composition law
+	\[ \circ\!:\calC(y,z)\otimes\calC(x,y)\to\calC(x,z) \]
+	which is associative and unital.
+	\end{enumerate}
+	That is, it's just a category where each Hom-set has the structure of an Abelian group and composition is bilinear.
+\end{definition}
+\begin{remark}
+	This implies that for each \(x,y\in\calC\), the set \(\calC(x,y)\) has a distinguished element \(0\) which is absorbative. This is a simple
+	computation:
+	\[ 0\circ f = (0+0)\circ f = 0\circ f + 0\circ f \implies 0 = 0\circ f. \]
+	The other direction for composition is dual. Categories with this property (or more general ones) are sometimes called \emph{pointed,} though this terminology
+	is also used for the stricter notion of a category with a zero object.
+\end{remark}
+
+\begin{exercise}
+	Let \(\calC\) be a pre-additive category, and suppose that there is an initial object \(\varnothing\in\calC\). Show that \(\varnothing\) is terminal.
+	Dually, show that any terminal object \(*\in\calC\) is also initial.
+\end{exercise}
+
+Our first goal is to show that the above exercise generalizes to arbitrary finite (co)products; note that initial/terminal objects are exactly \emph{empty} (co)products.
+
+\begin{construction}\label{construction:pre-additive-product-inclusions}
+	Let \(\calC\) be a pointed category (i.e. one that admits zero morphisms), let \(x_1,x_2\in\calC\), and suppose that the product \(x_1\times x_2\) exists. Denote by
+	\[ p_k\!:x_1\times x_2 \to x_k,\quad k=1,2 \]
+	the canonical projection maps. We can construct maps
+	\[ i_k\!:x_k\to x_1\times x_2,\quad k=1,2 \]
+	by applying the universal property of the product to \(\id_{x_k}\) and \(0\).
+\end{construction}
+\begin{proposition}
+	Let \(x_k\), \(p_k\), and \(i_k\) be as above. Then
+	\[ \id_{x_1\times x_2} = (i_1\circ p_1) + (i_2\circ p_2). \]
+\end{proposition}
+\begin{proof}
+By universal property, the following computation suffices:
+\[ p_k \circ ((i_1\circ p_1) + (i_2\circ p_2)) = p_k\circ i_k\circ p_k = p_k \]
+where we use that \(p_k\circ i_k = \id\).
+\end{proof}
+\begin{remark}
+	Intuitively, this is the statement that
+	\[ (a,b) = (a,0) + (0,b). \]
+\end{remark}
+\begin{proposition}\label{prop:pre-additive-direct-sum-data}
+	Let \(\calC\) be a pre-additive category, and let \(x_1,x_2,y\in\calC\). Suppose we have maps
+	\[ p_k\!:y\to x_k,\quad i_k\!:x_k\to y \]
+	such that
+	\[ \id_{y} = (i_1\circ p_1) + (i_2\circ p_2),\quad p_j\circ i_k = \begin{cases} \id_{x_k} & \text{if }j=k,\\ 0 & \text{if }j\not=k. \end{cases} \]
+	Then
+	\begin{enumerate}[label=(\arabic*)]
+	\item \((y,p_1,p_2)\) defines a product \(x_1\times x_2\), and
+	\item \((y,i_1,i_2)\) defines a coproduct \(x_1\amalg x_2\).
+	\end{enumerate}
+\end{proposition}
+\begin{proofsketch}
+To prove (1), we must show that the provided data makes \(y\) represent the functor \(\calC(-,x_1)\times\calC(-,x_2)\). Let \(z\in\calC\). Then we see that
+\[  p_{k,*}\!:\calC(z,y)\to \calC(z,x_k),\quad i_{k,*}\!:\calC(z,x_k)\to\calC(z,y) \]
+are maps of Abelian groups satisfying the assumptions in the proposition. It is then a simple computation that this induces a functorial isomorphism
+\[ \calC(z,y) \iso \calC(z,x_1)\times\calC(z,x_2). \]
+Similarly, to prove (2), the same argument applies but after applying \(\calC(-,z)\) instead.
+\end{proofsketch}
+\begin{remark}
+	Objects in pre-additive categories equipped with maps as above are sometimes called \emph{direct sums,} and are denoted \(x_1\oplus x_2\). The proposition
+	shows that any a product of two objects and a coproduct of two objects define the direct sum of those objects.
+\end{remark}
+\begin{corollary}
+	Let \(\calC\) be a pre-additive category and let \(x_1,x_2\in\calC\). The product \(x_1\times x_2\) exists if and only if the coproduct \(x_1\amalg x_2\) exists if and only
+	if the direct sum \(x_1\oplus x_2\) exists. Furthermore, in the case that these exist, the canonical map
+	\begin{diagram*}
+		x_1\amalg x_2 \ar[r,dashed] & x_1\times x_2 \\
+		x_k\ar[u] \ar[r,equal] & x_k \ar[u,"i_k"']
+	\end{diagram*}
+	is an isomorphism, where \(i_k\) are the maps in Construction \ref{construction:pre-additive-product-inclusions}.
+\end{corollary}
+\begin{proof}
+Proposition \ref{prop:pre-additive-direct-sum-data} handles the first statement by a clear induction argument. For the second statement,
+note that the maps \(i_k\) exhibit \(x_1\times x_2\) as a direct sum by Proposition \ref{prop:pre-additive-direct-sum-data}, and therefore the induced map is an isomorphism.
+\end{proof}
+
+We conclude that in an appropriate sense, finite products and finite coproducts agree in any pre-additive category. It turns out, rather profoundly, that the pre-additive
+structure on a category is detected by these (co)products whenever they exist.
+\begin{proposition}
+	Let \(\calC\) be a pre-additive category, and let \(f,g\!:x\to y\) be morphisms in \(\calC\). If \(x\oplus x\) and \(y\oplus y\) exist, then
+	the morphism \(f+g\) is equal to the composition
+	\[ x\xrightarrow{\Delta_x} x\oplus x \xrightarrow{f\oplus g} y\oplus y\xrightarrow{\nabla_y} y. \]
+\end{proposition}
+\begin{proofsketch}
+One can check by a computation that
+\[ i_1^x + i_2^x = \Delta_x,\quad \pi_1^y + \pi_2^y = \nabla_y \]
+and deduce that
+\[ \nabla_y \circ (f\oplus g)\circ i_1^x = f,\quad \nabla_y \circ (f\oplus g)\circ i_2^x = g. \]
+Therefore
+\[ \nabla_y \circ (f\oplus g)\circ \Delta_x = f+g \]
+as desired.
+\end{proofsketch}
+
+\begin{definition}
+	An \emph{additive category} is a pre-additive category which admits finite products.
+\end{definition}
+\begin{remark}\label{remark:additive-internal-characterization}
+	An additive category therefore admits all finite direct sums, and the pre-additive structure is entirely determined by the properties of the underlying unenriched category. In fact,
+	there is a characterization of additive categories in terms of purely ordinary category theory. Specifically, a category \(\calC\) is additive if and only if
+	\begin{enumerate}[label=(\arabic*)]
+	\item it admits a zero object \(0\in\calC\),
+	\item for any \(x,y\in\calC\), the product \(x\times y\) and coproduct \(x\amalg y\) exist,
+	\item the canonical map \(r\!:x\amalg y \to x\times y\) induced by the maps from Construction \ref{construction:pre-additive-product-inclusions} is an isomorphism, and
+	\item for all \(x\in\calC\), there is some \(a\in\calC(x,x)\) such that
+	\[ x\xrightarrow{\Delta_x} x\times x\xrightarrow{(a,\id_x)}x\times x\xrightarrow{r^{-1}} x\amalg x\xrightarrow{\nabla_x} x \]
+	is zero.
+	\end{enumerate}
+	Here, (4) is what guarantees the existence of additive inverses.
+\end{remark}
+
+\begin{definition}
+	A functor \(F\!:\calC\to\calD\) between pre-additive categories is \emph{additive} if for all \(x,y\in\calC\), the induced maps
+	\[ \calC(x,y)\to\calD(Fx,Fy) \]
+	are group homomorphisms.
+\end{definition}
+\begin{proposition}
+	A functor between additive categories is additive if and only if it preserves finite products.
+\end{proposition}
+\begin{proof}
+See \cite[Prop.\ 8.2.15]{kashiwara-schapira-book}.
+\end{proof}
+
+\subsection{Abelian categories}
+The category \(\Ab\) of Abelian groups has certain special properties. First of all, it is additive; this is clear. However, on top of that, given any morphism of Abelian groups,
+we can form a kernel, cokernel, image, etc., and these behave well (e.g.\ in that they detect interesting properties of the morphism). We wish to capture these properties
+in a general form.
+\begin{definition}
+	Let \(\calC\) be a category with a zero object, and let \(f\!:x\to y\) be a morphism in \(\calC\). The \emph{kernel} of \(f\) is the pullback
+	\begin{diagram*}
+		\ker{f}\ar[r,dashed]\ar[d,dashed]\ar[dr, pullback] & x\ar[d,"f"] \\
+		0\ar[r] & y
+	\end{diagram*}
+	in \(\calC\). Dually, the \emph{cokernel} of \(f\) is the pushout
+	\begin{diagram*}
+		x\ar[r,"f"]\ar[d] & y \ar[d,dashed] \\
+		0\ar[r,dashed] & \coker{f}\ar[ul,pushout]
+	\end{diagram*}
+	in \(\calC\).
+\end{definition}
+\begin{exercise}
+	Express \(\ker{f}\) and \(\coker{f}\) in terms of an equalizer and coequalizer, respectively.
+\end{exercise}
+\begin{exercise}\label{exercise:kernel-map-monomorphism}
+	Let \(\calC\) be a pre-additive category with a zero object.
+	\begin{enumerate}[label=(\arabic*)]
+	\item Show that a morphism \(f\!:x\to y\) is a monomorphism if and only if for any \(a\!:z\to x\), \(f\circ a = 0\) implies \(a = 0\).
+	\item Show that whenever \(\ker{f}\) exists, the canonical map \(\ker{f}\to x\) is a monomorphism.
+	\end{enumerate}
+	Furthermore, dualize these statements to obtain the corresponding results for epimorphisms and \(\coker{f}\).
+\end{exercise}
+
+\begin{proposition}
+	Let \(\calC\) be a pre-additive category with a zero object, and let \(f\!:x\to y\) be a morphism with a kernel and cokernel.
+	\begin{enumerate}[label=(\arabic*)]
+	\item The morphism \(f\) is monic if and only if \(\ker{f} = 0\).
+	\item The morphism \(f\) is epic if and only if \(\coker{f} = 0\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+Statement (2) is just the dual of (1). To prove (1), consider the diagram
+\begin{diagram*}
+	& z\ar[d,"a"']\ar[dl,dashed]\ar[dr,"0"] & \\
+	\ker{f} \ar[r,hook] & x\ar[r,"f"] & y
+\end{diagram*}
+for some \(a\!:z\to x\) satisfying \(f\circ a = 0\). If \(\ker{f}=0\), then \(a\) factors through the zero object so \(a=0\) and \(f\) is monic.
+Conversely, if \(f\) is monic, then \(a=0\) and we see that \(0\) satisfies the universal property of \(\ker{f}\).
+\end{proof}
+
+
+\begin{definition}
+	Let \(\calC\) be a category with a zero object. The \emph{image} of a morphism \(f\!:x\to y\) is
+	\[ \img{f} := \ker(y\sur\coker{f}) \]
+	and the \emph{coimage} of \(f\) is
+	\[ \coimg{f} := \coker(\ker{f}\inj x). \]
+\end{definition}
+\begin{remark}
+	By Exercise \ref{exercise:kernel-map-monomorphism}, the canonical maps
+	\[ \img{f}\to y \quad\text{and}\quad x\to\coimg{f} \]
+	are a monomorphism and epimorphism, respectively.
+\end{remark}
+\begin{remark}
+	The intuition for the definition comes from viewing the cokernel operation as taking the quotient.
+\end{remark}
+\begin{remark}
+	Concretely, the universal property of the image of \(f\!:x\to y\) is given by the diagram
+	\begin{diagram*}
+		& z\ar[d]\ar[dr,"0"]\ar[dl,dashed,"\exists!"'] & \\
+		\img{f}\ar[r,hook] & y \ar[r,two heads] & \coker{f}
+	\end{diagram*}
+	while, dually, the universal property of the coimage is given by the diagram
+	\begin{diagram*}
+		\ker{f}\ar[r,hook]\ar[dr,"0"'] & x\ar[r,two heads]\ar[d] & \coimg{f}\ar[dl,dashed,"\exists!"] \\
+		& z
+	\end{diagram*}
+\end{remark}
+\begin{construction}\label{construction:coimg-to-img}
+	Observe that since the composition \(\ker{f}\to x\to y\) is zero (and by the dual statement), we can build the diagram
+	\begin{diagram*}
+		\ker{f} \ar[r,hook] \ar[dr,"0"'] & x\ar[r,"f"]\ar[d,two heads]\ar[dr] & y\ar[from=dl,crossing over] \ar[r,two heads] & \coker{f} \\
+		& \coimg{f} & \img{f}\ar[u,hook]\ar[ur,"0"'] &
+	\end{diagram*}
+	and easily see that the compositions
+	\[ \coimg{f} \to y \sur\coker{f}\quad \ker{f}\to x\to\img{f} \]
+	are zero. In particular, we have an induced map
+	\[ \coimg{f} \to \img{f} \]
+	fitting in the square
+	\begin{diagram*}
+		x\ar[r]\ar[d,two heads] & y\\ 
+		\coimg{f}\ar[r] & \img{f}\ar[u,hook]
+	\end{diagram*}
+	and is unique.
+\end{construction}
+\begin{definition}
+	Let \(\calA\) be an additive category. We say \(\calA\) is \emph{Abelian} if for every \(x,y\in\calA\) and \(f\in\calA(x,y)\),
+	\begin{enumerate}[label=(\arabic*)]
+	\item the kernel and cokernel of \(f\) exist, and
+	\item the canonical map
+	\[ \coimg{f}\to\img{f} \]
+	from Construction \ref{construction:coimg-to-img} is an isomorphism.
+	\end{enumerate}
+\end{definition}
+\begin{remark}
+	Condition (2) above is effectively demanding that the first isomorphism theorem holds in \(\calA\). Indeed, we can think of \(\coimg{f}\) as the quotient \(x/\ker{f}\),
+	and (2) thus says we have a canonical isomorphism \(x/\ker{f}\iso\img{f}\).
+\end{remark}
+\begin{remark}
+	Limits can be built from products and equalizers. Furthermore, in an additive category, any equalizer can be phrased as a kernel, namely \(\eq(f,g)\) will be \(\ker(f-g)\).
+	In particular, since any Abelian category thus admits both equalizers and finite products, it admits all finite limits. The dual argument shows that Abelian categories also
+	admit all finite colimits.
+\end{remark}
+\begin{exercise}\label{exercise:monic-epic-image}
+	Let \(f\!:x\to y\) be a morphism in an Abelian category.
+	\begin{enumerate}[label=(\arabic*)]
+	\item Show that if \(f\) is monic, then
+	\[ x\iso\img{f}. \]
+	\item Dually, show that if \(f\) is epic, then
+	\[ \img{f}\iso y. \]
+	\item Conclude that \(f\) is an isomorphism if and only if it is monic and epic.
+	\end{enumerate}
+\end{exercise}
+
+\subsection{Appendix: Enriched category theory}
+Pre-additive categories are a special case of a more general paradigm, \emph{enriched categories.} There are many different formalisms for this at many different levels
+of generality; we present only one, roughly following \cite{riehl-categorical-homotopy-theory}. The general idea is that an enriched category is like a category, but where the set of morphisms between two objects is replaced by
+an object in some category, called the \emph{enrichment base.} The first order of business is to specify what kind of category we wish to have as base for enrichments.
+\begin{definition}
+	A \emph{symmetric monoidal category} is triple \((\calV,\otimes,\1)\) where \(\calV\) is a category, \(\otimes\!:\calV\times\calV\to\calV\) is a functor,
+	and \(\1\in\calV\) is an object, together with the data of specified natural isomorphisms
+	\[ v\otimes w \cong w\otimes v,\quad u\otimes(v\otimes w)\cong (u\otimes v)\otimes w,\quad \1\otimes v\cong v \cong v\otimes \1. \]
+	These natural isomorphisms are required to satisfy various coherences which ensure that any two bracketings of \(\otimes\)-products are naturally isomorphic.
+\end{definition}
+\begin{example}
+	By considering the tensor product over \(\Z\), the category \(\Ab\) can be promoted to a symmetric monoidal category \((\Ab,\otimes_\Z,\Z)\). More generally, for
+	any ring \(R\), the category \(\Mod_R\) forms a symmetric monoidal category \((\Mod_R,\otimes_R,R)\).
+\end{example}
+\begin{example}
+	Any category \(\calC\) admitting finite products yields a symmetric monoidal category \((\calC,\times,*)\) where \(*\in\calC\) is the terminal object. In particular,
+	\(\Set\) provides a symmetric monoidal category \((\Set,\times,*)\).
+\end{example}
+\begin{example}
+	Let \(R\) be a commutative ring. The tensor product on \(\Mod_R\) can be lifted to the category \(\Ch(R)\) of chain complexes in \(R\), to be defined in Section \ref{subsection:chain-complexes-and-exact-sequences},
+	to give a functor \(\otimes_R\!:\Ch(R)\times\Ch(R)\to\Ch(R)\). This provides a symmetric monoidal category \((\Ch(R),\otimes_R,R)\).
+\end{example}
+\begin{definition}
+	Let \((\calV,\otimes,\1)\) be a symmetric monoidal category. A \(\calV\)\emph{-category} \(\underline\calC\) consists of
+	\begin{enumerate}[label=(\arabic*)]
+	\item a set of objects \(\Ob(\underline\calC)\),
+	\item for every pair of objects \((x,y)\) in \(\underline\calC\), an object \(\underline\calC(x,y)\in\calV\),
+	\item for every \(x\in\underline\calC\), a morphism \(1_x\!:\1\to\underline\calC(x,x)\), and
+	\item for each triple \((x,y,z)\) of objects in \(\calV\), a morphism
+	\[ \circ\!:\underline\calC(y,z)\otimes\underline\calC(x,y)\to\underline\calC(x,z) \]
+	\end{enumerate}
+	such that for all \(x,y,z,w\in\underline\calC\), the diagrams
+	\begin{diagram*}
+		\underline\calC(z,w)\otimes\underline\calC(y,z)\otimes\underline\calC(x,y)\ar[r,"1\otimes\circ"]\ar[d,"\circ\otimes 1"'] & \underline\calC(z,w)\otimes\underline\calC(x,z)\ar[d,"\circ"] \\
+		\underline\calC(y,w)\otimes\underline\calC(x,y)\ar[r,"\circ"] & \underline\calC(x,w)
+	\end{diagram*}
+	\begin{center}
+	\begin{tikzcd}
+		\underline\calC(x,y)\otimes\1\ar[r,"\id\otimes1_x"]\ar[dr,"\cong"'] & \underline\calC(x,y)\otimes\underline\calC(x,x)\ar[d,"\circ"] \\
+		& \underline\calC(x,y)
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		\underline\calC(y,y)\otimes\underline\calC(x,y)\ar[d,"\circ"] & \1\otimes\underline\calC(x,y)\ar[l,"1_y\otimes\id"']\ar[dl,"\cong"]\\
+		\underline\calC(x,y) &
+	\end{tikzcd}
+	\end{center}
+	expressing associativity and unitality commute. One also says that \(\underline\calC\) is a \emph{category enriched over} \((\calV,\otimes,\1)\).
+\end{definition}
+\begin{example}
+	An ordinary category is a category enriched over \((\Set,\times,*)\).
+\end{example}
+\begin{example}
+	A 2-category is a category enriched over \((\Cat,\times,[0])\).
+\end{example}
+\begin{example}
+	A pre-additive category is a category enriched over \((\Ab,\otimes_\Z,\Z)\).
+\end{example}
+\begin{example}
+	A \emph{dg-category} over a commutative ring \(R\) is a category enriched over \((\Ch(R),\otimes_R,R)\). These play a particularly important role in homological algebra,
+	as they are a computationally convenient presentation for \(R\)-linear stable \(\infty\)-categories.
+\end{example}
+\begin{example}
+	A \emph{simplicial category} is a category enriched over \((\sSet,\times,\Delta^0)\).
+\end{example}
+\begin{remark}
+	Any \(\calV\)-category \(\underline\calC\) induces an ordinary category \(\calC\) whose objects are just the objects of \(\underline\calC\), and whose morphisms are given by
+	\[ \calC(x,y) := \calV(\1,\underline\calC(x,y)). \]
+\end{remark}
+\begin{definition}
+	Let \((\calV,\otimes,\1)\) be a symmetric monoidal category. A \(\calV\)\emph{-enriched functor,} or \(\calV\)\emph{-functor} \(F\!:\underline\calC\to\underline\calD\) between
+	\(\calV\)-categories consists of
+	\begin{enumerate}[label=(\arabic*)]
+	\item a map \(\Ob(\underline\calC)\to\Ob(\underline\calD)\), \(x\mapsto Fx\),
+	\item for each pair of objects \((x,y)\) in \(\underline\calC\), a morphism
+	\[ F\!:\underline\calC(x,y)\to\underline\calD(Fx,Fy), \]
+	\end{enumerate}
+	such that for all triples \((x,y,z)\) of objects in \(\underline\calC\), the diagrams
+	\begin{center}
+	\begin{tikzcd}
+		\underline\calC(y,z)\otimes\underline\calC(x,y)\ar[r,"\circ"]\ar[d,"F\otimes F"'] & \underline\calC(x,z)\ar[d,"F"] \\
+		\underline\calD(Fy,Fz)\otimes\underline\calD(Fx,Fy)\ar[r,"\circ"] & \underline\calD(Fx,Fz)
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		\1 \ar[r,"1_x"]\ar[dr,"1_{Fx}"'] & \underline\calC(x,x)\ar[d,"F"] \\
+		& \underline\calD(Fx,Fx)
+	\end{tikzcd}
+	\end{center}
+	commute.
+\end{definition}
+
+Much of category theory can be developed in the enriched setting, including the Yoneda lemma, (co)limits of various sorts, and so on. This turns out to be very useful
+in higher category theory, as many models of higher categories can be ``strictified'' by working in an enriched context. An example of this mentioned before is
+given by dg-categories.
+
+Categories enriched in Kan complexes give a model for \((\infty,1)\)-categories, and categories enriched in weak Kan complexes (a.k.a.\ quasicategories, or \(\infty\)-categories) give a model for \((\infty,2)\)-categories.
+In practice, this means that doing higher category theory, homotopy theory, etc.\ can be simplified by knowing some enriched category theory. Indeed, this is the topic of
+\cite{riehl-categorical-homotopy-theory} and partly \cite{riehl-verity-elements}.
+
+\subsection{Appendix: (Co)limits in terms of (co)products \& (co)equalizers}
+Consider a small diagram \(D\!:I\to\Set\) in the category of sets. It is a standard result that one can compute the limit and colimit of \(D\)
+as
+\[ \projlim{D} \cong \left\{ (d_i)_{i\in I}\in\prod_{i\in I}D(i)\bigmid \forall(\varphi\!:i\to j)\in I,\, D(\varphi)(d_i) = d_j \right\} \]
+and
+\[ \injlim{D} \cong \left(\coprod_{i\in I}D(i)\right) / \sim \]
+where \(\sim\) is the equivalence relation generated by (!) \((i,d) \sim (i',d')\) if there exists \(\varphi\!:i\to i'\) such that \(D(\varphi)(d) = d'\).
+Notably, these are compute in terms of the easier-to-understand products and coproducts in \(\Set\).
+
+We wish to generalize this to any category in order to deduce that a category admitting (co)products and (co)equalizers admits all small (co)limits.
+\begin{construction}\label{construction:diagram-product-equalizer-diagram}
+	Let \(D\!:I\to\calC\) be a small diagram in a category \(\calC\) which admits products, and consider a map \(\varphi\!:i\to j\) in \(I\). From this, we obtain two maps
+	\begin{diagram*}
+		D(i)\times D(j) \ar[r,shift left,"D(\varphi)\circ\pi_1"]\ar[r,shift right,"\pi_2"'] & D(j)
+	\end{diagram*}
+	and these allow us to produce two maps
+	\begin{diagram*}
+		D(\cod\varphi)\ar[r,equal] & D(\cod\varphi) \\
+		\displaystyle\prod_{i\in I}D(i)\ar[r,shift left,dashed,"a"]\ar[r,shift right,dashed,"b"']\ar[u,"\pi_{\cod\varphi}"]\ar[d,"\pi_{\dom\varphi}"'] & \displaystyle\prod_{\varphi\in\Ar(I)}D(\cod{\varphi})\ar[u,"\pi_\varphi"']\ar[d,"\pi_\varphi"] \\
+		D(\dom\varphi)\ar[r,"D(\varphi)"] & D(\cod\varphi)
+	\end{diagram*}
+	defined on the \(\varphi\)th component by the indicated morphisms. Furthermore, there is a canonical map
+	\[ c\!:\projlim{D} \to \prod_{i\in I}D(i) \]
+	induced by the projections \(\projlim{D}\to D(i)\), \(i\in I\). One notes that \(a\circ c = b\circ c\) since this equality comes down to verifying it on components, where it
+	holds by the commutativity of
+	\begin{diagram*}
+		\projlim{D} \ar[r]\ar[dr] & D(\dom{\varphi})\ar[d,"D(\varphi)"] \\
+		& D(\cod\varphi).
+	\end{diagram*}
+	In particular, we have an induced map \(\projlim{D}\to\eq(a,b)\).
+\end{construction}
+\begin{proposition}\label{prop:limit-from-products-and-equalizers}
+	Let \(\calC\) be a category admitting products and equalizers, and let \(D\!:I\to\calC\) be a small diagram. Consider the maps
+	\begin{diagram*}
+		\displaystyle\prod_{i\in I}D(i)\ar[r,shift left,"a"]\ar[r,shift right,"b"'] & \displaystyle\prod_{\varphi\in\Ar(I)}D(\cod{\varphi})
+	\end{diagram*}
+	of Construction \ref{construction:diagram-product-equalizer-diagram}. Then \(\projlim{D}\) exists and the canonical map satisfies
+	\[ \projlim{D}\iso\eq(a,b). \]
+\end{proposition}
+\begin{proof}
+In \(\calC=\Set\), this is a triviality: indeed, it is just the statement we made at the start. To lift it to an arbitrary category \(\calC\), pick \(x\in\calC\) and apply
+\(\calC(x,-)\). We then have, by the \(\Set\) case, that
+\begin{diagram*}
+	 & \calC(x,\eq(a,b))\ar[r]\ar[d,"\sim" labl] & \calC(x,\prod_{i\in I}D(i))\ar[d, "\sim" labl] \ar[r,shift left,"a_*"]\ar[r,shift right,"b_*"'] & \calC(x,\prod_{\varphi\in\Ar(I)}D(\cod{\varphi}))\ar[d, "\sim" labl] \\
+	\projlim\calC(x,D)\ar[r,"\sim"] & \eq(a_*,b_*) \ar[r] & \prod_{i\in I}\calC(x,D(i)) \ar[r,shift left,"a_*"]\ar[r,shift right,"b_*"'] & \prod_{\varphi\in\Ar(I)}\calC(x,D(\cod{\varphi}))
+\end{diagram*}
+and thus that we have an isomorphism
+\[ \projlim\calC(x,D) \cong \calC(x,\eq(a,b)) \]
+which is natural in \(x\). We conclude that \(\projlim{D}\) exists and is isomorphic to \(\eq(a,b)\).
+\end{proof}
+\begin{corollary}
+	Let \(\calC\) be a category. Then the following statements are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+	\item \(\calC\) admits all small (resp.\ finite) limits.
+	\item \(\calC\) admits equalizers and all small (resp.\ finite) products.
+	\end{enumerate}
+	Let \(F\!:\calC\to\calD\) be a functor. Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*')]
+	\item \(F\) preserves all small (resp.\ finite) limits.
+	\item \(F\) preserves equalizers and all small (resp.\ finite) products.
+	\end{enumerate}
+\end{corollary}
+\begin{proof}
+Clearly, (1) implies (2) and (1') implies (2'). On the other hand, (2) implies (1) by Proposition \ref{prop:limit-from-products-and-equalizers} (noting that the products
+are finite whenever \(I\) is finite), so only (2') implies (1') remains. However, if \(F\) preserves products and equalizers then
+\begin{diagram*}
+	F(\projlim{D}) \ar[d,"\sim" labl] \ar[r] & F(\prod_{i\in I}D(i))\ar[r,shift left,"Fa"]\ar[r,shift right,"Fb"']\ar[d,"\sim" labl] & F(\prod_{\varphi\in\Ar(I)}D(\cod{\varphi}))\ar[d,"\sim" labl] \\
+	F(\eq(a,b)) \ar[d,"\sim" labl] \ar[r] & F(\prod_{i\in I}D(i))\ar[r,shift left,"Fa"]\ar[r,shift right,"Fb"']\ar[d,"\sim" labl] & F(\prod_{\varphi\in\Ar(I)}D(\cod{\varphi}))\ar[d,"\sim" labl] \\
+	\eq(Fa,Fb) \ar[r] & \prod_{i\in I}F(D(i))\ar[r,shift left,"Fa"]\ar[r,shift right,"Fb"'] & \prod_{\varphi\in\Ar(I)}F(D(\cod{\varphi})) \\
+\end{diagram*}
+and since \(\projlim(F\circ D)\cong\eq(Fa,Fb)\), we are done.
+\end{proof}

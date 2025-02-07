@@ -1,0 +1,222 @@
+%!TEX root = ../lectures.tex
+
+\section{Metric \(\infty\)-categories (WIP)}
+Recall that a metric \(d\!:X\times X\to \R_{\geq 0}\) on a set \(X\) is a function satisfying
+\begin{enumerate}[label=(\arabic*)]
+	\item \(\forall x,y\in X\), \(d(x,y) = 0\) if and only if \(x=y\),
+	\item \(\forall x,y\in X\), \(d(x,y) = d(y,x)\), and
+	\item \(\forall x,y,z\in X\), \(d(x,z) \leq d(x,y) + d(y,z)\).
+\end{enumerate}
+A pair \((X,d)\) of a set \(X\) and a metric \(d\) on \(X\) is called a metric space, as the reader is surely aware. These are ubiquitous in many areas, mainly in analysis.
+There is a slightly weakened version one can consider, sometimes called a \emph{pseudoquasimetric,} or a \emph{hemimetric.} Here, instead of (1), one merely demands that \(d(x,x)=0\),
+and one drops the symmetry requirement (2) entirely. That is, a hemimetric is a function \(d\!:X\times X \to \R_{\geq 0}\) such that
+\begin{enumerate}[label=(\arabic*')]
+	\item \(\forall x\in X\), \(d(x,x)=0\), and
+	\item \(\forall x,y,z\in X\), \(d(x,z) \leq d(x,y) + d(y,z)\).
+\end{enumerate}
+The content of this lecture is that one may extend this notion to categories. This was originally studied by Lawvere \cite{lawvere73-metric-spaces}, and has been subsequently considered by many authors.
+We are inspired primarily by the work of Neeman \cite{neeman2021metricstriangulatedcategories}. In \emph{loc. cit.,} the focus is on metrics on metrics on triangulated categories, and
+we take the perspective that these should be interpreted as being homotopy categories of stable \(\infty\)-categories. Hence, we choose to begin by developing the theory in the
+\(\infty\)-categorical context.
+
+\subsection{Metrics}
+\begin{notation}
+	Let \(\calC\) be an \(\infty\)-category. We will write \(\Mor(\calC)\) for the set of morphisms in \(\calC\), i.e.\ the set of functors \(\Delta^1 \to \calC\), or alternatively
+	the set of 1-simplices \(\calC_1\) of \(\calC\).
+\end{notation}
+\begin{definition}
+	Let \(\calC\) be an \(\infty\)-category. A \emph{metric} on \(\calC\) is a function \(d\!:\Mor(\calC)\to\R_{\geq 0}\), satisfying the following properties.
+	\begin{enumerate}[label=(\arabic*)]
+		\item For all \(x\in\calC\), we have \(d(x \overset{\id_x}\longto x) = 0\).
+		\item For any commutative triangle in \(\calC\) as below left, we have the triangle inequality as below right:
+		\begin{center}
+			\begin{tikzcd}[cramped, column sep=small]
+				& y\ar[dr,"g"] & \\
+				x\ar[ur,"f"]\ar[rr,"h"] & & z
+			\end{tikzcd}\(\quad \leadsto \quad d(x\overset{h}\to z) \leq d(x\overset{f}\to y) + d(y\overset{g}\to z). \)
+		\end{center}
+	\end{enumerate}
+	Two metrics \(d_1\) and \(d_2\) on \(\calC\) are \emph{equivalent} if for all \(\varepsilon > 0\), there is a \(\delta > 0\) such that
+	\begin{align*}
+		d_1(x\to y) < \delta &\implies d_2(x\to y) < \varepsilon, \\
+		d_2(x\to y) < \delta &\implies d_1(x\to y) < \varepsilon.
+	\end{align*}
+	A \emph{metric} \(\infty\)\emph{-category} is a pair \((\calC,d)\) of an \(\infty\)-category \(\calC\) and a metric \(d\!:\Mor(\calC)\to\R_{\geq 0}\).
+\end{definition}
+\begin{definition}
+	Let \((\calC,d)\) be a metric \(\infty\)-category. A sequence of morphisms
+	\[ x_1 \to x_2 \to \cdots \to x_n \to \cdots \]
+	in \(\calC\) is \emph{Cauchy} with respect to \(d\) if for all \(\varepsilon > 0\) there is some \(M > 0\) such that
+	\[  M \leq i \leq j \implies d(x_{i} \to x_j) < \varepsilon. \]
+\end{definition}
+\begin{remark}
+	For a 1-category \(\calC\), the triangle inequality requirement just says that for any composable pair of morphisms
+	\[ x \overset{f}\to y \overset{g}\to z \]
+	we have
+	\[ d(x\overset{g\circ f}\to z) \leq d(x\overset{f}\to y) + d(y\overset{g}\to z). \]
+\end{remark}
+\begin{example}
+	Let \(X\) be some set. Form the category \(\calX\), whose objects are the elements of \(X\), and where for each \(x,y\in\calX\) there is exactly
+	one morphism \(x\to y\). Then a metric on \(\calX\) is exactly a hemimetric on \(X\). In particular, any (hemi)metric space \(X\) determines a
+	metric category \(\calX\), and one observes that Cauchy sequences in \(X\) are the same as Cauchy sequences in \(\calX\).
+\end{example}
+\begin{example}
+	Let \(\cat{Ban}\) be the category of Banach spaces. There is a metric \(d\) on \(\cat{Ban}\) given by
+	\[ d(X \overset{T}\to Y) := \max\{0,\log\|T\|\}. \]
+	To see that this is in fact a metric, note that
+	\[ d(X\overset{\id_X}\to X) = \log(1) = 0, \]
+	 and for \(X \overset{T}\to Y\overset{S}\to Z\), we have
+	 \begin{align*}
+	 	\log\|ST\| &\leq \log(\|S\|\cdot\|T\|) = \log\|S\| + \log\|T\|
+	 \end{align*}
+	 from which it follows that
+	 \[ d(X\overset{ST}\longto Z) \leq \max\{0, \log\|S\| + \log\|T\|\} \leq d(X\overset{T}\to Y) + d(Y\overset{S}\to Z). \]
+	 This example is discussed in \cite[§8]{clementino2024cauchyconvergencevnormedcategories}. This metric has a few trivial properties. For example, \(d(X\overset{T}\to Y)=0\)
+	 if and only if \(\|T\|\leq 1\). It follows that one always has \(\|T\| \leq \exp{d(X\overset{T}\to Y)} \).
+\end{example}
+
+We now show that metrics do not see the higher-categorical data in an \(\infty\)-category, and depend only on the homotopy 1-category \(\ho(\calC)\).
+\begin{proposition}\label{prop:metric-invariant-under-homotopy}
+	Let \((\calC,d)\) be a metric \(\infty\)-category, and consider two morphisms \(f,g\!:x\to y\) such that \([f] = [g]\) in \(\ho(\calC)\).
+	Then \(d(x\overset{f}\to y) = d(x\overset{g}\to y)\).
+\end{proposition}
+\begin{proof}
+By assumption (see e.g.\ \cite[§1.6]{cisinski-book}), we have the following commutative triangles:
+\begin{center}
+	\begin{tikzcd}[cramped, column sep=small]
+		& y\ar[dr,"\id_y"] & \\
+		x\ar[ur,"f"]\ar[rr,"g"] & & y
+	\end{tikzcd}\quad and \quad
+	\begin{tikzcd}[cramped, column sep=small]
+		& y\ar[dr,"\id_y"] & \\
+		x\ar[ur,"g"]\ar[rr,"f"] & & y
+	\end{tikzcd}
+\end{center}
+and therefore
+\[ d(x\overset{g}\to y) \leq d(x\overset{f}\to y) + d(x\overset{\id_x}\to x), \quad d(x\overset{f}\to y) \leq d(x\overset{g}\to y) + d(x\overset{\id_x}\to x) \]
+but since \(d(\id_x) = 0\), we thus have
+\[ d(x\overset{g}\to y) \leq d(x\overset{f}\to y) \leq d(x\overset{g}\to y) \]
+as desired.
+\end{proof}
+
+\begin{corollary}
+	Let \(\calC\) be an \(\infty\)-category. Then there is a bijection
+	\[ \{ \text{metrics on }\calC \}\cong\{ \text{metrics on }\ho(\calC) \}. \]
+	Furthermore, the following statements hold about this bijection.
+	\begin{enumerate}[label=(\arabic*)]
+		\item For a metric \(d\) on \(\calC\), a sequence \(x_1 \to x_2 \to \cdots\) is Cauchy if and only if the sequence taken in \(\ho(\calC)\) is Cauchy with respect to the corresponding metric on \(\ho(\calC)\).
+		\item Two metrics on \(\calC\) are equivalent if and only if the corresponding metrics on \(\ho(\calC)\) are equivalent.
+	\end{enumerate}
+\end{corollary}
+\begin{proof}
+Starting with a metric \(d\) on \(\calC\), one obtains a metric \(d'\) on \(\ho(\calC)\) given by \(d'([f]) = d(f)\). By Proposition \ref{prop:metric-invariant-under-homotopy}, this is well-defined,
+and it is quite clear that one gets a metric. Conversely, starting with a metric \(d'\) on \(\ho(\calC)\), one obtains a metric \(d\) on \(\calC\) given by the same formula. These two operations
+are inverse to each other, which provides the bijection. The remaining claims are obvious.
+\end{proof}
+
+\begin{remark}
+	In particular, we could have originally defined metrics only for 1-categories, extending the notion to \(\infty\)-categories by saying that a metric on an \(\infty\)-category \(\calC\)
+	is a metric on \(\ho(\calC)\).
+\end{remark}
+
+\subsection{Non-Archimedean metrics \& valued \(\infty\)-categories}
+\begin{definition}
+	Let \(\calC\) be an \(\infty\)-category. A metric \(d\) on \(\calC\) is \emph{non-Archimedean} (or an \emph{ultrametric}) if it satisfies the following stronger
+	version of the triangle inequality, also known as the ultrametric inequality.
+	\begin{itemize}[label=(2')]
+		\item For any commutative triangle in \(\calC\) as below left, we have inequality as below right:
+		\begin{center}
+			\begin{tikzcd}[cramped, column sep=small]
+				& y\ar[dr,"g"] & \\
+				x\ar[ur,"f"]\ar[rr,"h"] & & z
+			\end{tikzcd}\(\quad \leadsto \quad d(x\overset{h}\to z) \leq \max\{d(x\overset{f}\to y), d(y\overset{g}\to z)\}. \)
+		\end{center}
+	\end{itemize}
+	A metric which is \emph{not} non-Archimedean is called \emph{Archimedean.}
+\end{definition}
+
+We will show that the data required for a non-Archimedean metric can be significantly simplified. The first step is the following, which should be familiar from topology.
+\begin{lemma}\label{lemma:metric-category-composition-with-nice-function-yields-equivalent-metric}
+	Let \(\calC\) be an \(\infty\)-category, and let \(d\) be a metric on \(\calC\). Suppose there is a weakly increasing function \(f\!:\R_{\geq 0}\to\R_{\geq 0}\) such
+	\(\lim_{t\to 0^+}f(t) = 0\) and either one of the following conditions holds.
+	\begin{enumerate}[label=(\alph*)]
+		\item The function \(f\) is subadditive: \(f(a+b) \leq f(a) + f(b)\).
+		\item The metric \(d\) is non-Archimedean.
+	\end{enumerate}
+	Then \(d' = f\circ d\) is a metric which is equivalent to \(d\). If (b) holds, then \(d'\) is also non-Archimedean.
+\end{lemma}
+\begin{proof}
+Observe that since \(f\) is increasing and tends to zero as \(t\to 0\), we have \(f(0)=0\). First, we show that \(d'\) is a metric. For this, we check the axioms.
+\begin{enumerate}[label=(\arabic*)]
+	\item Let \(x\in\calC\). Then
+	\[ d'(x\overset{\id_x}\to x) = f(d(x\overset{\id_x}\to x)) = f(0) = 0. \]
+	\item Consider a commutative triangle \((f\!:x\to y,g\!:y\to z,h\!:x\to z)\). If we are in case (a), then
+	\begin{align*}
+		d'(x\overset{h}\to z) &= f(d(x\overset{h}\to z)) \\
+		&\leq f(d(x\overset{f}\to y) + d(y\overset{g}\to z)) \\
+		&\leq f(d(x\overset{f}\to y)) + f(d(y\overset{g}\to z))) = d'(x\overset{f}\to y) + d'(y\overset{g}\to z).
+	\end{align*}
+	On the other hand, if we are in case (b), then since \(f\) is order-preserving, we have \(f(\max\{a,b\}) = \max\{f(a),f(b)\}\), and hence the above computation
+	follows through in an identical fashion.
+\end{enumerate}
+It follows easily that \(d'\) is non-Archimedean if \(d\) is non-Archimedean.
+
+Now we must show that \(d'\) is equivalent to \(d\). Let \(\varepsilon > 0\), and set \(\delta_0\) such that \(f(\delta_0) < \varepsilon\). This is possible by the requirement that
+\(\lim_{t\to 0^+}f(t) = 0\). Let us consider \(\delta = \min\{\delta_0, f(f(\delta_0))\}\). Then
+\[ d(x\to y) < \delta \implies f(d(x\to y)) = d'(x\to y) \leq f(\delta) \leq f(\delta_0) < \varepsilon. \]
+This proves one direction. For the other, note that
+\[ d'(x\to y) < \delta \implies f(d(x\to y)) \leq f(f(\delta_0)) \implies d(x\to y) \leq f(\delta_0) < \varepsilon \]
+as desired.
+\end{proof}
+
+\begin{lemma}
+	Let \(\calC\) be an \(\infty\)-category, and let \(d\) be a non-Archimedean metric. Consider any strictly decreasing sequence \((r_n)_{n=1}^{\infty}\) in \(\R_{\geq 0}\) such that \(r_n\to 0\) as \(n\to\infty\).
+	Then there is an equivalent non-Archimedean metric \(d'\) on \(\calC\) taking values in \(\{r_n \mid n \geq 1\}\).
+\end{lemma}
+\begin{proof}
+We intend to apply Lemma \ref{lemma:metric-category-composition-with-nice-function-yields-equivalent-metric}. For simplicity, we assume \((r_n)_{n=1}^\infty\) is normalized such that \(r_1=1\).
+First, we modify \(d\) to get a metric \(d_0\) that is bounded by \(1\). For this, apply the lemma to \(f_0(t) = t/(1+t)\) and set \(d_0 = f_0\circ d\). To get \(d'\), we define the function
+\[ f\!: [0,1] \to \R_{\geq 0},\quad f(t) := \inf\{ r_n \mid n \geq 1,\, t \leq r_n \}. \]
+In other words, \(f(t)\) is the smallest \(r_n\) larger than \(t\). Now, \(f\) is weakly increasing and clearly satisfies \(\lim_{t\to 0^+}f(t) = 0\). Since \(d\)
+is assumed to be non-Archimedean, so is \(d_0\), and it follows that \(d' := f\circ d_0\) is a non-Archimedean metric. Note that, while the domain of \(f\) is not as
+in the statement of the lemma, since the image of \(d_0\) is in \([0,1]\) there is no issue.
+\end{proof}
+\begin{remark}
+	The above lemma is stated without proof in \cite{neeman2021metricstriangulatedcategories} in greater generality, namely for an arbitrary metric rather than a non-Archimedean one.
+	However, this cannot hold with the same strategy we used: there are counter-examples using the above \(f\). The issue is that the function \(f\) is not subadditive,
+	and there is no clear choice for one that is.
+\end{remark}
+
+\begin{definition}
+	Let \(\calC\) be an \(\infty\)-category. A \emph{discrete valuation} on \(\calC\) is a map \(v\!:\Mor(\calC)\to\Z_{\geq 0}\cup\{\infty\}\) satisfying the following properties.
+	\begin{enumerate}[label=(\arabic*)]
+		\item For all \(x\in\calC\), we have \(v(x\overset{\id_x}\to x) = \infty\).
+		\item For any commutative triangle as below left, we have the inequality as below right:
+		\begin{center}
+			\begin{tikzcd}[cramped, column sep=small]
+				& y\ar[dr,"g"] & \\
+				x\ar[ur,"f"]\ar[rr,"h"] & & z
+			\end{tikzcd}\(\quad \leadsto \quad v(x\overset{h}\to z) \geq \min\{v(x\overset{f}\to y), v(y\overset{g}\to z)\}. \)
+		\end{center}
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}
+	Let \((\calC,d)\) be a non-Archimedean metric \(\infty\)-category, and consider the full subcategories
+	\[ \forall x\in\calC,\, \forall n\geq 1,\quad B_n(x) := \left\{ x\to y \mid d(x\to y) \leq \frac{1}{n} \right\} \subseteq x/\calC. \]
+	Define the map
+	\[ v\!: \Ob(x/\calC) \to \Z_{\geq 1}\cup\{\infty\},\quad v(x\to y) := \inf\{ n \mid n\geq 1,\, (x\to y) \not\in B_n(x) \}. \]
+	Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(m \geq n\) then \(B_m(x) \subseteq B_n(x)\).
+		\item 
+	\end{enumerate}
+\end{proposition}
+
+\begin{theorem}
+	Let \(\calC\) be an \(\infty\)-category. Then there is a bijection
+	\[ \left\{ \begin{array}{c}
+		\text{equivalence classes of}\\
+		\text{non-Archimedean metrics on } \calC
+	\end{array} \right\} \cong  \]
+\end{theorem}

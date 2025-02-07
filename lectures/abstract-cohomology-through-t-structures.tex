@@ -1,0 +1,557 @@
+%!TEX root = ../lectures.tex
+
+\section{Abstract cohomology through t-structures}\label{lecture:abstract-cohomology-through-t-structures}
+An important topic of homological algebra is \emph{(co)homology.} Indeed, the entire subject is named after it. Typically, cohomology is handled (one way or another) through
+derived categories, by using that the cohomology functors on chain complexes descend to cohomology functors on the derived category. One can then study various properties in a nice and systematic way.
+However, there is also an abstract formulation of cohomology on the level of triangulated categories, given by the theory of \emph{t-structures.} These were initially
+invented in \cite{faisceaux-pervers}, where they acted as a way to find Abelian categories living inside triangulated categories (in particular, Abelian categories of so-called \emph{perverse sheaves}).
+
+While the formalism of t-structures should really be motivated by seeing the concrete example of derived categories, we choose to reverse this
+and instead view t-structures as a formal setting in which cohomology arises, later showing that this may be employed in the standard cases.
+As a result, some of the axioms may at first seem a bit unmotivated, but the hope is that they are still convincing enough to be considered reasonable. We essentially follow
+\cite{kashiwara-schapira-book-2}.
+
+\subsection{Truncation functors \& t-structures}
+In essence, the cohomology functors on chain complexes come about due to the natural \emph{grading} that chain complexes have: indeed, given a chain complex \(x^\bullet\in\sfC(\calA)\), we can consider
+the piece \(x^i\) living in degree \(i\). Cohomology comes out of the relation between this piece and its neighbouring pieces. Accordingly, t-structures start with the perspective that this
+should be doable in more generality by \emph{specifying} this grading as data.
+
+\begin{definition}
+	Let \(\calT\) be a triangulated category. A \emph{t-structure} on \(\calT\) is a pair \((\calT^{\leq 0}, \calT^{\geq 0})\) of replete full subcategories of \(\calT\) (the \emph{aisle} and \emph{co-aisle,} respectively;
+	alternatively, the \emph{coconnective piece} and the \emph{connective piece}) satisfying the below conditions. For any \(n\in\Z\), we set \(\calT^{\leq n} := \Sigma^{-n}\calT^{\leq 0}\) and \(\calT^{\geq n} := \Sigma^{-n}\calT^{\geq 0}\).
+	\begin{enumerate}[label=(T\arabic*)]
+		\item \((\calT^{\leq 0})^\perp \supseteq \calT^{\geq 1}\). That is, if \(x\in\calT^{\leq 0}\) and \(y\in\calT^{\geq 1}\), then \(\calT(x,y) = 0\).
+		\item \(\calT^{\leq -1}\subseteq\calT^{\leq 0}\) and \(\calT^{\geq 1}\subseteq\calT^{\geq 0}\).
+		\item For all \(x\in\calT\), there is a distinguished triangle
+		\[ x' \to x \to x'' \to \Sigma x' \]
+		such that \(x'\in\calT^{\leq 0}\) and \(x''\in\calT^{\geq 1}\).
+	\end{enumerate}
+\end{definition}
+\begin{remark}
+	Requiring the subcategories in a t-structure to be replete is not \emph{strictly} necessary for all purposes, but it is a nice simplifying assumption, and furthermore, it is harmless to reduce to this case
+	since one can always just enlarge one's subcategories to be replete.
+\end{remark}
+
+\begin{example}
+	Let \(\calT\) be a triangulated category. There are two trivial t-structures one may put on \(\calT\), namely \((\calT,0)\) and \((0,\calT)\).
+\end{example}
+\begin{example}
+	When we get around to the derived category in later lectures, we will see that for an Abelian category \(\calA\), the pair
+	\[ (\sfD^{\leq 0}(\calA),\sfD^{\geq 0}(\calA)) \]
+	given by the subcategories spanned by those complexes concentrated in non-positive or non-negative cohomological degrees determines a t-structure. This is called the \emph{standard t-structure}
+	on \(\sfD(\calA)\).
+\end{example}
+\begin{exercise}
+	Let \((\calT^{\leq0},\calT^{\geq 0})\) be a t-structure. Show that, for all \(n\in\Z\), the pair \((\calT^{\leq n},\calT^{\geq n})\) is a t-structure.
+\end{exercise}
+
+We may employ the results developed in Lecture \ref{lecture:localization-sequences-of-triangulated-categories} immediately. In particular, we can make use of
+Proposition \ref{prop:adjoint-from-orthogonal-triangle} (and its dual); inspection of the assumptions reveal that one demands almost exactly half the conditions of a t-structure.
+We deduce that the inclusions
+\[ \iota^{\leq n}\!:\calT^{\leq n}\inj\calT,\quad \iota^{\geq n}\!:\calT^{\geq n}\inj\calT \]
+admit a right (resp.\ left) adjoint.
+\begin{definition}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure on \(\calT\). The right adjoint of \(\iota^{\leq n}\), respectively the left adjoint of \(\iota^{\geq n}\),
+	are denoted
+	\[ \tau^{\leq n}\!:\calT\to\calT^{\leq n},\quad \text{resp.\ } \tau^{\geq n}\!:\calT \to \calT^{\geq n} \]
+	and are called the \emph{truncation functors.}
+\end{definition}
+By construction, the counit \(\varepsilon\) of the adjunction \(\iota^{\leq n}\ladj\tau^{\leq n}\) and the unit \(\eta\) of the adjunction \(\tau^{\geq n+1}\ladj\iota^{\geq n+1}\)
+lie in distinguished triangles
+\[ \tau^{\leq n}x \overset{\varepsilon_x}\longto x \overset{\eta_x}\longto \tau^{\geq n+1}x \longto \Sigma \tau^{\leq n}x. \]
+Furthermore, any other distinguished triangle
+\[ x' \to x \to x'' \to \Sigma x', \]
+such that \(x'\in\calT^{\leq n}\) and \(x''\in\calT^{\geq n+1}\), is canonically isomorphic to the first one. The details of this are in Proposition \ref{prop:adjoint-from-orthogonal-triangle}.
+
+\begin{proposition}
+	For all \(n\in\Z\) and \(x\in\calT\), there is a \emph{unique} morphism \(d^n_x\!:\tau^{\geq n+1}x\to \Sigma\tau^{\leq n}x\) such that
+	\[ \tau^{\leq n}x \overset{\varepsilon_x}\longto x \overset{\eta_x}\longto \tau^{\geq n+1}x \overset{d^n_x}\longto \Sigma \tau^{\leq n}x \]
+	is a distinguished triangle. Moreover, the morphisms \(d^n_x\) assemble into a natural transformation \(d^n\!:\tau^{\geq n+1}\To \Sigma\tau^{\leq n}\).
+\end{proposition}
+\begin{proof}
+We use Lemma \ref{lemma:simple-uniqueness-of-cone-shift-map}. All we have to do is check that
+\[ \calT(\Sigma \tau^{\leq n}x, \tau^{\geq n+1}x) = 0 \]
+but \(\Sigma \tau^{\leq n}x\in \Sigma \calT^{\leq n} = \calT^{\leq n-1} \subseteq \calT^{\leq n}\), and \((\calT^{\leq n})^\perp\supseteq\calT^{\geq n+1}\), so this is clear.
+
+To see that the (now unique) morphisms \(d^n_x\) assemble into a natural transformation \(d^n\!:\tau^{\geq n+1}\To \Sigma\circ \tau^{\leq n}\), suppose we have a
+map \(f\!:x\to y\). Applying \(\tau^{\leq n}\) to \(f\) and using adjointness, we get a morphism of distinguished triangles
+\begin{diagram*}
+	\tau^{\leq n}x\ar[d,"\tau^{\leq n}f"']\ar[r] & x\ar[r]\ar[d,"f"] & \tau^{\geq n+1}x\ar[d,dashed]\ar[r,"d^n_x"] & \Sigma\tau^{\leq n}x\ar[d,"\Sigma\tau^{\leq n}f"] \\
+	\tau^{\leq n}y\ar[r] & y\ar[r] & \tau^{\geq n+1}y\ar[r,"d^n_y"] & \Sigma\tau^{\leq n}y
+\end{diagram*}
+which by uniqueness (see Lemma \ref{lemma:simple-tr3-uniqueness}) implies that the dashed arrow is \(\tau^{\geq n+1}f\).
+\end{proof}
+
+\begin{exercise}
+	Prove that for all \(n\in\Z\),
+	\[ \tau^{\leq n} = \Sigma^{-n}\circ\tau^{\leq 0}\circ\Sigma^{n},\quad \tau^{\geq n} = \Sigma^{-n}\circ\tau^{\leq 0}\circ\Sigma^{n}. \]
+\end{exercise}
+
+\subsection{Properties of the aisle and co-aisle}
+The truncation functors can be used to detect if something is in the aisle or the co-aisle.
+\begin{proposition}
+	Let \((\calT^{\leq0},\calT^{\geq0})\) be a t-structure. Then \(x\in\calD^{\leq n}\) if and only if \(\tau^{\geq n+1}x \cong 0\).
+\end{proposition}
+\begin{proof}
+Since \(\tau^{\leq n}\) is right adjoint to a fully faithful functor, we have that \(x\in\calD^{\leq n}\) if and only if then the counit component \(\tau^{\leq n}x\to x\) is an isomorphism.
+This, in turn, is equivalent to the cone (which is given by \(\tau^{\geq n+1}x\)) being zero.
+\end{proof}
+
+\begin{exercise}\label{exercise:t-structure-zero-is-in-aisle-and-coaisle}
+	Let \((\calT^{\leq 0}, \calT^{\geq 0})\) be a t-structure. Show that \(0\in\calT^{\leq 0}\cap\calT^{\geq 0}\).
+\end{exercise}
+
+\begin{corollary}\label{corollary:t-structure-orthogonality}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item \(y\in\calT^{\geq 1}\) if and only if \(\calT(x,y) = 0\) for all \(x\in\calT^{\leq 0}\).
+		\item \(x\in\calT^{\leq 0}\) if and only if \(\calT(x,y) = 0\) for all \(y\in\calT^{\geq 1}\).
+	\end{enumerate}
+	In particular, \(\calT^{\geq 1} = (\calT^{\geq 0})^\perp\) and \(\calT^{\leq 0} = \bperp{(\calT^{\geq 1})}\). Furthermore, \(\calT^{\leq 0}\) and \(\calT^{\geq 0}\) are
+	closed under direct summands.
+\end{corollary}
+\begin{proof}
+We prove (1), since (2) follows dually. Since \(\calT^{\geq 1}\subseteq (\calT^{\geq0})^\perp\), one direction is clear. For the other, let \(y\in\calT\) and
+assume that \(\calT(x,y) = 0\) for all \(x\in \calT^{\geq 0}\). We now note that
+\[ 0 \cong \calT(x,0) \cong \calT(x,y) \cong \calT(x,\tau^{\leq 0}y) \]
+so that \(\tau^{\leq 0}y \cong 0\), hence \(y\in\calT^{\geq 1}\).
+
+To see that \(\calT^{\leq 0}\) is closed under direct summands, let \(x \cong x'\oplus x'' \in \calT^{\leq 0}\). Then for all \(y\in\calT^{\geq 1}\) we have
+\[ 0\cong \calT(x,y) \cong \calT(x',y)\oplus \calT(x'',y) \implies \calT(x',y) \cong \calT(x'',y)\cong 0 \]
+so that \(x',x''\in\calT^{\leq 0}\) by (2). The other case is dual.
+\end{proof}
+
+We thus see that the aisle and co-aisle in a t-structure are almost thick subcategories, missing only the property of being closed under a particular shift.
+We can say more: these subcategories are also closed under extensions. To prove this, we need a lemma.
+\begin{lemma}\label{lemma:t-structure-aisle-from-trivial-mapping-to-truncation}
+	Let \((\calT^{\leq 0},\calT^{\geq0})\) be a t-structure, and let \(x\in\calT\). If \(\calT(x,\tau^{\geq 1}x)=0\), then \(x\in\calT^{\leq 0}\).
+\end{lemma}
+\begin{proof}
+By assumption, we have a distinguished triangle
+\[ \tau^{\leq 0}x\to x \overset{0}\to \tau^{\geq 1}x \to \Sigma\tau^{\leq 0}x. \]
+We recognize that any distinguished triangle involving a zero map induces a direct sum decomposition by Corollary \ref{corollary:direct-sum-triangle}, and in particular, we see that
+\[ \tau^{\leq 0}x\cong \Sigma^{-1}\tau^{\geq 1}x \oplus x. \]
+Since \(\calT^{\leq 0}\) is closed under direct summands, we see that \(x\in\calT^{\leq 0}\).
+\end{proof}
+\begin{proposition}\label{prop:t-structure-closure-under-extension}
+	Let \((\calT^{\leq 0},\calT^{\geq0})\) be a t-structure. Then \(\calT^{\leq 0}\) and \(\calT^{\geq 0}\) are closed under extensions.
+\end{proposition}
+\begin{proof}
+We prove the first statement, as the other follows by duality. Consider a distinguished triangle
+\[ x' \to x \to x'' \to \Sigma x' \]
+where \(x',x''\in\calT^{\leq 0}\). We want to show that \(x\in\calT^{\leq 0}\). We apply the cohomological functor \(\calT(-,\tau^{\geq 1}x)\) to see that
+\[ 0 = \calT(x'',\tau^{\geq 1}x) \to \calT(x,\tau^{\geq 1}x) \to \calT(x',\tau^{\geq 1}x) = 0 \]
+is exact, so \(\calT(x,\tau^{\geq 1}x) = 0\). By the preceeding lemma, we conclude that \(x\in\calT^{\leq 0}\).
+\end{proof}
+\begin{exercise}\label{exercise:t-structures-cones-of-morphisms-in-aisle}
+	Let \((\calT^{\leq 0},\calT^{\geq0})\) be a t-structure, and let \(f\!:x\to y\) be a morphism in \(\calT\). Fix some \(n\in\Z\). Prove the following statements.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(x,y\in\calT^{\leq n}\), then any cone of \(f\) is in \(\calT^{\leq n}\) and any cocone of \(f\) is in \(\calT^{\leq n+1}\).
+		\item If \(x,y\in\calT^{\geq n}\), then any cone of \(f\) is in \(\calT^{\geq n-1}\) and any cocone of \(f\) is in \(\calT^{\geq n}\).
+	\end{enumerate}
+\end{exercise}
+
+\subsection{The Abelian heart of a t-structure}
+One of the original motivations for t-structures is the following construction.
+
+\begin{definition}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. The \emph{heart} of \(\calT\) with respect to \((\calT^{\leq 0},\calT^{\geq 0})\) is
+	\[ \calT^\heartsuit := \calT^{\leq 0}\cap\calT^{\geq 0}. \]
+\end{definition}
+
+The heart consists of objects ``concentrated in degree zero'' and so, from the example of the derived category, we expect this to be an Abelian category. Proving that is our next aim.
+An easy step towards this is showing that \(\calT^\heartsuit\) is additive.
+
+\begin{proposition}\label{prop:t-structure-heart-is-additive}
+	Let \((\calT^{\leq0},\calT^{\geq0})\) be a t-structure. Then \(\calT^\heartsuit\) is additive.
+\end{proposition}
+\begin{proof}
+By Exercise \ref{exercise:t-structure-zero-is-in-aisle-and-coaisle}, \(0\in\calT^\heartsuit\). Furthermore, it is clearly pre-additive, since it is a full subcategory of a pre-additive category.
+Therefore, we need only show it admits finite direct sums. However, if \(x,x'\in\calT^{\leq0}\) then for all \(y\in\calT^{\geq 1}\), we have
+\[ 0\cong\calT(x\oplus x',y) \cong \calT(x,y)\oplus\calT(x',y) \]
+so \(x\oplus x'\in\calT^{\leq 0}\) by Corollary \ref{corollary:t-structure-orthogonality}. The same statement holds for \(\calT^{\geq 0}\) by a similar argument. Therefore, \(\calT^\heartsuit\) is
+also closed under finite direct sums.
+\end{proof}
+
+To prove that \(\calT^\heartsuit\) is Abelian, we will make use of the uniqueness properties coming from the orthogonality assumptions in a t-structure, along
+with the intuition that cones in triangulated categories are like ``homotopy cokernels''. Actually, the cone is a more subtle construction: the cocone, which should be a ``homotopy kernel'',
+is just a shift of the cone. In other words, the cone contains both information about the kernel and cokernel of a morphism. One way in which this appears in other results
+is that it suffices to know a morphism has trivial cone to know that it is an isomorphism, in contrast to an Abelian category where one needs to check both the kernel and cokernel.
+
+\begin{theorem}\label{thm:t-structure-heart-is-abelian}
+	Let \((\calT^{\leq 0},\calT^{\geq0})\) be a t-structure. Then \(\calT^\heartsuit\) is an Abelian category.
+\end{theorem}
+\begin{proof}
+Since we already know \(\calT^\heartsuit\) is additive, what remains is to check that it admits kernels and cokernels, and that the image coincides with the coimage.
+Let \(f\!:x\to y\) be a morphism in \(\calT^\heartsuit\), and take the cone to get a distinguished triangle
+\[ x\overset{f}\to y \to z \to \Sigma x. \]
+Inspecting the triangle and using closure under extension, one sees that \(z\in\calT^{\leq 0}\cap\calT^{\geq -1}\).
+\begin{enumerate}[label=(\arabic*)]
+	\item The kernel of \(f\) is given by \(\tau^{\leq0}\Sigma^{-1} z \to x\). To see this, let \(w\in\calT^\heartsuit\). Applying \(\calT(w,-)\), we see that we have an exact sequence
+	\[  0 = \calT(w,\Sigma^{-1}y) \to \calT(w,\Sigma^{-1}z) \to \calT(w,x)\overset{f_*}\to\calT(w,y). \]
+	Therefore, we see that \(\calT(w,\Sigma^{-1}z)\) is the kernel of \(f_*\!:\calT(w,x)\to\calT(w,y)\). Using the canonical isomorphism \(\calT(w,\Sigma^{-1}z) \cong \calT(w,\tau^{\leq 0}\Sigma^{-1}z)\),
+	we are done.
+	\item The cokernel of \(f\) is given by \(y\to \tau^{\geq 0}z\). This is identical to (1).
+	\item The image and coimage agree. By (1) and (2), we obtain the image of \(f\) by truncating the cocone of the composition \(y\to z \to \tau^{\geq 0}z\). Let us consider the distinguished triangle
+	\[ e \to y \to \tau^{\geq 0}z \to \Sigma e, \]
+	so that \(\img{f} = \tau^{\geq 0}e\). We observe that \(e\in\calT^{\leq1}\cap\calT^{\geq0}\). Applying (TR4) to the composition \(y \to z \to \tau^{\geq 0}z\), we obtain a distinguished triangle
+	\[ \Sigma x \to \Sigma e \to \Sigma\tau^{\leq-1}z \to \Sigma^2 x \quad\leadsto\quad x \to e \to \tau^{\leq-1}z \to \Sigma x.\]
+	By closure under extension, we see that \(e\in\calT^{\leq 0}\), so in fact \(e\in\calT^\heartsuit\). Shifting to the left, we have the distinguished triangle
+	\[ \Sigma^{-1}\tau^{\leq-1}z \to x \to e \to \tau^{\leq-1}z \]
+	where we note that \(\Sigma^{-1}\tau^{\leq-1}z = \tau^{\leq 0}\Sigma^{-1} z = \ker{f}\), so really we have
+	\[ \ker{f} \to x \to e \to \Sigma(\ker{f}). \]
+	Since \(e \cong \tau^{\geq 0}e\), this exhibits \(e\) also as the cokernel of the kernel map, i.e.\ \(e \cong \coimg{f} \). On the other hand,
+	\(e\cong\img{f}\), so we are done.
+\end{enumerate}
+We conclude that \(\calT^\heartsuit\) is Abelian.
+\end{proof}
+
+Remarkably, this means that whenever we have a t-structure on \(\calT\), we may find an Abelian subcategory where the kernel and cokernel are, in a sense, given by the
+triangulated structure on \(\calT\).
+
+\subsection{Cohomology functors}
+By truncating to the left and right at position \(n\), we are left with something in \(\calT^{\leq n}\cap\calT^{\geq n} \simeq \Sigma^{-n}\calT^\heartsuit\). This
+indudces the all-important \emph{cohomology functors} intrinsic to any t-structure.
+\begin{definition}
+	Let \((\calT^{\leq0},\calT^{\geq0})\) be a t-structure. The \emph{zeroth cohomology functor} with respect to the t-structure is
+	\[ \HH^0\!:\calT\to\calT^\heartsuit,\quad \HH^0 := \tau^{\geq 0}\circ\tau^{\leq 0}. \]
+	More generally, we define the \(n\)th cohomology functor, for any \(n\in\Z\), by
+	\[ \HH^n\!:\calT\to\calT^\heartsuit,\quad \HH^n := \HH^0\circ\Sigma^n. \]
+\end{definition}
+\begin{exercise}
+	Show that \(\HH^n = \Sigma^n\circ \tau^{\geq n}\circ\tau^{\leq n}\).
+\end{exercise}
+
+Now, we made a choice in the above definition of what order to do the truncations. However, clearly there should be no difference between truncating on the left then the right, or vice versa.
+We verify this now, in (3) below.
+\begin{proposition}\label{prop:t-structure-truncation-relations}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(m\leq n\), then
+		\[ \tau^{\leq n}\circ\tau^{\leq m} \cong \tau^{\leq m}\circ\tau^{\leq n} \cong \tau^{\leq m},\quad \text{and}\quad \tau^{\geq n}\circ\tau^{\geq m} \cong \tau^{\geq m}\circ\tau^{\geq n} \cong \tau^{\geq n}. \]
+		\item If \(m > n\), then
+		\[ \tau^{\geq m}\circ\tau^{\leq n} \cong 0 \cong \tau^{\leq n}\circ\tau^{\geq m}. \]
+		\item For all \(m,n\in\Z\), there is a unique natural isomorphism \(\beta\!:\tau^{\geq m}\circ\tau^{\leq n}\cong\tau^{\leq n}\circ\tau^{\geq m}\) such that the diagram
+		of natural transformations
+		\begin{diagram*}
+			\tau^{\leq n}\ar[r,Rightarrow,"\varepsilon"]\ar[d,Rightarrow,"\eta\tau^{\leq n}"'] & \1 \ar[r,Rightarrow,"\eta"] & \tau^{\geq m} \\
+			\tau^{\geq m}\tau^{\leq n} \ar[rr,Rightarrow,"\sim","\beta"'] & & \tau^{\leq n}\tau^{\geq m}\ar[u,Rightarrow,"\varepsilon\tau^{\geq m}"']
+		\end{diagram*}
+		commutes, where \(\varepsilon\) is the counit of \(\iota^{\leq n}\ladj\tau^{\leq n}\) and \(\eta\) is the unit of \(\tau^{\geq m}\ladj\iota^{\geq m}\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) We prove the leftmost statement, as the other one is dual. Observe that we have a natural transformation \(\varepsilon\tau^{\leq m}\!: \tau^{\leq n}\circ\tau^{\leq m} \To \tau^{\leq m}\).
+Since \(\calT^{\geq n}\) is a reflective subcategory and \(\tau^{\leq m}x\in\calT^{\leq m}\subseteq\calT^{\leq n}\) for all \(x\in\calT\), we see that this natural transformation
+must be a natural isomorphism by Lemma \ref{lemma:reflective-subcategory-essential-image}, showing that \(\tau^{\leq n}\circ\tau^{\leq m} \cong \tau^{\leq m}\). For the
+other isomorphism, note that we have natural isomorphisms
+\[ \calT^{\leq m}(-, (\tau^{\leq m}\circ\tau^{\leq n})(-)) \cong \calT^{\leq n}(\iota^{\leq m}(-),\tau^{\leq n}(-)) \cong \calT(\iota^{\leq m}(-), -) \]
+so by uniqueness of adjoints, we get a natural isomorphism \( \tau^{\leq m}\circ\tau^{\leq n}\cong\tau^{\leq m} \).
+
+(2) The natural transformation \( \tau^{\leq m-1}\tau^{\leq n} \To \tau^{\leq n} \) is a natural isomorphism since \(n < m\), by (1). In particular, the cone of each component is zero.
+However, the cone here is canonically given by \(\tau^{\geq m}\circ \tau^{\leq n}\), hence we get one of the claimed isomorphisms. The other is dual.
+
+(3) By (2), the claim already holds when \(m > n\). Hence, we may assume that \(m \leq n\). We have the distinguished triangles
+\begin{align*}
+	\tau^{\leq m-1}\tau^{\leq n}x \longto \tau^{\leq n}x \overset{(\eta\tau^{\leq n})_x}\longto \tau^{\geq m}\tau^{\leq n}x \longto \Sigma\tau^{\leq m-1}\tau^{\leq n}x, \\
+	\tau^{\leq n}\tau^{\geq m}x \overset{(\varepsilon\tau^{\geq m})_x}\longto \tau^{\geq m}x \longto \tau^{\geq n+1}\tau^{\geq m}x \longto \Sigma\tau^{\leq n}\tau^{\geq m}x.
+\end{align*}
+Applying Exercise \ref{exercise:t-structures-cones-of-morphisms-in-aisle}, we see that \(\tau^{\leq n}\tau^{\geq m}x, \tau^{\geq m }\tau^{\leq n}x \in \calT^{\leq n}\cap\calT^{\geq m}\).
+Now we use the universal properties of the truncations (being adjoints):
+\begin{center}
+	\begin{tikzcd}[row sep=small]
+		\tau^{\leq n}x \ar[r,"(\eta\tau^{\leq n})_x"]\ar[d,"\varepsilon_x"'] & \tau^{\geq m}\tau^{\leq n}x\ar[ddl,dashed,"\exists!"]  \\
+		x\ar[d,"\eta_x"'] & \\
+		\tau^{\geq m}x & \tau^{\leq n}\tau^{\geq m}x \ar[l, "(\varepsilon\tau^{\geq m})_x"]
+	\end{tikzcd}
+	\(\quad\leadsto\quad\)
+	\begin{tikzcd}[row sep=small]
+		\tau^{\leq n}x \ar[r,"(\eta\tau^{\leq n})_x"]\ar[d,"\varepsilon_x"'] & \tau^{\geq m}\tau^{\leq n}x\ar[dd,dashed,"\exists!"]  \\
+		x\ar[d,"\eta_x"'] & \\
+		\tau^{\geq m}x & \tau^{\leq n}\tau^{\geq m}x \ar[l, "(\varepsilon\tau^{\geq m})_x"]
+	\end{tikzcd}
+\end{center}
+where we use that \(\tau^{\geq m}\tau^{\leq n}x\in\calT^{\leq n}\). We see that there is a unique natural transformation \(\beta\!:\tau^{\geq m}\circ\tau^{\leq n}\To\tau^{\leq n}\tau^{\geq m}\)
+making the provided diagram of natural transformations commute. We must now show it is an isomorphism.
+
+By part (1), we may rewrite the triangles as
+\begin{align*}
+	\tau^{\leq m-1}x \longto \tau^{\leq n}x \overset{(\eta\tau^{\leq n})_x}\longto \tau^{\geq m}\tau^{\leq n}x \longto \Sigma\tau^{\leq m-1}x, \\
+	\tau^{\leq n}\tau^{\geq m}x \overset{(\varepsilon\tau^{\geq m})_x}\longto \tau^{\geq m}x \longto \tau^{\geq n+1}x \longto \Sigma\tau^{\leq n}\tau^{\geq m}x.
+\end{align*}
+We apply (TR4) to the composition \(\tau^{\leq m-1}x \to \tau^{\leq n}x \to x\). This yields a distinguished triangle
+\[ \tau^{\geq m}\tau^{\leq n}x \to \tau^{\geq m}x \to \tau^{\geq n+1}x \to \Sigma\tau^{\geq m}\tau^{\leq n}x. \]
+However, we now have a distinguished triangle around \(\tau^{\geq m}x\) whose left term is in \(\calT^{\leq n}\) and right term is in \(\calT^{\geq n+1}\), which implies (by construction
+of the truncation adjunction) that the canonical map \(\beta_x\!:\tau^{\geq m}\tau^{\leq n}x \to \tau^{\leq n}\tau^{\geq m}x \) is an isomorphism.
+\end{proof}
+
+\begin{corollary}\label{corollary:t-structure-kernel-and-cokernel-in-heart-cohomology}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure, and consider a morphism \(f\!:x\to y\) in \(\calT^\heartsuit\). Given a distinguished triangle
+	\[ x \to y \to z \to \Sigma x, \]
+	we have canonical isomorphisms
+	\[ \ker{f} \cong \HH^{-1}(z),\quad \text{and}\quad \coker{f} \cong \HH^0(z).  \]
+\end{corollary}
+\begin{proof}
+Recall from the proof of Theorem \ref{thm:t-structure-heart-is-abelian} that we have canonical isomorphisms
+\[ \ker{f} \cong \tau^{\leq -1}z,\quad \text{and}\quad \coker{f} \cong \tau^{\geq 0}z  \]
+and that \(z\in\calT^{\geq -1}\cap\calT^{\leq 0}\). In particular, we have canonical isomorphisms
+\[ \tau^{\geq -1}z \cong z \cong \tau^{\leq 0}z. \]
+Thus,
+\[ \ker{f} \cong \tau^{\leq -1}\tau^{\geq -1}z \cong \HH^{-1}(z),\quad \text{and}\quad \coker{f} \cong \tau^{\geq 0}\tau^{\leq 0}z \cong \HH^0(z) \]
+where, for the left computation, we use Proposition \ref{prop:t-structure-truncation-relations}.
+\end{proof}
+
+\begin{corollary}\label{corollary:t-structure-exact-sequence-in-heart-induces-unique-distinguished-triangle}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure, and consider a short exact sequence
+	\[ 0 \to x \inj y \sur z \to 0 \]
+	in \(\calT^\heartsuit\). Then there is a unique morphism \(z \to \Sigma x\) for which
+	\[ x \to y \to z \to \Sigma x \]
+	is a distinguished triangle in \(\calT\).
+\end{corollary}
+\begin{proof}
+If such a morphism exists, it is unique by Lemma \ref{lemma:simple-uniqueness-of-cone-shift-map}, since there are no non-zero maps from \(\calT^{\leq -1}\) to \(\calT^{\geq 0}\). To see that one exists,
+pick a distinguished triangle
+\[ x \to y \to z' \to \Sigma x. \]
+We aim to show that \(z' \cong z\). We have that \(z'\in\calT^{\leq 0}\calT^{\geq -1}\), and therefore the distinguished triangle
+\[ \tau^{\leq -1}z' \to z' \to \tau^{\geq 0}z' \to \Sigma\tau^{\leq -1}z' \]
+turns into
+\[ \HH^{-1}(z') \to z' \to \HH^0(z') \to \Sigma \HH^{-1}(z'). \]
+However, by Corollary \ref{corollary:t-structure-kernel-and-cokernel-in-heart-cohomology}, we have
+\[ \HH^{-1}(z') \cong \ker(x\inj y) \cong 0,\quad \HH^0(z')\cong \img(y\sur z) \cong z. \]
+Thus, \(z' \cong \HH^0(z') \cong z\).
+\end{proof}
+
+\subsection{Appendix: Cohomology is cohomological}
+Of central importance about the cohomology functors induced by a t-structure is the fact that they are actually genuine cohomological functors, so
+that a t-structure gives rise to some new \emph{non-trivial} and \emph{interesting} constructions. We now prove this.
+\begin{exercise}\label{exercise:abelian-category-kernel-invariant-under-composition-with-monic}
+	Let \(\calA\) be an Abelian category, and let \(f\!:x\to y\) be a morphism in \(\calA\). Suppose that we have a factorization
+	\[ f = (x \overset{g}\to z \overset{h}\inj y). \]
+	Show that there is a canonical isomorphism \(\ker{f} \cong \ker{g}\).
+\end{exercise}
+\begin{exercise}\label{exercise:t-structure-cohomology-of-object-in-aisle}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure, and let \(x\in\calT^{\leq n}\). Show that \(\HH^i(x) \cong 0\) for all \(i > n\). Prove the dual statement also.
+\end{exercise}
+\begin{theorem}\label{thm:t-structure-cohomology-is-cohomological}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. Then the cohomology functors \(\HH^n\!:\calT\to\calT^{\heartsuit}\) are cohomological.
+\end{theorem}
+\begin{proof}
+Note that \(\calT^\heartsuit\) is Abelian by Theorem \ref{thm:t-structure-heart-is-abelian}, so the proposition is a valid one to consider. The functors are clearly additive, so we must check that
+they send distinguished triangles to exact sequences. Consider a distinguished triangle
+\[ x \to y \to z \to \Sigma x \]
+in \(\calT\). It suffices to show that \(\HH^0\) sends this to an exact sequence
+\[ \HH^0(x) \to \HH^0(y) \to \HH^0(z). \]
+The proof proceeds in three steps, increasing in generality.
+\begin{enumerate}[label=(\arabic*)]
+	\item The case when \(x,y,z\in\calT^{\leq 0}\). We show that, in fact,
+	\[ \HH^0(x) \to \HH^0(y) \to \HH^0(z) \to 0 \]
+	is exact. To do this, note that for all \(w\in\calT^\heartsuit\) and \(u\in\calT^{\leq 0}\), we have natural isomorphisms
+	\[ \calT^\heartsuit(\HH^0(u),w) = \calT(\tau^{\geq 0}\tau^{\leq 0}u, w) \cong \calT(\tau^{\geq 0}u, w) \cong \calT(u,w) \]
+	since \(\tau^{\leq 0}u \iso u\). Furthermore, \(\calT(\Sigma u,w) \cong 0\) since \(\Sigma u \in \calT^{\leq -1}\). Therefore, applying \(\calT(-,w)\) to our original distinguished triangle yields
+	exact sequences
+	\begin{diagram*}[cramped]
+		\calT(\Sigma x,w) \ar[r]\ar[d,"\sim" labl] & \calT(z,w)\ar[r]\ar[d,"\sim" labl] & \calT(y,w)\ar[d,"\sim" labl]\ar[r] & \calT(x,w)\ar[d,"\sim" labl] \\
+		0 \ar[r] & \calT(\HH^0(z),w)\ar[r] & \calT(\HH^0(y),w)\ar[r] & \calT(\HH^0(x),w)
+	\end{diagram*}
+	for all \(w\in\calT^\heartsuit\), from which we deduce that the claimed sequence is exact.
+	\item The case when \(x\in\calT^{\leq 0}\). We again show that
+	\[ \HH^0(x) \to \HH^0(y) \to \HH^0(z) \to 0 \]
+	is exact, by reduction to (1). Let \(w\in\calT^{\geq 1}\). We see that \(\calT(x,w) \cong \calT(\Sigma x,w) \cong 0\). In particular, applying \(\calT(-,w)\) to our distinguished triangle yields an
+	exact sequence
+	\[ 0 \to \calT(z,w) \to \calT(y,w) \to 0 \]
+	so that we have a natural isomorphism \(\calT(z,w)\iso\calT(y,w)\) when \(w\in\calT^{\geq 1}\). Therefore, we have natural isomorphisms
+	\[ \calT(\tau^{\geq 1}z,w) \cong \calT(z,w) \iso \calT(y,w) \cong \calT(\tau^{\geq 1}y,w) \]
+	from which we conclude that \(\tau^{\geq 1}y \iso \tau^{\geq 1}z\). To finally reduce to (1), we apply (TR4) to the composition \(y \to z \to \tau^{\geq 1}z\), yielding a distinguished triangle
+	\[ \Sigma x \to \Sigma\tau^{\leq 0}y \to \Sigma\tau^{\leq 0}z \to \Sigma^2x \quad \leadsto \quad x \to \tau^{\leq 0}y \to \tau^{\leq 0}z \to \Sigma x \]
+	where we are now in the situation of (1). We have a natural isomorphism \(\HH^0\cong\HH^0\circ\tau^{\leq 0}\), so in the end, applying \(\HH^0\) to the above yields the desired exact sequence.
+	\item The case when \(x,y,z\) are all arbitrary. Consider the composition \(\tau^{\leq 0}x \to x \to y\), and take the cone so we have a distinguished triangle
+	\[ \tau^{\leq 0}x \to y \to e \to \Sigma\tau^{\leq 0}x. \]
+	Applying (TR4) to the composition, we have the commutative diagram
+	\begin{diagram*}[cramped]
+		\tau^{\leq 0}x\ar[r]\ar[d,equal] & x\ar[d]\ar[r] & \tau^{\geq 1}x \ar[r]\ar[d,dashed] & \Sigma \tau^{\leq 0}x \ar[d,equal] \\
+		\tau^{\leq 0}x\ar[r]\ar[d] & y\ar[r]\ar[d,equal] & e\ar[r]\ar[d,dashed] & \Sigma\tau^{\leq 0}x \ar[d] \\
+		x\ar[r]\ar[d] & y\ar[d]\ar[r] & z \ar[r]\ar[d,equal] & \Sigma x\ar[d] \\
+		\tau^{\geq 1}x \ar[r,dashed] & e\ar[r,dashed] & z\ar[r,dashed] & \Sigma \tau^{\geq 1}x
+	\end{diagram*}
+	with rows distinguished triangles. Applying \(\HH^0\) to the second row, by (2), gives the exact sequence
+	\[ \HH^0(x) \to \HH^0(y) \to \HH^0(e). \]
+	By the dual of (2), shifting the bottom row and applying \(\HH^0\) yields the exact sequence
+	\[ 0 \to \HH^0(e) \to \HH^0(z) \to \HH^1(x) \]
+	and in particular, \(\HH^0(e) \to \HH^0(z)\) is a monomorphism. Noting that \(\HH^0(y)\to\HH^0(z)\) factors as \(\HH^0(y)\to\HH^0(e)\inj\HH^0(z)\) by the commutativity
+	of the big diagram, we deduce by Exercise \ref{exercise:abelian-category-kernel-invariant-under-composition-with-monic} that
+	\[ \img(\HH^0(x)\to\HH^0(y)) \cong \ker(\HH^0(y)\to\HH^0(e)) \cong \ker(\HH^0(y)\to\HH^0(z)) \]
+	showing that
+	\[ \HH^0(x) \to \HH^0(y) \to \HH^0(z) \]
+	is exact.
+\end{enumerate}
+This completes the proof.
+\end{proof}
+
+\begin{corollary}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure, and suppose we have a distinguished triangle
+	\[ x \to y \to z \to \Sigma x,\quad x,y,z\in\calT^\heartsuit. \]
+	Then the sequence
+	\[ 0 \to x \to y \to z \to 0 \]
+	is exact. In particular, there is a bijection between exact sequences in \(\calT^\heartsuit\) and distinguished triangles whose terms lie in \(\calT^\heartsuit\).
+\end{corollary}
+\begin{proof}
+We have a natural isomorphism \(\HH^0|_{\calT^\heartsuit} \cong \1_{\calT^\heartsuit}\), since on objects of the heart, the components of the (co)unit for the truncation at zero are isomorphisms.
+In particular, Theorem \ref{thm:t-structure-cohomology-is-cohomological} specializes to say that given a distinguished triangle
+\[ x \to y \to z \to \Sigma x,\quad x,y,z\in\calT^\heartsuit, \]
+applying \(\HH^0\) yields exact sequences
+\begin{diagram*}[cramped]
+	0 \ar[r]\ar[d,equal] & \HH^0(x) \ar[r]\ar[d,"\sim" labl] & \HH^0(y) \ar[d,"\sim" labl]\ar[r] & \HH^0(y)\ar[d,"\sim" labl]\ar[r] & 0\ar[d,equal] \\
+	0 \ar[r] & x \ar[r] & y \ar[r] & z \ar[r] & 0
+\end{diagram*}
+as desired. The final assertion follows by combining the above with Corollary \ref{corollary:t-structure-exact-sequence-in-heart-induces-unique-distinguished-triangle}.
+\end{proof}
+
+\subsection{Appendix: Bounded and non-degenerate t-structures}
+Consider a complex \(x^\bullet\) in some Abelian category category \(\calA\):
+\[ x^\bullet\!:\quad \cdots \to x^{i-1} \to x^i \to x^{i+1} \to \cdots. \]
+The t-structure on \(\sfD(\calA)\) is such that \(x^\bullet\in\sfD(\calA)^{\leq 0}\) if and only if \(x^\bullet \in \sfD^{\leq 0}(\calA)\), i.e.\ if \(\HH^i(x^\bullet) \cong 0\) for all \(i > 0\).
+In other words, one can use the cohomology functors to completely characterize the aisle (and co-aisle) of the t-structure.
+
+Now consider some arbitrary triangulated category \(\calT\) with a t-structure \((\calT^{\leq 0},\calT^{\geq 0})\). The above statement no longer holds, as, in fact, there may be non-zero \(x\in\calT\)
+for which \(\HH^i(x)\cong 0\) \emph{for all} \(i\in\Z\). Indeed, consider the trivial t-structure \((\calT,0)\). The left truncation functor does nothing, while the right truncation functor
+is the functor sending everything to zero. In this t-structure, all cohomology functors are just the zero functor \(\calT \to 0\), and so in fact every object \(x\in\calT\) forms a counter-example.
+We would like to find critera which prevent this kind of pathology.
+
+\begin{proposition}\label{prop:t-structure-aisle-from-cohomology}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure, and let \(x\in\calT\). Assume one of the following conditions hold.
+	\begin{enumerate}[label=(\roman*)]
+		\item There is some \(n\in\Z\) such that \(x\in\calT^{\leq n}\).
+		\item If \(\tau^{\geq 1}x \in \calT^{\geq n} \) for all \(n\geq 1\), then \(\tau^{\geq 1}x\cong 0\).
+	\end{enumerate}
+	Then \(x\in\calT^{\leq 0}\) if and only if \(\HH^i(x)\cong 0\) for all \(i > 0\).
+\end{proposition}
+\begin{proof}
+If \(x\in\calT^{\leq 0}\), then \(\HH^i(x)\cong 0\) for all \(i>0\); this is Exercise \ref{exercise:t-structure-cohomology-of-object-in-aisle}. For the converse, we split into the cases presented.
+\begin{enumerate}[label=(\roman*)]
+	\item We proceed by induction. If \(n\leq 0\), we are done. Thus, suppose \(n > 0\), and that we know the result for all \(0 \leq m < n\). By assumption, \(\HH^n(x) \cong 0\), so the distinguished triangle
+	\[ \tau^{\leq n-1}\tau^{\leq n}x \to \tau^{\leq n}x \to \tau^{\geq n}\tau^{\leq n}x \to \Sigma \tau^{\leq n-1}\tau^{\leq n}x \]
+	becomes
+	\[ \tau^{\leq n-1}x \to x \to 0 \to \Sigma\tau^{\leq n-1}x \]
+	showing that \(\tau^{\leq -1}x\iso x\). In particular, \(x\in\calT^{\leq n-1}\), so by the induction hypothesis \(x\in\calT^{\leq 0}\).
+	\item We wish to show that \(\tau^{\leq 0}x \to x\) is an isomorphism, to which it suffices to prove \(\tau^{\geq 1}x\cong 0\). To this end, let us show that for all \(n \geq 1\),
+	the morphism \(\tau^{\geq n}x \to \tau^{\geq n+1}x\) is an isomorphism. Consider the distinguished triangle
+	\[ \tau^{\leq n}\tau^{\geq n}x \to \tau^{\geq n}x \to \tau^{\geq n+1}\tau^{\geq n}x \to \Sigma\tau^{\leq n}\tau^{\geq n}x \]
+	which we compute as
+	\[ \Sigma^{-n}\HH^n(x) \to \tau^{\geq n}x \to \tau^{\geq n+1}x \to \Sigma^{-n+1}\HH^n(x). \]
+	Since \(n>0\), we see that \(\HH^n(x)\cong 0\) and therefore \(\tau^{\geq n}x\iso\tau^{\geq n+1}x\). We see that \(\tau^{\geq 1}x\cong \tau^{\geq n}x\) for all \(n\geq 1\),
+	so that \(\tau^{\geq 1}x \in \bigcap_{n\geq 1}\calT^{\geq n}\). By assumption, \(\tau^{\geq 1}x\) is such that if it satisfies this, it is zero.
+\end{enumerate}
+This completes the proof.
+\end{proof}
+
+This proposition hopefully motivates the following definitions being interesting.
+
+\begin{definition}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. We say it is \emph{left bounded,} resp.\ right bounded, if
+	\[ \calT = \bigcup_{n\in\Z}\calT^{\geq n},\quad \text{resp.\ } \calT = \bigcup_{n\in\Z}\calT^{\leq n}. \]
+	If the t-structure is both left and right bounded, we say is is bounded.
+
+	We say the t-structure is \emph{left non-degenerate,} resp.\ \emph{right non-degenerate} if
+	\[ \{0\} \simeq \bigcap_{n\in\Z}\calT^{\leq n},\quad \text{resp.\ } \{0\} \simeq \bigcap_{n\in\Z}\calT^{\geq n}. \]
+	If the t-structure is both left and right non-degenerate, we say it is non-degenerate.
+\end{definition}
+
+\begin{proposition}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. If it is right bounded, then it is right non-degenerate.
+\end{proposition}
+\begin{proof}
+Suppose that \(x\in\bigcap_{k\in\Z}\calT^{\geq k}\). Since the t-structure is right bounded, we also have that \(x\in\calT^{\leq n}\) for some \(n\in\Z\).
+In particular, \(x\in\calT^{\leq n}\cap\calT^{\geq n+1}\), so
+\[ x \cong \tau^{\geq n+1}\tau^{\leq n}x \cong 0 \]
+by Proposition \ref{prop:t-structure-truncation-relations}. Therefore, the t-structure is non-degenerate.
+\end{proof}
+
+\begin{corollary}\label{corollary:t-structure-right-non-degenerate-aisle-from-cohomology}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a right non-degenerate t-structure. Then
+	\[ \calT^{\leq 0} = \{ x\in\calT \mid \forall i>0,\, \HH^i(x) \cong 0 \}. \]
+\end{corollary}
+\begin{proof}
+Clearly, we have
+\[ \calT^{\leq 0} \subseteq \{ x\in\calT \mid \forall i>0,\, \HH^i(x) \cong 0 \}. \]
+For the converse, we apply Proposition \ref{prop:t-structure-aisle-from-cohomology}. In applying (ii), note that since \(\calT^{\geq m}\subseteq\calT^{\geq n}\) for all \(m\geq n\), we have
+\[ \bigcap_{n\in\Z}\calT^{\geq n} = \bigcap_{n\geq 1}\calT^{\geq n}. \]
+By assumption, the right term is thus zero, which means (ii) in the proposition is satisfied for all \(x\in\calT\).
+\end{proof}
+
+By appropriately dualizing what we have proven, we see that in a non-degenerate t-structure (for example, one which is bounded) the aisle and co-aisle are completely
+determined by the cohomology functors \(\HH^n\!:\calT^\to\calT^\heartsuit\). In this case, the cohomology functors act nicely as a family.
+\begin{proposition}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a non-degenerate t-structure. Then \(\{\HH^n\}_{n\in\Z}\) is a conservative family of functors. That is, a morphsism \(f\!:x\to y\)
+	is an isomorphism if and only if the morphisms \(\HH^n(f)\!:\HH^n(x)\to\HH^n(y)\) are isomorphisms for all \(n\in\Z\).
+\end{proposition}
+\begin{proof}
+One direction is easy: if \(f\) is already an isomorphism, the latter statement is clear. Conversely, assume \(\HH^n(f)\) is an isomorphism for all \(n\in\Z\). Taking the cone of \(f\),
+we have a distinguished triangle
+\[ x \overset{f}\to y \to z \to \Sigma x. \]
+From Theorem \ref{thm:t-structure-cohomology-is-cohomological}, the functors \(\HH^n\) are cohomological, so we have the exact sequence
+\begin{diagram*}
+	\HH^n(x) \ar[r,"\sim","\HH^n(f)"'] & \HH^n(y) \ar[r] & \HH^n(z) \ar[r] & \HH^{n+1}(x) \ar[r,"\sim","\HH^{n+1}(f)"'] & \HH^{n+1}(y)
+\end{diagram*}
+which implies that \(\HH^n(z)\cong 0\) for all \(n\in\Z\). In particular, since the t-structure is right non-degenerate, Corollary \ref{corollary:t-structure-right-non-degenerate-aisle-from-cohomology} tells us that
+\[ z \in \bigcap_{n\in\Z}\calT^{\leq n}. \]
+However, since the t-structure is also left non-degenerate, this means that \(z\cong 0\), so \(f\) is an isomorphism.
+\end{proof}
+
+In fact, this property completely characterizes non-degenerate t-structures.
+\begin{theorem}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+		\item The t-structure is non-degenerate.
+		\item The family of cohomological functors \(\{\HH^n\!:\calT\to\calT^{\heartsuit}\}_{n\in\Z}\) is conservative.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+The implication \((1)\Rightarrow(2)\) has already been proven. For the converse, let us first assume that
+\[ x \in\bigcap_{n\in\Z}\calT^{\leq n}. \]
+Then \(\HH^n(x)\cong 0\) for all \(n\in\Z\) by Exercise \ref{exercise:t-structure-cohomology-of-object-in-aisle}. In particular, \(x \to 0\) is an isomorphism, by conservativity. This shows
+that the t-structure is left non-degenerate. Showing that it is right non-degenerate is dual.
+\end{proof}
+
+\begin{remark}
+	The above characterization of non-degenerate t-structures suggests that perhaps one ought to be able to go the other way: starting from a cohomological functor \(H\!:\calT\to\calA\)
+	such that the family \(\{H\circ\Sigma^n\}_{n\in\Z}\) is conservative, construct a t-structure on \(\calT\) such that \(\calT^\heartsuit\simeq\calA\) and the cohomology functors
+	are given by \(H\circ\Sigma^n\).
+
+	In general, one cannot hope for this to be possible, but for particular kinds of functors it actually is. A prominent example is the theorem
+	of Hoshino--Kato--Miyachi \cite{hkm02}, previously discussed briefly in Appendix \ref{appendix:abelian-categories-with-a-compact-projective-generator}, which proves that
+	this works for the functor \(\calT(s,-)\!:\calT\to\Mod_{\End(s)}\) as long as \(s\in\calT\) is a compact generator and satisfies
+	\[ \forall i > 0,\quad \calT(s,s[i]) \cong 0. \]
+	Proving the theorem takes some work, but involves many interesting ingredients which we will cover later.
+\end{remark}
+
+\subsection{Appendix: Stable t-structures}
+Let \(\calT\) be a triangulated category. The trivial t-structure \((\calT,0)\) has a special property.
+\begin{definition}
+	A t-structure \((\calT^{\leq 0},\calT^{\geq 0})\) is called \emph{stable} if \(\Sigma\calT^{\leq 0} = \calT^{\leq 0}\).
+\end{definition}
+We dedicate this short appendix to a simple characterization of such t-structures, which also demonstrates that they are somewhat pathological. Everything is taken
+from \cite{chen2022extensionststructures}, where a little more can be found too.
+
+\begin{proposition}
+	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a t-structure. The following statements are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+		\item The t-structure \((\calT^{\leq 0},\calT^{\geq 0})\) is stable.
+		\item Both \(\calT^{\leq0}\) and \(\calT^{\geq0}\) are triangulated subcategories of \(\calT\).
+		\item The heart of the t-structure \((\calT^{\leq 0},\calT^{\geq 0})\) satisfies \(\calT^\heartsuit\simeq\{0\}\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+That (1) and (2) are equivalent is pretty easy. In particular, (2) trivially implies (1), while to see that (1) implies (2), use that by definition of being
+stable, \(\calT^{\leq 0} = \calT^{\leq -1}\) is a triangulated subcategory and that \(\calT^{\geq 0} = (\calT^{\leq -1})^\perp\).
+
+To see that (1) \(\Rightarrow\) (3), we compute
+\[ \calT^\heartsuit = \calT^{\leq 0}\cap\calT^{\geq0} = \calT^{\leq -1}\calT^{\geq 0} = \calT^{\leq -1} \cap (\calT^{\leq -1})^\perp \simeq \{0\}. \]
+For the converse implication (3) \(\Rightarrow\) (1), it suffices to prove that for all \(x\in\calT^{\leq 0}\), we have \(\tau^{\leq -1}x \iso x\).
+To this end, consider the distinguished triangle
+\[ \tau^{\leq -1}x \to x \to \tau^{\geq 0}x \to \Sigma\tau^{\leq -1}x. \]
+Since \(x\in\calT^{\leq 0}\), we have \(\tau^{\geq 0}x \cong \HH^0(x)\cong 0\) since \(\calT^\heartsuit\simeq\{0\}\), and therefore
+the map on the left is an isomorphism.
+\end{proof}
+
+\subsection{Appendix: t-structures on stable \(\infty\)-categories (TBD)}
+
