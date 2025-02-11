@@ -1,0 +1,415 @@
+%!TEX root = ../lectures.tex
+
+% copied from tex.stackexchange @ https://tex.stackexchange.com/questions/615542/boxtimes-without-a-diagonal
+% don't need it, actually, but I'm keeping it around just in case
+% \DeclareFontFamily{U}{mathb}{\hyphenchar\font45}
+% \DeclareFontShape{U}{mathb}{m}{n}{
+%       <5> <6> <7> <8> <9> <10> gen * mathb
+%       <10.95> mathb10 <12> <14.4> <17.28> <20.74> <24.88> mathb12
+%       }{}
+% \DeclareSymbolFont{mathb}{U}{mathb}{m}{n}
+% \DeclareMathSymbol{\boxslash}{2}{mathb}{"6D}%%%%%% imported only two symbol of mathabx; here there are the slot of this package: https://mirror.las.iastate.edu/tex-archive/fonts/mathabx/texinputs/mathabx.dcl
+% \DeclareMathSymbol{\boxbackslash}{2}{mathb}{"6E}
+
+\section{Lifting problems \& Quillen's small object argument}\label{lecture:lifting-problems}
+
+In essence, homotopy theory is the study of localizations of categories. For example, classically one was interested in the localization of some nice category of topological spaces
+at the (weak) homotopy equivalences. Studying these kinds of structures takes many forms, and we have seen a few already in Lectures
+\ref{section:localization-of-categories} \& \ref{lecture:homotopical-algebra-through-deformations}. However, modern homotopy theory is, largely speaking, fundamentally phrased in terms of
+so-called \emph{lifting problems.} The crux is that much homotopy theory can be done in the setting of a \emph{model category,} which makes use of factorizations of morphisms into pairs
+(a trivial fibration and a cofibration, or a fibration and a trivial cofibration) having some lifting property with respect to each other. Pairs of classes of maps where one can make such
+factorizations are called \emph{factorization systems.}
+
+The other topic of this lecture, the small object argument (due to Quillen), is a method for producing factorization systems out of some specified class of maps whose domains
+are sufficiently compact objects. This is the origin of the name, as compact objects have historically also been referred to as ``small'' objects.
+
+\subsection{Lifting problems}
+
+This is our basic notion for study.
+\begin{definition}
+	Let \(\calC\) be a category. We say a morphism \(f\!:x\to y\) has the \emph{left lifting property} with respect to a morphism \(g\!:x'\to y'\),
+	or that \(g\) has the \emph{right lifting property} with respect to \(f\), if for any solid diagram
+	\begin{diagram*}
+		x\ar[d,"f"']\ar[r] & x'\ar[d,"g"] \\
+		y\ar[r]\ar[ur,dashed] & y'
+	\end{diagram*}
+	a dashed arrow exists.
+
+	Consider some set of maps \(S\) in \(\calC\). We say \(f\) has the left lifting property with respect to \(S\) if it has the left lifting property with respect to all elements of \(S\).
+	The case for the right lifting property is similar.
+\end{definition}
+\begin{remark}
+	A diagram of the form
+	\begin{diagram*}
+		x\ar[d,"f"']\ar[r] & x'\ar[d,"g"] \\
+		y\ar[r]\ar[ur,dashed] & y'
+	\end{diagram*}
+	describes a \emph{lifting problem.} A dashed arrow, if one exists, is called a \emph{solution} to the lifting problem. In this way, \(f\) has the left lifting property with
+	respect to \(g\) if we can solve any lifting problem with \(f\) on the left and \(g\) on the right.
+\end{remark}
+\begin{example}
+	Let \(\calA\) be an Abelian category. Recall that an object \(p\in\calA\) is \emph{projective} if \(\calA(p,-)\) is exact. This essentially reduces to asking that
+	for any epimorphism \(x \sur y\) and morphism \(p\to y\), there is a lift factoring this through a morphism \(p\to x\). Observe that we can phrase this as a lifting problem:
+	\begin{diagram*}
+		0\ar[d]\ar[r] & x\ar[d,two heads] \\
+		p\ar[r]\ar[ur,dashed] & y
+	\end{diagram*}
+	so that \(p\) is projective if and only if the unique map \(0 \to p\) has the left lifting property with respect to the set of epimorphisms in \(\calA\). Dually, an object \(q\in\calA\)
+	is \emph{injective} if and only if the unique map \(0\to q\) has the right lifting property with respect to the set of monomorphisms.
+\end{example}
+\begin{remark}
+	In the situation above, where one of the morphisms is trivial, it is common to omit it entirely. For example, one might write
+	\begin{diagram*}
+		 & x\ar[d,two heads] \\
+		p\ar[r]\ar[ur,dashed] & y
+	\end{diagram*}
+	for the lifting problem associated to a projective.
+\end{remark}
+\begin{example}\label{example:surjections-in-terms-of-rlp}
+	A map of sets \(f\!:A\to B\) is surjective if and only if it has the right lifting property with respect to \(\varnothing \inj *\). This is easy to see; indeed, the diagram is
+	\begin{diagram*}
+		\varnothing\ar[d]\ar[r] & A\ar[d,"f"] \\
+		*\ar[r]\ar[ur,dashed] & B
+	\end{diagram*}
+	which tells us that for any element \(b\in B\), there is some element \(a\in A\) such that \(f(a)=b\), i.e.\ \(f\) is surjective.
+\end{example}
+
+So, many interesting maps and objects arise in terms of lifting problems admitting a solution. Let us fix some notation for these things, taken from \cite{riehl-categorical-homotopy-theory}.
+\begin{notation}
+	Let \(\calC\) be a category, and let \(f,g\) be two morphisms in \(\calC\). We write \(f\boxslash g\) to say that \(f\) has the left lifting property with respect to \(g\) (or, equivalently, that \(g\) has the
+	right lifting property with respect to \(f\)).
+
+	If \(S\) is a set of morphisms in \(\calC\), we write \(S^\boxslash\) for those morphisms which have the right lifting property with respect to \(S\), and dually, \(\prescript{\boxslash}{}{S}\)
+	for those morphisms having the left lifting property with respect to \(S\). If \(T\) is another set of morphisms, we write \(S\boxslash T\) to say that \(S\subseteq \prescript{\boxslash}{}{T}\),
+	or equivalently that \(T\subseteq S^\boxslash\).
+\end{notation}
+\begin{remark}
+	To spell it out, writing \(S\boxslash T\) means that we can solve any lifting problem with an \(S\) on the left and \(T\) on the right.
+\end{remark}
+\begin{example}
+	We see from Example \ref{example:surjections-in-terms-of-rlp} that
+	\[ \{ \text{surjections in }\Set \} = \{\varnothing\inj *\}^\boxslash. \]
+\end{example}
+
+\begin{example}
+	Any isomorphism has the left and right lifting property with respect to all maps. Indeed, you just compose with the inverse of the isomorphism to produce the desired lift.
+\end{example}
+
+\begin{proposition}
+	Let \(\calC\) be a category, and let \(S\) and \(T\) be sets of morphisms in \(\calC\). Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(S\subseteq T\), then \(\prescript{\boxslash}{}{T}\subseteq\prescript{\boxslash}{}{S}\).
+		\item If \(S\subseteq T\), then \(T^\boxslash\subseteq S^\boxslash\).
+		\item \(S \subseteq \prescript{\boxslash}{}{(S^\boxslash)}\).
+		\item \(S^\boxslash = (\prescript{\boxslash}{}{(S^\boxslash)})^\boxslash\).
+		\item \(\prescript{\boxslash}{}{S} = \prescript{\boxslash}{}{((\prescript{\boxslash}{}{S})^\boxslash)}\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+Statements (1), (2), and (3) are trivial. Statements (4) and (5) are dual, so we prove (3). First, note that one inclusion follows by (2) and (3), i.e.
+\[ S \subseteq \prescript{\boxslash}{}{(S^\boxslash)} \implies (\prescript{\boxslash}{}{(S^\boxslash)})^\boxslash \subseteq S^\boxslash. \]
+On the other hand, the other inclusion is also trivial: let \(g\in S^\boxslash\); what we have to check is that \(\prescript{\boxslash}{}{(S^\boxslash)} \boxslash g\),
+but to test this, we use a lifting problem against a morphism \(f\) with the left lifting property with respect to \(S^\boxslash\).
+\end{proof}
+
+\subsection{Saturated classes}
+
+Let \(S\) be a class of morphisms in some category \(\calC\). The set of morphisms \(\prescript{\boxslash}{}{S}\) has some special properties. We will now explain them.
+One has already been mentioned: \(\prescript{\boxslash}{}{S}\) contains all isomorphisms, which is easy to see.
+
+Most of the properties that \(\prescript{\boxslash}{}{S}\) will satisfy are fairly self-explanatory. One, however, is a bit trickier to make sense of. It is not too hard to see
+that it is closed under composition. However, something much stronger is true: it is closed under \emph{transfinite composition.} For the purposes of explaining this,
+we will need to make use of ordinals. Rest assured, we do not need to know much about them.
+
+Recall that a totally ordered set is a \emph{well order} if, in addition, every non-empty subset has a least element. These can be regarded as categories in an obvious way, and an
+ordinal is merely an isomorphism class of well ordered sets. In particular, we can view any ordinal \(\alpha\) as a category. Now, the class of ordinals happens to be well-ordered (intuitively,
+by inclusion), meaning that for any two ordinals \(\alpha\) and \(\beta\) we can also talk about whether \(\beta < \alpha\). In general, one can identify an ordinal \(\alpha\) with
+the set \(\{ \beta \mid \beta < \alpha \}\).
+
+Taking an ordinal \(\alpha\) and freely adjoining a terminal element, one obtains the \emph{succesor} \(\alpha+1\). An ordinal \(\lambda\) is a \emph{limit} ordinal if it is non-zero and
+not the successor of any other ordinal. Observe that this happens if and only if \(\lambda\) is the \emph{colimit} of all ordinals strictly lesser than \(\lambda\). Indeed, if \(\lambda = \beta+1\), then
+the colimit would instead be given by \(\beta\).
+
+\begin{definition}
+	Let \(\calC\) be a category, let \(S\) be a set of morphisms in \(\calC\), and let \(\alpha\) be some ordinal. An \(\alpha\)-composable sequence of morphisms in \(S\) is a
+	diagram \(x_\bullet\!:\alpha \to \calC\) with the following properties.
+	\begin{enumerate}[label=(\arabic*)]
+		\item For any ordinal \(\beta < \alpha\) with a succesor \(\beta + 1 < \alpha\), the corresponding morphism \(x_{\beta} \to x_{\beta+1}\) is in \(S\).
+		\item \(x_\bullet\) is ``continuous''. That is, for any limit ordinal \(\lambda < \alpha\), the canonical morphism
+		\[ x_\lambda \to \injlim_{\beta < \lambda}x_\beta \]
+		is an isomorphism.
+	\end{enumerate}
+	The \emph{composition} of an \(\alpha\)-composable sequence of morphisms \(x_\bullet\) is the canonical map
+	\[ x_0 \to x_\alpha := \injlim x_\bullet. \]
+	Let \(\kappa\) be a cardinal. We say that \(S\) is closed under \(\kappa\)-transfinite compositions if the composition of any \(\alpha\)-composable sequence of morphisms
+	in \(S\) is in \(S\) for all ordinals \(\alpha\) with cardinality strictly less than \(\kappa\).
+
+	We say that \(S\) is \emph{closed under transfinite compositions} if it is closed under \(\kappa\)-transfinite compositions for all \(\kappa\).
+\end{definition}
+
+\begin{remark}
+	The easiest non-trivial picture here is \(\alpha = \omega\). Then we just have a sequence
+	\[ x_0 \to x_1 \to \cdots \to x_i \to \cdots \]
+	and we require that each \(x_{i} \to x_{i+1}\) is in \(S\). If \(S\) is now closed under transfinite composition, it means that the map
+	\[ x_0 \to x_\omega := \injlim_i x_i \]
+	is in \(S\) too.
+\end{remark}
+
+\begin{proposition}\label{prop:llp-closure-properties}
+	The set \(\prescript{\boxslash}{}{S}\) is closed under the following constructs.
+	\begin{enumerate}[label=(\arabic*)]
+		\item Retracts.
+		\item Small coproducts, meaning that for any small indexing set \(I\) and collection of morphisms \(\{f_i\!:x_i\to y_i\}_{i\in I}\subseteq S\), the morphism
+		\[ \coprod_{i\in I}f_i \!: \coprod_{i\in I}x_i \to \coprod_{i\in I}y_i \]
+		is in \(S\) whenever it exists.
+		\item Pushouts, meaning:
+		\[
+		\begin{tikzcd}
+			x \ar[d,"S\ni"']\ar[r] & z \\
+			y
+		\end{tikzcd}\quad\leadsto\quad
+		\begin{tikzcd}
+			x\ar[d,"S\ni"'] \ar[r] & z \ar[d,dashed,"\in S"] \\
+			y\ar[r,dashed] & y\amalg_xz\ar[ul,pushout]
+		\end{tikzcd}.
+		\]
+		\item Transfinite compositions.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+The proofs of all of these facts are very similar. We prove (4) by transfinite induction. Let \(\alpha\) be some ordinal, and consider an \(\alpha\)-composable sequence of morphisms
+\(x_\bullet\!:\alpha\to\calC\) in \(\prescript{\boxslash}{}{S}\). The base case when \(\alpha=1\) is trivial, so assume we know the result for all \(\beta < \alpha\). If \(\alpha = \alpha'+1\) is a successor ordinal, then
+if \(f\in S\), we are in the following situation
+\[
+	\begin{tikzcd}
+		x_0\ar[d,"\prescript{\boxslash}{}{S}\ni"']\ar[r] & x\ar[dd,"f"] \\
+		x_{\alpha'}\ar[d,"\prescript{\boxslash}{}{S}\ni"'] & \\
+		x_{\alpha'+1}\ar[r]\ar[uur,dashed] & y
+	\end{tikzcd}\quad = \quad
+	\begin{tikzcd}
+		x_0 \ar[d,"\prescript{\boxslash}{}{S}\ni"']\ar[r] & x\ar[d,"f"] \\
+		x_{\alpha'}\ar[r]\ar[ur,dashed,"\exists"] & y
+	\end{tikzcd}\text{ and }
+	\begin{tikzcd}
+		x_{\alpha'} \ar[d,"\prescript{\boxslash}{}{S}\ni"']\ar[r] & x\ar[d,"f"] \\
+		x_{\alpha'+1}\ar[r]\ar[ur,dashed,"\exists"] & y
+	\end{tikzcd}
+\]
+giving the desired solution. If \(\alpha\) is a limit ordinal, note that a map \(x_\alpha \to x\) is given by a compatible collection of maps \(x_\beta\to x\) for all \(\beta < \alpha\). In
+particular, by the induction hypothesis, we then have
+\[
+	\forall \beta < \alpha,\quad
+	\begin{tikzcd}
+		x_0\ar[d,"\prescript{\boxslash}{}{S}\ni"']\ar[r] & x\ar[dd,"f"] \\
+		x_\beta\ar[d]\ar[ur,dashed,"\exists"] & \\
+		x_\alpha\ar[r] & y
+	\end{tikzcd}\quad\leadsto\quad
+	\begin{tikzcd}
+		x_0\ar[d]\ar[r] & x\ar[d,"f"] \\
+		x_\alpha\ar[r]\ar[ur,dashed,"\exists"] & y
+	\end{tikzcd}
+\]
+so we have our lift here too. This completes the argument.
+\end{proof}
+\begin{exercise}
+	Complete the above proof.
+\end{exercise}
+
+\begin{definition}
+	Let \(\calC\) be a category and let \(\kappa\) be a cardinal. A set of morphisms \(T\) in \(\calC\) is said to be \emph{weakly} \(\kappa\)\emph{-saturated} if it satisfies the following
+	properties.
+	\begin{enumerate}[label=(\arabic*)]
+		\item \(T\) is closed under retracts.
+		\item \(T\) is closed under small coproducts.
+		\item \(T\) is closed under pushouts.
+		\item \(T\) is closed under \(\kappa\)-transfinite compositions.
+		\item \(T\) contains all isomorphisms.
+	\end{enumerate}
+	We say \(T\) is \emph{weakly saturated} if it is weakly \(\kappa\)-saturated for all \(\kappa\). Dually, we say \(T\) is \emph{weakly} (\(\kappa\)-)\emph{cosaturated} if \(T^\op\)
+	is weakly (\(\kappa\)-)saturated in \(\calC^\op\).
+\end{definition}
+\begin{corollary}\label{corollary:llp-weakly-saturated}
+	Let \(S\) be a set of morphisms in \(\calC\). Then \(\prescript{\boxslash}{}{S}\) is weakly saturated and \(S^\boxslash\) is weakly cosaturated.
+\end{corollary}
+\begin{remark}
+	In \cite[Remark 2.1.3]{cisinski-book}, it is pointed out that the above list has a redundancy. In fact, being closed under transfinite composition and pushouts implies being
+	closed under small coproducts.
+\end{remark}
+
+\begin{notation}
+	Let \(S\) be some collection of morphisms in \(\calC\). We write \(\overline{S}^{(\kappa)}\) for the \(\kappa\)\emph{-saturation} of \(S\), i.e.\ the smallest
+	weakly \(\kappa\)-saturated collection of morphisms containing \(S\). Similarly, we write \(\overline{S}\) for the smallest weakly saturated collection of morphisms containing \(S\).
+\end{notation}
+\begin{remark}\label{remark:saturation-inclusions}
+	Observe that since \(\prescript{\boxslash}{}{(S^\boxslash)}\) is saturated and contains \(S\), we have \(\overline{S} \subseteq \prescript{\boxslash}{}{(S^\boxslash)}\). We will
+	see that in favourable situations, this inclusion is an equality. This is one of the consequences of the small object argument.
+	
+	Additionally, we have that for all cardinals \(\kappa < \kappa'\), \(\overline{S}^{\kappa} \subseteq \overline{S}^{\kappa'} \subseteq \overline{S}\).
+\end{remark}
+
+\subsection{Factorization systems}
+We begin with the following motivating example.
+\begin{example}
+	We saw that the set of surjections in \(\Set\) were characterized by having the right lifting property with respect to \(\varnothing\inj*\). One may ask: what are
+	\[  \{\text{surjections}\}^\boxslash \quad\text{and}\quad\prescript{\boxslash}{}{\{\text{surjections}\}}? \]
+	Curiously, the answer is the same in both cases, namely you recover the collection of injective maps. Proving this makes use of the axiom of choice, and we will not discuss it.
+	Nonetheless, it is interesting to us because the following much more trivial fact: any map of sets can be decomposed into an injective map followed by a surjective map.
+\end{example}
+\begin{definition}\label{definition:factorization-system}
+	Let \(\calC\) be a category. A \emph{factorization system} on \(\calC\) is a pair \((S,T)\) of collections of maps satisfying the following properties.
+	\begin{enumerate}[label=(\alph*)]
+		\item The collections \(S\) and \(T\) are closed under retracts.
+		\item For all \(f\!:x\to y\) in \(\calC\), there is a factorization \(f = p\circ i\) with \(i\in S\) and \(p\in T\).
+		\item \(S\boxslash T\).
+	\end{enumerate}
+\end{definition}
+
+\begin{lemma}[``The retract lemma'']\label{lemma:retract-lemma}
+	Suppose we have a factorization
+	\[
+	\begin{tikzcd}[cramped, column sep=small]
+		x\ar[rr,"f"]\ar[dr,"i"'] & & y \\
+		& z\ar[ur,"p"'] &
+	\end{tikzcd}.
+	\]
+	Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(i\boxslash f\) then \(f\) is a retract of \(p\).
+		\item If \(f\boxslash p\), then \(f\) is a retract of \(i\).
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+Statements (1) and (2) are dual, so we prove (1). The lifting problem below left
+\[
+	\begin{tikzcd}
+		x\ar[r,equal]\ar[d,"i"'] & x \ar[d,"f"] \\
+		z\ar[r,"p"]\ar[ur,dashed,"\exists"] & y
+	\end{tikzcd}\quad\leadsto\quad
+	\begin{tikzcd}
+		x\ar[d,"f"]\ar[r,"i"] & z\ar[d,"p"]\ar[r,dashed,""] & x \ar[d,"f"] \\
+		y \ar[r,equal] & y \ar[r,equal] & y
+	\end{tikzcd}
+\]
+gives rise to the retraction as above right, as desired.
+\end{proof}
+\begin{proposition}\label{prop:factorization-system-equalities}
+	Suppose we have a pair \((S,T)\) of collections of morphisms satisfying property (b) in Definition \ref{definition:factorization-system}. Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+		\item \((S,T)\) is a factorization system.
+		\item \(S^\boxslash = T\) and \(S = \prescript{\boxslash}{}{T}\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+It is clear that (2) implies (1) (note Corollary \ref{corollary:llp-weakly-saturated}), so what remains is the other direction. We are given that \(S^\boxslash \supseteq T\) and \(S\subseteq \prescript{\boxslash}{}{T}\)
+(which are equivalent). To get the other inclusions, suppose \(f\in S^\boxslash\). We may then write \(f = p\circ i\) for \(i\in S\) and \(p\in T\), but by Lemma \ref{lemma:retract-lemma} and the
+fact that \(i\boxslash f\), we see that \(f\) is a retract of \(p\). Since \(T\) is closed under retracts, \(f \in T\). The other case is dual.
+\end{proof}
+
+\subsection{Quillen's small object argument}
+A priori, it is very hard to produce factorization systems. In particular, while it is not at all hard to find nice pairs of collections of morphisms with some
+lifting properties with respect to each other, manufacturing factorizations into these morphisms is tricky. Quillen provided a tool of great ingenuity for tackling this problem,
+namely the \emph{small object argument.} There are a number of versions of it; we choose one which is fairly intelligible.
+
+\begin{proposition}[Small object argument]\label{prop:small-object-argument}
+	Let \(\calC\) be a locally small category admitting all small colimits, let \(\kappa\) be an infinite regular cardinal, and let \(M\) be some collection of morphisms
+	in \(\calC\) with \(\kappa\)-compact domains. Then \((\prescript{\boxslash}{}{(M^\boxslash)}, M^\boxslash)\) is a factorization system.
+\end{proposition}
+\begin{proof}
+By construction, conditions (a) and (b) of Definition \ref{definition:factorization-system} are already satisfied. In other words, the crux of this proposition is the existence,
+for all \(f\!:x\to y\) in \(\calC\), of a factorization \(f = h\circ g\) where \(g\in \prescript{\boxslash}{}{(M^\boxslash)}\) and \(h\in M^\boxslash\). In fact, we will prove something
+slightly stronger: we can choose \(g\in \overline{M}^\kappa\), which implies the former by Remark \ref{remark:saturation-inclusions}.
+
+The strategy of the proof is to approximate \(f\) by a morphism in \(M\). To this end, for any map \(a\!: u\to v\), define the set
+\[ I_M(a) := \left\{\begin{tikzcd}
+	z\ar[d,"s"']\ar[r]  & u\ar[d,"a"] \\
+	w\ar[r] & v
+\end{tikzcd} : s \in M \right\}, \]
+which consists of all morphisms \(s\To a\) in \(\Ar(\calC) \cong \Fun([1], \calC)\). We observe that this set is small since \(M\) is small and \(\calC\) is locally small.
+
+For notational simplicity, given a commutative square \(i \in I_M(a)\), we write \(z_i\), \(w_i\), and \(s_i\) for the corresponding data as above. Note that we leave the horizontal maps
+unnamed since we will not need them by name. Now, using \(I_M(a)\) we can associate to \(a\) an object \(u_M\) and a pair of maps \(g(a)\!:u\to u_M\) and \(h(a)\!:u_M\to v\) such that
+\[ a = h(a)\circ g(a),\quad \text{and}\quad g(a)\in\overline{M}^\kappa. \]
+In other words, a factorization almost like what we want. The procedure is the following: taking the coproduct over all \(i\in I_M(a)\), we get a diagram
+\begin{diagram*}
+	\coprod_{i\in I_M(a)} z_i\ar[r]\ar[d,"\coprod_i s_i"'] & u\ar[d,"a"] \\
+	\coprod_{i\in I_M(a)} w_i\ar[r] & v
+\end{diagram*}
+by composing horizontally with the codiagonal. Taking the pushout of the morphism on the left, we get
+\begin{diagram*}[row sep=large]
+	\coprod_{i\in I_M(a)} z_i\ar[r]\ar[d,"\coprod_i s_i"'] & u\ar[ddr,bend left,"a"]\ar[d,dashed,"g(a)"] & \\
+	\coprod_{i\in I_M(a)} w_i\ar[r,dashed]\ar[drr,bend right] & u_M \ar[dr,"h(a)"']\ar[ul,pushout] & \\
+	& & v
+\end{diagram*}
+which defines our maps. We have that \(g(a)\in\overline{M}^\kappa\) since the latter is stable under small coproducts and pushouts.
+
+If we apply the above to \(f\), we get a factorization \(f = h(f)\circ g(f)\) where \(g(f) \in \overline{M}^\kappa\). However, we do not know that \(h(f)\in M^\boxslash\),
+so our approximation isn't good enough. To remedy this, we will approximate again and again, inductively, and in fact do it \(\kappa\) times.
+
+Set \(x_0 = x\), \(h_0 = f\). We obtain \(g_{0,1} := g(h_0)\!:x_0 \to (x_0)_M =: x_1\) and \(h_1 := h(h_0)\). We continue inductively as follows: for any successor ordinal
+\(\alpha+1\), supposing we have defined \(x_\alpha\), \(h_\alpha\!:x_{\alpha}\to y\), and \(g_{\beta,\alpha}\!:x_{\beta}\to x_{\alpha} \) for all \(\beta \leq \alpha\), we define
+\[ x_{\alpha+1} = (x_\alpha)_M,\quad g_{\beta,\alpha+1} := g(h_\alpha)\circ g_{\beta,\alpha},\quad h_{\alpha+1} = h(h_\alpha). \]
+We remark that \(g_{\alpha,\alpha} = \id_{x_\alpha}\), and therefore \(g_{\alpha,\alpha+1} = g(h_\alpha)\). For a limit ordinal \(\lambda \leq \kappa\), we define \(x_\lambda\) and \(h_\lambda\) by
+\[ x_0 \overset{h_\lambda}\longto \injlim_{\beta < \lambda}x_\beta =: x_\lambda. \]
+For any \(\beta < \lambda\) we obtain the canonical morphism \(g_{\beta,\lambda}\!:x_\beta \to x_\lambda\).
+
+We get an object \(x_\kappa\) and a pair of maps
+\[ x \overset{g_{0,\kappa}}\longto x_\kappa \overset{h_\kappa}\longto y, \]
+so we set \(g = g_{0,\kappa }\) and \(h = h_\kappa\). These satisfy \(f = h\circ g\), and \(g\in\overline{M}^\kappa\) since the latter is closed under \(\kappa\)-transfinite compositions.
+It remains to check that \(h\in M^\boxslash\).
+
+Consider a lifting problem
+\[
+	\begin{tikzcd}
+		z\ar[d,"M \ni s"']\ar[r] & x_\kappa\ar[d,"h"] \\
+		w\ar[r]\ar[ur,dashed,"\exists?"] & y
+	\end{tikzcd}
+\]
+to be solved. By definition, \(x_\kappa = \injlim_{\beta < \kappa}x_\beta\), which is a \(\kappa\)-filtered colimit. Hence, the \(\kappa\)-compactness of \(z\) means there is some
+\(\alpha < \kappa\) and a factorization
+\[
+	\begin{tikzcd}
+		z\ar[dd,"s"']\ar[rr]\ar[dr,dashed] & & x_\kappa\ar[dd,"h"] \\
+		& x_\alpha\ar[dr,"h_\alpha"']\ar[ur,"g_{\alpha,\kappa}"' near start] & \\
+		w\ar[rr] & & y
+	\end{tikzcd}.
+\]
+Now comes the genius trick: the square defined by the bottom left morphisms
+\[
+	\begin{tikzcd}
+		z\ar[d,"s"']\ar[r] & x_\alpha \ar[d,"h_\alpha"] \\
+		w \ar[r] & y
+	\end{tikzcd}
+\]
+is exactly a square used in defining \(x_{\alpha+1} = (x_{\alpha})_m\). This means precisely that we can factorize further into
+\[
+	\begin{tikzcd}[column sep=large]
+		z\ar[ddd,"s"']\ar[rr]\ar[dr] & & x_\kappa\ar[ddd,"h"] \\
+		& x_\alpha\ar[d,"g_{\alpha+1}"']\ar[ur,"g_{\alpha,\kappa}" near start] & \\
+		& x_{\alpha+1}\ar[dr,"h_{\alpha+1}" near start]\ar[uur,"g_{\alpha+1,\kappa}"'] & \\
+		w\ar[rr]\ar[ur] & & y
+	\end{tikzcd}
+\]
+where we thus obtain our solution to the lifting problem.
+\end{proof}
+\begin{corollary}
+	Let \(\calC\) be a locally small category admitting all small colimits, and suppose \(M\) is a collection of maps whose domains are all \(\kappa\)-compact for some fixed cardinal \(\kappa\).
+	Then \(\overline{M} = \prescript{\boxslash}{}{(M^\boxslash)}\).
+\end{corollary}
+\begin{proof}
+The proof of Proposition \ref{prop:small-object-argument} shows that \((\overline{M},M^\boxslash)\) is a factorization system. However, by Proposition \ref{prop:factorization-system-equalities},
+one then has
+\[ \overline{M} = \prescript{\boxslash}{}{(M^\boxslash)} \]
+as desired.
+\end{proof}
+\begin{remark}
+	In \cite[§12.2]{riehl-categorical-homotopy-theory}, there is a brief discussion of various kinds of assumptions one can take to get a small object argument. In the above, we've chosen
+	a somewhat straightforward one, modulo the details imposed by allowing any cardinal \(\kappa\). One can weaken the assumptions drastically. For example, we do not need the domain
+	of a morphism \(s\!:z\to w\) in \(M\) to be entirely \(\kappa\)-compact, as we only use that \(\calC(z,-)\) commutes with \(\kappa\)-filtered colimits of morphisms in \(\overline{M}^\kappa\).
+	Furthermore, we only use one particular kind of \(\kappa\)-filtered colimit, namely a transfinite composition of \(\kappa\)-many arrows.
+\end{remark}
+
+
+\subsection{Appendix: Transposing along adjunctions}
+
+
+
