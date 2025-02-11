@@ -1,6 +1,9 @@
 # ignore the pdf file, make others compile it themselves
 lectures.pdf
 
+# weird
+*-SAVE-ERROR
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof

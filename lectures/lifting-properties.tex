@@ -409,7 +409,227 @@ as desired.
 \end{remark}
 
 
-\subsection{Appendix: Transposing along adjunctions}
+\subsection{Appendix: Transposing lifting problems along adjunctions}
+There are a few ways that lifting problems can be moved across adjunctions, and it is very useful to be aware of them, as a number of techniques in categorical homotopy
+theory (for example, of simplicial sets) come down to convering a difficult lifting problem to an easy one through some adjunction you have available to you.
 
+The following is the easiest possible case. It is taken from \cite[Lemma 11.1.5]{riehl-categorical-homotopy-theory}, though the overall argument is
+of course standard.
+\begin{proposition}\label{prop:adjunction-lifting-correspondence}
+	Let \(
+	\begin{tikzcd}[cramped]
+		\calC\ar[r,bend left,"F",""{name=A,below}] & \calD \ar[l,bend left,"G",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	\) be an adjunction, and suppose we have collections of morphisms \(S\subseteq\Mor(\calC)\) and \(T\subseteq\Mor(\calD)\). Then
+	\( F(S) \boxslash T\) if and only if \( S \boxslash G(T) \).
+\end{proposition}
+\begin{proof}
+Specializing the below Lemma \ref{lemma:functor-category-adjunction} to the case \(\calE=[1]\), we see that there is an induced adjunction
+\[
+	\begin{tikzcd}[cramped]
+		\Fun([1],\calC)\ar[r,bend left,"F_*",""{name=A,below}] & \Fun([1],\calD) \ar[l,bend left,"G_*",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+\]
+on the arrow categories, where we note that \(\Ar(-) \cong \Fun([1],-)\). The setup for a lifting problem is precisely a morphism in an arrow category,
+so we get a bijection between a squares \(Fi \To f\) in \(\calD\) as below left, and solid squares \(i \To Gf\) in \(\calC\) as below right:
+\[
+	\begin{tikzcd}
+		Fa\ar[d,"Fi"']\ar[r] & x\ar[d,"f"] \\
+		Fb\ar[r]\ar[ur,dashed,"h"] & y
+	\end{tikzcd} \quad \leftrightsquigarrow \quad
+	\begin{tikzcd}
+		a\ar[d,"i"']\ar[r] & Gx\ar[d,"Gf"] \\
+		b\ar[r]\ar[ur,dashed,"h'"] & Gy
+	\end{tikzcd}.
+\]
+Moreover, a solution \(h\) as above left is exactly the same as a morphism in \(\Fun([2],\calD)\) as below left, which by the same argument means we have a
+correspondence with a solution \(h'\) as below right
+\[
+	\begin{tikzcd}
+		Fa\ar[d,"Fi"']\ar[r] & x\ar[d,equal] \\
+		Fb\ar[r,"h"]\ar[d,equal] & x\ar[d,"f"] \\
+		Fb\ar[r] & y
+	\end{tikzcd} \quad \leftrightsquigarrow \quad
+	\begin{tikzcd}
+		a\ar[d,"i"']\ar[r] & Gx\ar[d,equal] \\
+		b\ar[r,"h'"]\ar[d, equal] & Gx\ar[d,"Gf"] \\
+		b\ar[r] & Gy
+	\end{tikzcd}
+\]
+which completes the argument.
+\end{proof}
+\begin{lemma}\label{lemma:functor-category-adjunction}
+	Let \(
+	\begin{tikzcd}[cramped]
+		\calC\ar[r,bend left,"F",""{name=A,below}] & \calD \ar[l,bend left,"G",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+	\end{tikzcd}
+	\) be an adjunction. Then, for any category \(\calE\), there is an induced adjunction
+	\[
+		\begin{tikzcd}[cramped]
+			\Fun(\calE,\calC)\ar[r,bend left,"F_*",""{name=A,below}] & \Fun(\calE,\calD) \ar[l,bend left,"G_*",""{name=B,above}]\ar[from=A,to=B,symbol=\dashv]
+		\end{tikzcd}
+	\]
+\end{lemma}
+\begin{proof}
+The functors \(F_*\) and \(G_*\) are defined by postcomposition, so e.g.\ \(F_*\!:H\mapsto F H\), and \((\sigma\!:H\To H') \mapsto (F\sigma\!: FH\To FH')\).
+Let \(\eta\) and \(\varepsilon\) be the unit and counit of the adjunction \(F\ladj G\). We then obtain natural transformations
+\[ \eta'\!: \1 \To G_*F_*,\quad \varepsilon'\!: F_*G_* \To \1 \]
+given by
+\[ \eta'_H := \eta H,\quad \varepsilon'_K := \varepsilon K. \]
+These satisfy the triangle identities. Indeed, it suffices to check at each component, at which point one is checking the commutativity of the diagrams
+\[
+	\begin{tikzcd}[cramped, column sep=small]
+		 & FGFH\ar[dr,Rightarrow,"\varepsilon FH"] &\\
+		FH \ar[ur,Rightarrow,"F\eta H"]\ar[rr,equal] & & FH
+	\end{tikzcd}\quad\text{and}\quad
+	\begin{tikzcd}[cramped, column sep=small]
+		 & GFGK \ar[dr,Rightarrow,"G \varepsilon K"] &\\
+		GK \ar[ur,Rightarrow,"\eta GK"]\ar[rr,equal] & & FK
+	\end{tikzcd}
+\]
+which follows from the original triangle identities.
+\end{proof}
 
+The above is pleasingly simple, but unfortunately also fairly uncommon in practice. Usually, one is in a somewhat more complex situation, involving a \emph{two-variable adjunction}
+instead. Those are perhaps \emph{surprisingly} common, so we will take the time to explain them in detail, following \cite{riehl-categorical-homotopy-theory}. First, we need the notion of what a two-variable
+adjunction is to begin with.
+\begin{definition}
+	A \emph{two-variable adjunction} consists of functors
+	\[ -\otimes-\!: \calC\times\calD\to\calE,\quad \{-,-\}\!:\calC^\op\times\calE\to\calD,\quad [-,-]\!:\calD^\op\times\calE\to\calC, \]
+	equipped with natural isomorphisms
+	\[ \calE(c\otimes d, e) \cong \calD(d, \{c,e\}) \cong \calC(c,[d,e]) \]
+	of functors \(\calC^\op\times\calD^\op\times\calE\to\Set\).
+\end{definition}
+\begin{remark}
+	Here, we should think of the \(\{-,-\}\) and \([-,-]\) functors as ``internal Hom's'' of a sort. Indeed, typical examples of two-variable adjunctions come
+	exactly from such situations, in which case \(\{-,-\} = [-,-]\). The easiest example is then when \(\otimes = \times\) and
+	\[ \{-,-\} = [-,-] = \Set(-,-). \]
+\end{remark}
 
+Before we do anything serious with these, let's prove a small but useful lemma, which will be extremely helpful to us very soon.
+
+\begin{lemma}\label{lemma:two-variable-adjunction-transposition-formula}
+	Consider a two-variable adjunction
+	\[ -\otimes-\!: \calC\times\calD\to\calE,\quad \{-,-\}\!:\calC^\op\times\calE\to\calD,\quad [-,-]\!:\calD^\op\times\calE\to\calC, \]
+	equipped with natural isomorphisms having components
+	\[ \alpha_{cde}\!: \calE(c\otimes d, e) \cong \calD(d, \{c,e\}),\quad \beta_{cde}\!: \calE(c\otimes d, e) \cong \calC(c,[d,e]). \]
+	Suppose we have morphisms
+	\[ i\!:c\to c', \quad j\!:d\to d',\quad h\!:c'\otimes d \to e,\quad h'\!: c\otimes d'\to e. \]
+	Then
+	\begin{align*}
+		\alpha( c\otimes d \overset{i\otimes d}\longto c'\otimes d \overset{h}\longto e ) &= d \overset{\alpha(h)}\longto \{c',e\} \overset{ \{i,e\} }\longto \{c,e\},\text{ and} \\
+		\beta( c\otimes d \overset{c\otimes j}\longto c\otimes d' \overset{h'}\longto e ) &= c \overset{\beta(h')}\longto [d',e] \overset{[j,e]}\longto [d,e].
+	\end{align*}
+\end{lemma}
+\begin{proof}
+We will prove the first statement, as the second is basically dual. Naturality of \(\alpha\) means we have the commutative diagram
+\[
+	\begin{tikzcd}
+		\calE(c'\otimes d,e)\ar[d,"{(i\otimes d)^*}"'] \ar[r,"\sim","\alpha_{c'de}"'] & \calD(d,\{c',e\})\ar[d,"{\{i,e\}_*}"] \\
+		\calE(c\otimes d,e)\ar[r,"\sim","\alpha_{cde}"'] & \calD(d,\{c,e\})
+	\end{tikzcd}
+\]
+which says exactly that
+\[ \alpha_{cde}(h\circ (i\otimes d)) = \{i,e\}\circ\alpha_{c'de}(h) \]
+as desired.
+\end{proof}
+
+\begin{construction}[The ``Leibniz construction'']\label{construction:two-variable-adjunction-leibniz-construction}
+	Suppose we have a two-variable adjunction
+	\[ -\otimes-\!: \calC\times\calD\to\calE,\quad \{-,-\}\!:\calC^\op\times\calE\to\calD,\quad [-,-]\!:\calD^\op\times\calE\to\calC, \]
+	and that the following properties hold.
+	\begin{enumerate}[label=(\roman*)]
+		\item \(\calC\) and \(\calD\) have pullbacks.
+		\item \(\calE\) has pushouts.
+	\end{enumerate}
+	For simplicity, let us write \(\calB^\calA := \Fun(\calA,\calB)\). Then there is an induced two-variable adjunction
+	\[ -\hat\otimes-\!: \calC^{[1]}\times\calD^{[1]}\to\calE^{[1]},\quad \hat{\{-,-\}}\!:(\calC^{[1]})^\op\times\calE^{[1]}\to\calD^{[1]},\quad \hat{[-,-]}\!:(\calD^{[1]})^\op\times\calE^{[1]}\to\calC^{[1]} \]
+	on the level of arrow categories.
+
+	Here's how they're defined on objects: the ``left adjoint'' \(-\hat\otimes-\) is given, on \(i\!:c\to c'\) in \(\calC\) and \(j\!:d\to d'\) in \(\calD\), by
+	\[
+		\begin{tikzcd}
+			c\otimes d \ar[r, "i\otimes d"]\ar[d,"c\otimes j"'] & c'\otimes d \ar[d]\ar[ddr,bend left,"c'\otimes j"] & \\
+			c\otimes d'\ar[r]\ar[drr,bend right=16,"i\otimes d'"'] & (c\otimes d') \underset{c\otimes d}\amalg(c'\otimes d)\ar[ul,pushout]\ar[dr,dashed,"i\hat\otimes j" description] & \\
+			& & c'\otimes d'
+		\end{tikzcd}
+	\]
+	which one easily verifies is functorial. The other functors are similarly defined, except using pullbacks instead. In particular, given \(f\!:e\to e'\), we have
+	\[
+		\begin{tikzcd}[column sep=small]
+			\{c',e\}\ar[dr,dashed,"\hat{ \{ i,f \} }" description]\ar[drr,bend left=15,"{ \{i,e\} }"]\ar[ddr,bend right,"{ \{c',f\} }"'] & & \\
+			         & \{c,e\}\underset{\{c,e'\}}\times \{c,e\} \ar[r]\ar[d] \ar[dr,pullback] & \{c,e\}\ar[d,"\{c{,}f\}"] \\
+			         & \{c',e'\}\ar[r,"\{i{,}e'\}"'] & \{c,e'\}
+		\end{tikzcd}\quad
+		\begin{tikzcd}[column sep=small]
+			[d',e]\ar[dr,dashed,"\hat{ [ j,f ] }" description]\ar[drr,bend left=15,"{ [j,e] }"]\ar[ddr,bend right,"{ [d',f] }"'] & & \\
+			         & {[d,e]} \underset{[d,e']}\times [d,e] \ar[r]\ar[d] \ar[dr,pullback] & {[d,e]}\ar[d,"{[d,f]}"] \\
+			         & {[d',e']}\ar[r,"{[j,e']}"'] & {[d,e']}
+		\end{tikzcd}
+	\]
+	which one also easily verifies are functorial.
+
+	We must now verify that this is actually a two-variable adjunction, meaning we want to show that
+	\[ \calE^{[1]}(i\hat\otimes j, f) \cong \calD^{[1]}(j, \hat{ \{i,f\} }) \cong \calC^{[1]}(i, \hat{ [j,f] }). \]
+	We will neglect checking naturality carefully, as it is not particularly insightful. Suppose we are given a morphism \((a,b)\!:i\hat\otimes j \To f\) as displayed below left;
+	then, by Lemma \ref{lemma:two-variable-adjunction-transposition-formula}, we have natural one-to-one correspondences
+	\begin{align*}
+		\begin{tikzcd}[ampersand replacement=\&]
+			(c\otimes d') \underset{c\otimes d}\amalg(c'\otimes d) \ar[d,"i\hat\otimes j"']\ar[r,"a"] \& e\ar[d,"f"] \\
+			c'\otimes d'\ar[r,"b"] \& e'
+		\end{tikzcd} \quad &\leftrightsquigarrow \quad
+		\begin{tikzcd}[ampersand replacement=\&]
+			c\otimes d\ar[r]\ar[d] \& c'\otimes d \ar[d]\ar[r,"a'"] \& e\ar[d,"f"] \\
+			c\otimes d'\ar[r] \& c'\otimes d'\ar[r,"b"] \& e'
+		\end{tikzcd} \\
+		&\leftrightsquigarrow \quad
+		\begin{tikzcd}[ampersand replacement=\&]
+			d\ar[r,"\overline{a'}"]\ar[d,"j"'] \& \{c',e\} \ar[d]\ar[r] \& \{c,e\} \ar[d,"f"] \\
+			d'\ar[r,"\overline{b}"] \& \{c',e'\}\ar[r] \& \{c,e'\}
+		\end{tikzcd} \\
+		&\leftrightsquigarrow \quad
+		\begin{tikzcd}[ampersand replacement=\&]
+			d\ar[r,"\overline{a'}"]\ar[d,"j"'] \& \{c',e\} \ar[d,"\hat{ \{i,f\} }"] \\
+			d'\ar[r,"\overline{b}'"] \& \{c,e\}\underset{\{c,e'\}}\times \{c,e\}
+		\end{tikzcd}
+	\end{align*}
+	The crux of the calculation for \(\hat{[-,-]}\) is the same.
+\end{construction}
+
+\begin{proposition}\label{prop:two-variable-adjunction-lifting-correspondence}
+	Consider a two-variable adjunction
+	\[ -\otimes-\!: \calC\times\calD\to\calE,\quad \{-,-\}\!:\calC^\op\times\calE\to\calD,\quad [-,-]\!:\calD^\op\times\calE\to\calC, \]
+	where \(\calC\) and \(\calD\) admit pullbacks, and \(\calE\) admits pushouts. Suppose we have collections of morphisms \(C\subseteq\Mor(\calC)\), \(D\subseteq\Mor(\calD)\), and
+	\(E\subseteq\Mor(\calE)\). Then
+	\[ C\hat\otimes D \boxslash E \iff D\boxslash \hat{\{C,E\}} \iff C \boxslash \hat{[D,E]}. \]
+\end{proposition}
+\begin{proof}
+A lifting problem \(i\hat\otimes j \To f\) transposes to \(j \To \hat{\{i,f\}}\) and \(i \To \hat{ [j,f] }\), and one easily sees that solutions also
+transport across these.
+\end{proof}
+\begin{remark}
+	We were inexplicit in the above proof to demonstrate how little is really going on. However, it is still insightful to show the inner workings of the calculation,
+	so we will be explicit, instead, in this remark. Take the calculation from Construction \ref{construction:two-variable-adjunction-leibniz-construction};
+	filling in a diagonal arrow for the desired lifts, we see that all that's happening is
+	\begin{align*}
+		\begin{tikzcd}[ampersand replacement=\&]
+			(c\otimes d') \underset{c\otimes d}\amalg(c'\otimes d) \ar[d,"i\hat\otimes j"']\ar[r,"a"] \& e\ar[d,"f"] \\
+			c'\otimes d'\ar[r,"b"]\ar[ur,dashed] \& e'
+		\end{tikzcd} \quad &\leftrightsquigarrow \quad
+		\begin{tikzcd}[ampersand replacement=\&]
+			c\otimes d\ar[r]\ar[d] \& c'\otimes d \ar[d]\ar[r,"a'"] \& e\ar[d,"f"] \\
+			c\otimes d'\ar[r] \& c'\otimes d'\ar[r,"b"] \ar[ur,dashed] \& e'
+		\end{tikzcd} \\
+		&\leftrightsquigarrow \quad
+		\begin{tikzcd}[ampersand replacement=\&]
+			d\ar[r,"\overline{a'}"]\ar[d,"j"'] \& \{c',e\} \ar[d]\ar[r] \& \{c,e\} \ar[d,"f"] \\
+			d'\ar[r,"\overline{b}"']\ar[ur,dashed] \& \{c',e'\}\ar[r] \& \{c,e'\}
+		\end{tikzcd} \\
+		&\leftrightsquigarrow \quad
+		\begin{tikzcd}[ampersand replacement=\&]
+			d\ar[r,"\overline{a'}"]\ar[d,"j"'] \& \{c',e\} \ar[d,"\hat{ \{i,f\} }"] \\
+			d'\ar[r,"\overline{b}'"']\ar[ur,dashed] \& \{c,e\}\underset{\{c,e'\}}\times \{c,e\}
+		\end{tikzcd}
+	\end{align*}
+	where the intermediate step is entirely about ordinary ``one-variable'' adjunctions, and follows purely by Proposition \ref{prop:adjunction-lifting-correspondence}.
+\end{remark}
