@@ -18,7 +18,7 @@ at the (weak) homotopy equivalences. Studying these kinds of structures takes ma
 \ref{section:localization-of-categories} \& \ref{lecture:homotopical-algebra-through-deformations}. However, modern homotopy theory is, largely speaking, fundamentally phrased in terms of
 so-called \emph{lifting problems.} The crux is that much homotopy theory can be done in the setting of a \emph{model category,} which makes use of factorizations of morphisms into pairs
 (a trivial fibration and a cofibration, or a fibration and a trivial cofibration) having some lifting property with respect to each other. Pairs of classes of maps where one can make such
-factorizations are called \emph{factorization systems.}
+factorizations are called \emph{weak factorization systems.}
 
 The other topic of this lecture, the small object argument (due to Quillen), is a method for producing factorization systems out of some specified class of maps whose domains
 are sufficiently compact objects. This is the origin of the name, as compact objects have historically also been referred to as ``small'' objects.
@@ -247,7 +247,7 @@ so we have our lift here too. This completes the argument.
 	Additionally, we have that for all cardinals \(\kappa < \kappa'\), \(\overline{S}^{\kappa} \subseteq \overline{S}^{\kappa'} \subseteq \overline{S}\).
 \end{remark}
 
-\subsection{Factorization systems}
+\subsection{Weak factorization systems}
 We begin with the following motivating example.
 \begin{example}
 	We saw that the set of surjections in \(\Set\) were characterized by having the right lifting property with respect to \(\varnothing\inj*\). One may ask: what are
@@ -256,7 +256,7 @@ We begin with the following motivating example.
 	Nonetheless, it is interesting to us because the following much more trivial fact: any map of sets can be decomposed into an injective map followed by a surjective map.
 \end{example}
 \begin{definition}\label{definition:factorization-system}
-	Let \(\calC\) be a category. A \emph{factorization system} on \(\calC\) is a pair \((S,T)\) of collections of maps satisfying the following properties.
+	Let \(\calC\) be a category. A \emph{weak factorization system} on \(\calC\) is a pair \((S,T)\) of collections of maps satisfying the following properties.
 	\begin{enumerate}[label=(\alph*)]
 		\item The collections \(S\) and \(T\) are closed under retracts.
 		\item For all \(f\!:x\to y\) in \(\calC\), there is a factorization \(f = p\circ i\) with \(i\in S\) and \(p\in T\).
@@ -295,7 +295,7 @@ gives rise to the retraction as above right, as desired.
 \begin{proposition}\label{prop:factorization-system-equalities}
 	Suppose we have a pair \((S,T)\) of collections of morphisms satisfying property (b) in Definition \ref{definition:factorization-system}. Then the following are equivalent.
 	\begin{enumerate}[label=(\arabic*)]
-		\item \((S,T)\) is a factorization system.
+		\item \((S,T)\) is a weak factorization system.
 		\item \(S^\boxslash = T\) and \(S = \prescript{\boxslash}{}{T}\).
 	\end{enumerate}
 \end{proposition}
@@ -306,7 +306,7 @@ fact that \(i\boxslash f\), we see that \(f\) is a retract of \(p\). Since \(T\)
 \end{proof}
 
 \subsection{Quillen's small object argument}
-A priori, it is very hard to produce factorization systems. In particular, while it is not at all hard to find nice pairs of collections of morphisms with some
+A priori, it is very hard to produce weak factorization systems. In particular, while it is not at all hard to find nice pairs of collections of morphisms with some
 lifting properties with respect to each other, manufacturing factorizations into these morphisms is tricky. Quillen provided a tool of great ingenuity for tackling this problem,
 namely the \emph{small object argument.} There are a number of versions of it; we choose one which is fairly intelligible.
 
@@ -396,7 +396,7 @@ where we thus obtain our solution to the lifting problem.
 	Then \(\overline{M} = \prescript{\boxslash}{}{(M^\boxslash)}\).
 \end{corollary}
 \begin{proof}
-The proof of Proposition \ref{prop:small-object-argument} shows that \((\overline{M},M^\boxslash)\) is a factorization system. However, by Proposition \ref{prop:factorization-system-equalities},
+The proof of Proposition \ref{prop:small-object-argument} shows that \((\overline{M},M^\boxslash)\) is a weak factorization system. However, by Proposition \ref{prop:factorization-system-equalities},
 one then has
 \[ \overline{M} = \prescript{\boxslash}{}{(M^\boxslash)} \]
 as desired.
@@ -407,6 +407,10 @@ as desired.
 	of a morphism \(s\!:z\to w\) in \(M\) to be entirely \(\kappa\)-compact, as we only use that \(\calC(z,-)\) commutes with \(\kappa\)-filtered colimits of morphisms in \(\overline{M}^\kappa\).
 	Furthermore, we only use one particular kind of \(\kappa\)-filtered colimit, namely a transfinite composition of \(\kappa\)-many arrows.
 \end{remark}
+\begin{exercise}
+	Show that the factorization produced from the small object argument is in fact \emph{functorial,} meaning that there is a \emph{functor} \(\Fun([1],\calC) \to \Fun([2],\calC)\)
+	describing it.
+\end{exercise}
 
 
 \subsection{Appendix: Transposing lifting problems along adjunctions}
@@ -558,12 +562,12 @@ as desired.
 	\[
 		\begin{tikzcd}[column sep=small]
 			\{c',e\}\ar[dr,dashed,"\hat{ \{ i,f \} }" description]\ar[drr,bend left=15,"{ \{i,e\} }"]\ar[ddr,bend right,"{ \{c',f\} }"'] & & \\
-			         & \{c,e\}\underset{\{c,e'\}}\times \{c,e\} \ar[r]\ar[d] \ar[dr,pullback] & \{c,e\}\ar[d,"\{c{,}f\}"] \\
+			         & \{c,e\}\underset{\{c,e'\}}\times \{c',e'\} \ar[r]\ar[d] \ar[dr,pullback] & \{c,e\}\ar[d,"\{c{,}f\}"] \\
 			         & \{c',e'\}\ar[r,"\{i{,}e'\}"'] & \{c,e'\}
 		\end{tikzcd}\quad
 		\begin{tikzcd}[column sep=small]
 			[d',e]\ar[dr,dashed,"\hat{ [ j,f ] }" description]\ar[drr,bend left=15,"{ [j,e] }"]\ar[ddr,bend right,"{ [d',f] }"'] & & \\
-			         & {[d,e]} \underset{[d,e']}\times [d,e] \ar[r]\ar[d] \ar[dr,pullback] & {[d,e]}\ar[d,"{[d,f]}"] \\
+			         & {[d,e]} \underset{[d,e']}\times [d',e'] \ar[r]\ar[d] \ar[dr,pullback] & {[d,e]}\ar[d,"{[d,f]}"] \\
 			         & {[d',e']}\ar[r,"{[j,e']}"'] & {[d,e']}
 		\end{tikzcd}
 	\]
@@ -590,7 +594,7 @@ as desired.
 		&\leftrightsquigarrow \quad
 		\begin{tikzcd}[ampersand replacement=\&]
 			d\ar[r,"\overline{a'}"]\ar[d,"j"'] \& \{c',e\} \ar[d,"\hat{ \{i,f\} }"] \\
-			d'\ar[r,"\overline{b}'"] \& \{c,e\}\underset{\{c,e'\}}\times \{c,e\}
+			d'\ar[r,"\overline{b}'"] \& \{c,e\}\underset{\{c,e'\}}\times \{c',e'\}
 		\end{tikzcd}
 	\end{align*}
 	The crux of the calculation for \(\hat{[-,-]}\) is the same.
@@ -628,7 +632,7 @@ transport across these.
 		&\leftrightsquigarrow \quad
 		\begin{tikzcd}[ampersand replacement=\&]
 			d\ar[r,"\overline{a'}"]\ar[d,"j"'] \& \{c',e\} \ar[d,"\hat{ \{i,f\} }"] \\
-			d'\ar[r,"\overline{b}'"']\ar[ur,dashed] \& \{c,e\}\underset{\{c,e'\}}\times \{c,e\}
+			d'\ar[r,"\overline{b}'"']\ar[ur,dashed] \& \{c,e\}\underset{\{c,e'\}}\times \{c',e'\}
 		\end{tikzcd}
 	\end{align*}
 	where the intermediate step is entirely about ordinary ``one-variable'' adjunctions, and follows purely by Proposition \ref{prop:adjunction-lifting-correspondence}.

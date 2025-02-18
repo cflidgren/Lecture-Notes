@@ -1,0 +1,132 @@
+%!TEX root = ../lectures.tex
+
+\newcommand{\Cof}{\operatorname{Cof}}
+\newcommand{\Fib}{\operatorname{Fib}}
+\newcommand{\tailto}{\rightarrowtail}
+
+\section{Homotopy theory in model categories (WIP)}\label{lecture:model categories}
+
+Model categories are, in short, a systematic framework for doing homotopy theory, meaning it is a tool for controlling localizations of categories. Previously, when trying to understand
+relative categories \((\calC,W)\), we have made use of the assumption that \(W\) is a (right or left) multiplicative system, which allows us to understand the morphisms a lot more
+cleanly due to the calculus of fractions.
+
+Model categories take a different approach. Essentially, they introduce what one might describe as \emph{phantom structure:} the data of \emph{fibrations} and \emph{cofibrations,}
+``meaningless'' on their own, the (imposed) properties of which allow you to describe the localization in terms very similar to the homotopy theory of topological spaces.
+Essentially, the (co)fibrations provide distinguished classes of ``nice'' objects and morphisms. Model categories also provide a very convenient setting in which to understand homotopical analogues
+of limits and colimits, though in a sense this is hardly unique to them, and is really a consequence of a good theory of derived functors.
+
+\subsection{Model categories}
+\begin{definition}
+	Let \(\calC\) be a category. A \emph{model structure} on \(\calC\) is a triple \((\Cof,W,\Fib)\) of sets of morphisms in \(\calC\) satisfying the following conditions.
+	\begin{enumerate}[label=(\arabic*)]
+		\item The set \(W\) has the 2-out-of-3 property.
+		\item The pairs \((\Cof,\Fib\cap W)\) and \((\Cof\cap W,\Fib)\) are weak factorization systems on \(\calC\).
+	\end{enumerate}
+	A category \(\calC\) with a model structure is called a \emph{model category} if, in addition, \(\calC\) admits finite limits and finite colimits.
+\end{definition}
+\begin{terminology}
+	Given a model structure \((\Cof,W,\Fib)\) on \(\calC\), one calls a morphism \(f\) in \(\calC\)
+	\begin{itemize}
+		\item a \emph{cofibration} if \(f\in\Cof\),
+		\item a \emph{fibration} if \(f\in\Fib\),
+		\item a \emph{weak equivalence} if \(f\in W\), or
+		\item a \emph{trivial (co)fibration} if \(f\) is both a weak equivalence and (co)fibration.
+	\end{itemize}
+	Suppose \(\calC\) is a model category. One says an object \(x\in\calC\) is
+	\begin{itemize}
+		\item \emph{fibrant} if \(x\to *\) is a fibration, where \(*\in\calC\) is the terminal object, or
+		\item \emph{cofibrant} if \(\varnothing\to x\) is a cofibration, where \(\varnothing\in\calC\) is the initial object.
+	\end{itemize}
+\end{terminology}
+\begin{notation}
+	We write \(\calC_c\) for the full subcategory of cofibrant objects; dually, \(\calC_f\) for the full subcategory of fibrant objects. Combining the two,
+	we write \(\calC_{cf}\) for the full subcategory of objects which are both fibrant and cofibrant.
+\end{notation}
+\begin{notation}
+	We adopt the following notation, in situations where no ambiguity is expected: \(\iso\) denotes a weak equivalence, \(\sur\) denotes a fibration, and \(\tailto\)
+	denotes a cofibration.
+\end{notation}
+\begin{remark}
+	Observe that a model structure has a large amount of redundant information: if one exists, it is completely determined by its weak equivalences
+	and either the trivial fibrations or trivial cofibrations. This is a corollary of Proposition \ref{prop:factorization-system-equalities}; suppose we know
+	\(W\) and \(\Fib\cap W\). Then
+	\[ \Cof = \prescript{\boxslash}{}{(\Fib\cap W)},\quad \leadsto\quad \Fib = (\Cof\cap W)^\boxslash, \]
+	which recovers the triple \((\Cof,W,\Fib)\).
+
+	This also means that \(W\) contains a weakly saturated class of morphisms, namely \(\Fib\cap W\), and therefore contains all isomorphisms. In particular, all identities,
+	so \(W\) determines a wide subcategory with the 2-out-of-3 property. We conclude that \((\calC,W)\) is a pseudo-homotopical category, in the terminology
+	of Lecture \ref{lecture:homotopical-algebra-through-deformations}. In fact, we will see that \(W\) necessarily also satisfies the 2-out-of-6 property,
+	so that \((\calC,W)\) is moreover a homotopical category. The reader should therefore not spend any time seeking examples of model categories whose weak
+	equivalences do not satisfy the 2-out-of-6 property.
+\end{remark}
+\begin{remark}
+	In many cases, model structures are constructed using the small object argument, such as the one we give in Proposition \ref{prop:small-object-argument}. That is,
+	one has some class of basic cofibrations \(J\) from which one forms the factorization systems \((\prescript{\boxslash}{}{(J^\boxslash)},J^\boxslash)\) using the small
+	object argument. Choosing some basic class of trivial cofibrations \(I\), one can then form \((\prescript{\boxslash}{}{(I^\boxslash)},I^\boxslash)\). If \(J\)
+	and \(I\) are chosen such that \(J^\boxslash \subseteq W\) and \(\prescript{\boxslash}{}{(I^\boxslash)} \subseteq W\), then this will yield a model structure given by
+	\[ (\Cof,W,\Fib) = (\prescript{\boxslash}{}{(J^\boxslash)},W,I^\boxslash). \]
+	In general, model structures for which one can find \emph{some} collections of maps \(I\) and \(J\) generating the (trivial) cofibrations are called \emph{cofibrantly generated,} and they have a
+	number of benefits. For example, since the small object argument provides functorial factorizations, any such model structure of course admits this extra structure.
+\end{remark}
+\begin{construction}[Opposites]
+	Let \((\calC, \Cof, W, \Fib)\) be a model category. Then \((\Fib^\op, W^\op, \Cof^\op)\) is a model structure on \(\calC^\op\), so \(\calC^\op\) can be promoted to a model category
+	as well. Furthermore, this demonstrates that fibrations and cofibrations are dual to each other, such that any result about cofibrations dualizes to a result about fibrations.
+\end{construction}
+\begin{construction}[Slices]
+	Let \(\calC\) be a model category, and let \(x\in\calC\). Then \(\calC/x\) can be promoted to a model category. In particular, let a morphism in \(\calC/x\) be a weak equivalence (resp.\ fibration, cofibration)
+	if it is a weak equivalence (resp.\ fibration, cofibration) in \(\calC\). Dualizing yields that \(x/\calC\) can be promoted to a model category in a similar way.
+\end{construction}
+
+\begin{proposition}
+	Let \((\calC,\Cof,W,\Fib)\) be a model category. Then \(\Cof\) is weakly saturated and \(\Fib\) is weakly cosaturated. In particular,
+	\begin{enumerate}[label=(\arabic*)]
+		\item \(\Cof\) is closed under retracts, compositions, small coproducts, and pushouts, and
+		\item \(\Fib\) is closed under retracts, compositions, small products, and pullbacks.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+Follows by Proposition \ref{corollary:llp-weakly-saturated} and Proposition \ref{prop:factorization-system-equalities}.
+\end{proof}
+
+Recall the importance of functors being \emph{homotopical} in the construction of derived functors; see Lecture \ref{lecture:homotopical-algebra-through-deformations}. In a model category,
+the morphisms which are easily controlled are the (co)fibrations, and the objects with nice properties are the (co)fibrant ones. Consequently, it is often the case that one can
+more easily say things about, say, trivial cofibrations between cofibrant objects than about weak equivalences in general. The below result is useful in these circumstances.
+\begin{lemma}[Ken Brown's lemma]
+	Let \(\calC\) be a model category, and let \(\calD\) be a pseudo-homotopical category. Suppose we have a functor \(F\!:\calC\to\calD\). Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+		\item \(F\) is homotopical on the full subcategory of cofibrant objects, i.e.\ \(F\) sends weak equivalences between cofibrant objects to weak equivalences.
+		\item \(F\) sends trivial cofibrations between cofibrant objects to weak equivalences.
+	\end{enumerate}
+\end{lemma}
+\begin{proof}
+The implication (1) \(\Rightarrow\) (2) is clear. For the converse, the idea is that we may rewrite any weak equivalence between cofibrant objects in terms of trivial cofibrations.
+Suppose we have a morphism \(f\!:x\to y\) where \(x,y\in\calC_c\). Form their coproduct \(x\amalg y\) and factor the map \(x\amalg y \to y\) given by
+\(f\!:x\to y\) and \(\id_y\!:y\to y\) into a cofibration followed by a trivial fibration
+\[
+	\begin{tikzcd}
+		\varnothing\ar[r,tail]\ar[d,tail] & x\ar[d,"\iota_x"] \\
+		y\ar[r,"\iota_y"] & x\amalg y\ar[ul,pushout]
+	\end{tikzcd} \quad \leadsto \quad
+	\begin{tikzcd}
+		x\ar[d,tail,"\iota_x"']\ar[drr,bend left=20,"\sim","f"'] \\
+		x\amalg y \ar[r,tail] & z \ar[r,"\sim"] & y \\
+		y\ar[u,tail,"\iota_y"]\ar[urr,bend right=20,equal]
+	\end{tikzcd}
+\]
+and, using the left diagram, note that since cofibrations are closed under pushouts, \(\iota_x\) and \(\iota_y\) are cofibrations. In particular, the compositions
+\[ i\!:x \overset{\iota_x}\tailto x\amalg y \tailto z,\quad j\!:y \overset{\iota_y}\tailto x\amalg y \tailto z \]
+are both cofibrations (by composition) and weak equivalences (by 2-out-of-3), hence trivial cofibrations. By commutativity, we have
+\[ j\circ f = i \implies F(j)\circ F(f) = F(i)  \]
+which implies \(F(f)\) is a weak equivalence by the 2-out-of-3 property.
+\end{proof}
+\begin{remark}
+	The above result is a simple but good example of how (co)fibrations and (co)fibrant objects can help us despite not being intrinsically meaningful.
+\end{remark}
+
+\subsection{Cylinders, paths, and homotopies (TBD)}
+
+\subsection{The homotopy category (TBD)}
+
+\subsection{Derived functors for model categories (TBD)}
+
+\subsection{Homotopy (co)limits (TBD)}
