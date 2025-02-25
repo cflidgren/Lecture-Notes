@@ -3,6 +3,7 @@
 \newcommand{\Cof}{\operatorname{Cof}}
 \newcommand{\Fib}{\operatorname{Fib}}
 \newcommand{\tailto}{\rightarrowtail}
+\renewcommand{\simh}{\overset{h}{\sim}}
 
 \section{Homotopy theory in model categories (WIP)}\label{lecture:model categories}
 
@@ -14,6 +15,8 @@ Model categories take a different approach. Essentially, they introduce what one
 ``meaningless'' on their own, the (imposed) properties of which allow you to describe the localization in terms very similar to the homotopy theory of topological spaces.
 Essentially, the (co)fibrations provide distinguished classes of ``nice'' objects and morphisms. Model categories also provide a very convenient setting in which to understand homotopical analogues
 of limits and colimits, though in a sense this is hardly unique to them, and is really a consequence of a good theory of derived functors.
+
+For the material here, we mainly follow \cite{riehl-categorical-homotopy-theory}, \cite{cisinski-book}, and \cite{may-ponto-more-concise-algebraic-topology}.
 
 \subsection{Model categories}
 \begin{definition}
@@ -38,6 +41,14 @@ of limits and colimits, though in a sense this is hardly unique to them, and is 
 		\item \emph{cofibrant} if \(\varnothing\to x\) is a cofibration, where \(\varnothing\in\calC\) is the initial object.
 	\end{itemize}
 \end{terminology}
+\begin{remark}
+	There are a few different variations on the definition of a model category, and we use the one in \cite{cisinski-book}. It is fairly common to assume a model category admits 
+	\emph{all} small limits and colimits, and further, that the factorization systems are \emph{functorial,} meaning that the factorizations can be chosen
+	to determine functors \(\Fun([1],\calC)\to\Fun([2],\calC)\). As many examples of model categories are produced by using the small object argument, which
+	produces functorial factorizations, this is often satisfied, but it is also not really necessary for the theory to a large extent. Note, however, that
+	a big convenience in having functorial factorizations is that choosing a \emph{(co)fibrant replacement} (obtained by factorizing either \(\varnothing\to x\) or \(x\to *\))
+	determines a deformation in the sense of Lecture \ref{lecture:homotopical-algebra-through-deformations}, and thus the theory of derived functors becomes very nice.
+\end{remark}
 \begin{notation}
 	We write \(\calC_c\) for the full subcategory of cofibrant objects; dually, \(\calC_f\) for the full subcategory of fibrant objects. Combining the two,
 	we write \(\calC_{cf}\) for the full subcategory of objects which are both fibrant and cofibrant.
@@ -69,7 +80,7 @@ of limits and colimits, though in a sense this is hardly unique to them, and is 
 	number of benefits. For example, since the small object argument provides functorial factorizations, any such model structure of course admits this extra structure.
 \end{remark}
 \begin{construction}[Opposites]
-	Let \((\calC, \Cof, W, \Fib)\) be a model category. Then \((\Fib^\op, W^\op, \Cof^\op)\) is a model structure on \(\calC^\op\), so \(\calC^\op\) can be promoted to a model category
+	Let \((\calC, \Cof, W, \Fib)\) be a model category. Then the triple \((\Fib^\op, W^\op, \Cof^\op)\) is a model structure on \(\calC^\op\), so \(\calC^\op\) can be promoted to a model category
 	as well. Furthermore, this demonstrates that fibrations and cofibrations are dual to each other, such that any result about cofibrations dualizes to a result about fibrations.
 \end{construction}
 \begin{construction}[Slices]
@@ -77,8 +88,8 @@ of limits and colimits, though in a sense this is hardly unique to them, and is 
 	if it is a weak equivalence (resp.\ fibration, cofibration) in \(\calC\). Dualizing yields that \(x/\calC\) can be promoted to a model category in a similar way.
 \end{construction}
 
-\begin{proposition}
-	Let \((\calC,\Cof,W,\Fib)\) be a model category. Then \(\Cof\) is weakly saturated and \(\Fib\) is weakly cosaturated. In particular,
+\begin{proposition}\label{prop:model-category-cof-saturated-fib-cosaturated}
+	Let \((\calC,\Cof,W,\Fib)\) be a model category. Then \(\Cof\) is weakly saturated and \(\Fib\) is weakly cosaturated. In particular, whenever it makes sense,
 	\begin{enumerate}[label=(\arabic*)]
 		\item \(\Cof\) is closed under retracts, compositions, small coproducts, and pushouts, and
 		\item \(\Fib\) is closed under retracts, compositions, small products, and pullbacks.
@@ -123,10 +134,304 @@ which implies \(F(f)\) is a weak equivalence by the 2-out-of-3 property.
 	The above result is a simple but good example of how (co)fibrations and (co)fibrant objects can help us despite not being intrinsically meaningful.
 \end{remark}
 
-\subsection{Cylinders, paths, and homotopies (TBD)}
+Before we move on to showing how homotopy theory may be done in the context of a model category, let us prove a nice property of the weak equivalences.
+Recall that isomorphisms are closed under retracts, as was shown in Lemma \ref{lemma:isomorphisms-closed-under-retracts}. This also holds for the weak
+equivalences in a model category. The proof is interesting, as it demonstrates a typical approach employed in the context of a model structure,
+namely to prove something for the (co)fibrations, and then lift it to all morphisms by using the factorization properties.
 
-\subsection{The homotopy category (TBD)}
+\begin{lemma}\label{lemma:model-category-fibration-retract-of-weak-equivalence-is-trivial-fibration}
+	Let \(\calC\) be a model category. If a fibration in \(\calC\) is the retract of a weak equivalence, then it is a trivial fibration.
+\end{lemma}
+\begin{proof}
+Let \(f\!:x\tailto y\) be fibration which is the retract of a weak equivalence \(w\!:x' \to y'\). First, factor \(w\) into a composition \(v\circ u\) using either factorization system,
+and observe that by the 2-out-of-3 property, both \(u\) and \(v\) are weak equivalences (and hence a trivial cofibration and trivial fibration, respectively), so we have
+\[
+	\begin{tikzcd}
+		x\ar[d,tail,"f"']\ar[r] & x'\ar[d,"w"', "\sim" labl]\ar[r] & x\ar[d,tail,"f"] \\
+		y\ar[r] & y'\ar[r] & y
+	\end{tikzcd}\quad\leadsto\quad
+	\begin{tikzcd}
+		x\ar[dd,tail,"f"']\ar[r] & x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[dd,tail,"f"] \\
+		 & z'\ar[d,two heads,"v"', "\sim" labl] & \\
+		y\ar[r] & y'\ar[r] & y
+	\end{tikzcd}.
+\]
+Composing in the obvious way, we get a morphism \(s\!:x\to z'\), and by considering the lifting problem as below left (obtained by the other obvious composition), we thus have the diagram below right:
+\[
+	\begin{tikzcd}
+		x'\ar[d,two heads,"u"', "\sim" labl]\ar[r] & x\ar[d,tail,"f"] \\
+		z'\ar[r]\ar[ur,dashed,"t"] & y
+	\end{tikzcd}\quad\leadsto\quad
+	\begin{tikzcd}
+		x\ar[dd,tail,"f"']\ar[r]\ar[dr,"s"'] & x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[dd,tail,"f"] \\
+		 & z'\ar[d,two heads,"v"', "\sim" labl]\ar[ur,"t"'] & \\
+		y\ar[r] & y'\ar[r] & y
+	\end{tikzcd}.
+\]
+By commutativity, we see that \(t\circ s = \id\), so that \(f\) is a retract of \(v\). Since trivial fibrations are weakly cosaturated (by Proposition \ref{prop:model-category-cof-saturated-fib-cosaturated}),
+they are closed under retracts, and hence \(f\) is a trivial fibration.
+\end{proof}
+\begin{proposition}
+	Let \(\calC\) be a model category. Then the weak equivalences are closed under retracts.
+\end{proposition}
+\begin{proof}
+Let \(f\!:x\to y\) be a retract of a weak equivalence \(w\!:x' \to y'\),
+\[
+	\begin{tikzcd}
+		x\ar[d,"f"']\ar[r] & x'\ar[r,"r"]\ar[d,"w"',"\sim" labl] & x\ar[d,"f"] \\
+		y\ar[r,"s"] & y'\ar[r] & y
+	\end{tikzcd}.
+\]
+Factor \(f = h\circ g\) as a trivial cofibration \(g\) followed by a fibration \(h\). Our goal is to show that \(h\) is the retract of a weak equivalence,
+so that, applying Lemma \ref{lemma:model-category-fibration-retract-of-weak-equivalence-is-trivial-fibration}, \(f\) is a composition of weak equivalences. To this end,
+consider the pushout below left
+\[
+	\begin{tikzcd}
+		x\ar[r]\ar[d,tail,"g"',"\sim" labl] & x'\ar[d,dashed,"i"] \\
+		z\ar[r,dashed,"k"] & z'\ar[ul,pushout]
+	\end{tikzcd}\quad\leadsto\quad
+	\begin{tikzcd}
+		x\ar[d,tail,"g"',"\sim" labl]\ar[r] & x'\ar[dd,bend left,"w" near start,"\sim" labl]\ar[d,tail,"i"',"\sim" labl]\ar[r] & x\ar[d,tail,"g"',"\sim" labl] \\
+		z\ar[d,two heads,"h"']\ar[r,"k"'] & z'\ar[ul,pushout]\ar[d,dashed,"j"'] & z \ar[d,two heads,"h"] \\
+		y\ar[r] & y'\ar[r] & y
+	\end{tikzcd}
+\]
+and note that trivial cofibrations, beeing weakly saturated, are closed under pushouts. Hence, \(i\) is a trivial cofibration. The morphism \(j\) in the diagram
+above right is induced by universal property applied to the morphisms \(w\) and \(s\circ h\); since \(j\circ i = w\) and both \(i\) and \(w\) are weak equivalences,
+we deduce that \(j\) is a weak equivalence.
 
-\subsection{Derived functors for model categories (TBD)}
+For the final step, observe that the identity \(\id_z\!:z\to z\) together with the composition \(g\circ r\) induce, by universal property, a
+map \(\ell\!:z'\to z\) for which \(\ell\circ k = \id_z\) and \(\ell\circ i = g\circ r\). The former equation implies that \(k\) is a monomorphism,
+and so one can check that the remaining bottom right square in the diagram
+\[
+	\begin{tikzcd}
+		x\ar[d,tail,"g"',"\sim" labl]\ar[r] & x'\ar[d,tail,"i"',"\sim" labl]\ar[r] & x\ar[d,tail,"g"',"\sim" labl] \\
+		z\ar[d,two heads,"h"']\ar[r,hook,"k"'] & z'\ar[ul,pushout]\ar[d,"j"']\ar[r,dashed,"\ell"] & z \ar[d,two heads,"h"] \\
+		y\ar[r] & y'\ar[r] & y
+	\end{tikzcd}
+\]
+commutes, so the entire diagram commutes. In particular, \(h\) is a retract of the weak equivalence \(j\).
+\end{proof}
 
-\subsection{Homotopy (co)limits (TBD)}
+\subsection{Cylinders, paths, and homotopies}
+Recall that in standard algebraic topology, one has the notion of a \emph{homotopy} between two continuous maps \(f,g\!:X\to Y\). Intuitively,
+this is some kind of continuous family of maps \(X\to Y\) which explains how to ``deform'' \(f\) into \(g\) (or vice versa). Formally, this is usually captured by
+having a continuous map \(H\!:[0,1]\times X\to Y\) such that \(H(0,x) = f(x)\) and \(H(1,x) = g(x)\) for all \(x\in X\).
+
+On the other hand, whenever it exists, one can also encode the notion of a homotopy as a path in the \emph{function space} \(Y^X\). The issue with this is that
+the function space \emph{doesn't} always exist, in the sense that one may fail to have a bijection
+\[ \Top([0,1]\times X, Y) \cong \Top([0,1],Y^X). \]
+Still, when it does happen to make sense, it's a very intuitive way to define homotopies. Slightly less intuitive is the expression obtained by considering
+the other possible adjunction,
+\[ \Top([0,1]\times X, Y) \cong \Top(X,Y^{[0,1]}), \]
+passing through the \emph{path space,} where a homotopy from \(f\) to \(g\) is a continuous map \(h\!:X\to Y^{[0,1]}\) such that \(h(x)(0) = f(x)\) and \(h(x)(1) = g(x)\).
+
+These two approaches can be partially employed in any relative category, and especially well in the context of a model structure.
+\begin{definition}
+	Let \((\calC,W)\) be a relative category, and let \(x\in \calC\) be an object.
+	\begin{enumerate}[label=(\roman*)]
+		\item A \emph{cylinder object} for \(x\) is an object \(Ix\in\calC\) together with maps
+		\[
+			\begin{tikzcd}
+				x\amalg x \ar[r,"{ (i_0, i_1) }"] & Ix \ar[r,"p"] & x
+			\end{tikzcd}
+		\]
+		such that \(p\circ i_k = \id_x\), \(k=0,1\), and \(p\in W\).
+		\item A \emph{path object} for \(x\) is an object \(x^I\in\calC\) together with maps
+		\[
+			\begin{tikzcd}
+				x\ar[r,"i"] & x^I \ar[r,"{ (p_0,p_1) }"] & x\times x
+			\end{tikzcd}
+		\]
+		such that \(p_k\circ i = \id_x\), \(k=0,1\), and \(i\in W\).
+	\end{enumerate}
+\end{definition}
+\begin{remark}
+	Note that these are not defined by universal property, and so do not need to be unique in any way, a priori.
+\end{remark}
+\begin{remark}
+	If \((\calC,W)\) is pseudo-homotopical in the sense of Lecture \ref{lecture:homotopical-algebra-through-deformations}, then the 2-out-of-3 property
+	shows that the \(i_k\) and \(p_k\) are weak equivalences.
+\end{remark}
+
+\begin{definition}
+	Let \(\calC,W\) be a relative category, and let \(f,g\!:x\to y\) be morphisms in \(\calC\).
+	\begin{enumerate}[label=(\roman*)]
+		\item Consider a cylinder object \(Ix\) for \(x\). A \emph{left homotopy} from \(f\) to \(g\) (with respect to \(Ix\)) is a morphism \(h\!:Ix \to y\)
+		such that \(h\circ i_0 = f\) and \(h\circ i_1 = g\). We write \(\simh_\ell\) for the equivalence relation on \(\calC(x,y)\) generated by the existence of
+		a cylinder object for \(x\) together with a left homotopy from one morphism to another, and set
+		\[ [x,y]_\ell := \calC(x,y)/\simh_\ell. \]
+		\item Consider a path object \(y^I\) for \(y\). A \emph{right homotopy} from \(f\) to \(g\) (with respect to \(y^I\)) is a morphism \(h'\!:x\to y^I\)
+		such that \(p_0\circ h' = f\) and \(p_1\circ h' = g\). We write \(\simh_r\) for the equivalence relation on \(\calC(x,y)\) generated by the existence of
+		a path object for \(y\) together with a right homotopy from one morphism to another, and set
+		\[ [x,y]_r := \calC(x,y)/\simh_r. \]
+	\end{enumerate}
+\end{definition}
+
+\begin{remark}
+	A warning to observe is that \(f \simh_\ell g\) (and its dual) does \emph{not} merely ask that there is a left homotopy from \(f\) to \(g\), since that is not
+	necessarily an equivalence relation. This is why we must ask for the equivalence relation \emph{generated} by that simpler relation. In general, \(f\simh_\ell g\)
+	means that there is some zigzag of left homotopies starting at \(f\) and ending with \(g\).
+\end{remark}
+\begin{remark}
+	We want to emphasize that the relations \(\simh_\ell\) and \(\simh_r\) do not require a fixed choice of cylinder object or path object, and rather allow any
+	choice for defining a homotopy.
+\end{remark}
+
+At this level of generality, there is not much one can say, but with a small added hypothesis, one can at least say the following:
+\begin{lemma}
+	Let \((\calC,W)\) be a pseudo-homotopical category, and suppose we have morphisms \(f,g\!:x\to y\) and a left homotopy \(h\) from \(f\) to \(g\). Then
+	\(f\) is a weak equivalence if and only if \(g\) is a weak equivalence.
+\end{lemma}
+\begin{proof}
+We have the diagram
+\[
+	\begin{tikzcd}
+		x\ar[d,"i_0"',"\sim" labl]\ar[dr,"f"] & \\
+		Ix \ar[r,"h"] & y \\
+		x \ar[u,"i_1","\sim"' labl] \ar[ur,"g"'] &
+	\end{tikzcd}
+\]
+and therefore \(f\in W\) if and only if \(h\in W\) if and only if \(g\in W\), by the 2-out-of-3 property.
+\end{proof}
+\begin{remark}
+	By the description of the equivalence relation \(\simh_\ell\), it follows that if \(f\simh_\ell g\) then \(f\in W\) if and only if \(g\in W\).
+\end{remark}
+
+The above definitions can be made in any relative category, as we have done, but typically one will work within a model category, in which case one can add some more conditions
+to make the definitions substantially more powerful.
+\begin{definition}
+	Let \(\calC\) be a model category, and let \(x\in\calC\) be an object.
+	\begin{enumerate}[label=(\roman*)]
+		\item Consider a cylinder object \((Ix,i_0,i_1,p)\) for \(x\). We say \(Ix\) is a \emph{good} cylinder object if \((i_0,i_1)\!:x\amalg x\to Ix\) is a cofibration,
+		We say \(Ix\) is a \emph{very good} cylinder object if it is good, and \(p\) is a trivial fibration. A left homotopy is (very) good if the corresponding cylinder object is (very) good.
+		\item Consider a path object \((x^I,i,p_0,p_1)\) for \(x\). We say \(x^I\) is a \emph{good} path object if \((p_0,p_1)\!:x^I\to x\times x\) is a fibration,
+		We say \(x^I\) is a \emph{very good} path object if it is good, and \(i\) is a trivial cofibration. A left homotopy is (very) good if the corresponding path object is (very) good.
+	\end{enumerate}
+\end{definition}
+\begin{lemma}
+	Let \(\calC\) be a model category, let \(x\in\calC_f\) be a fibrant object, and let \((Ix,i_0,i_1,p)\) be a good cylinder object. Then \(i_0\) and \(i_1\)
+	are trivial cofibrations.
+\end{lemma}
+\begin{proof}
+We know that \(i_0\) and \(i_1\) are weak equivalences by the 2-out-of-3 property, so we need to show they are cofibrations. However,
+the canonical inclusions \(\iota_k\!:x\to x\amalg x\) are cofibrations (being pushouts of the cofibration \(\varnothing\to x\)), and
+\[ i_k = (i_0,i_1)\circ\iota_k \]
+so that \(i_k\), \(k=0,1\), are cofibrations.
+\end{proof}
+\begin{proposition}
+	Let \(\calC\) be a model category. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item For any object \(x\in\calC\) there exists a very good cylinder object and a very good path object.
+		\item For two morphisms \(f,g\!:x\to y\), there exists a left (resp.\ right) homotopy from \(f\) to \(g\) if and only if there exists a good left (resp.\ right) homotopy from \(f\) to \(g\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) Factorize the codiagonal and diagonal maps
+\[ \nabla_x\!: x\amalg x \to x,\quad \Delta_x\!:x\to x\times x \]
+using the appropriate factorization system.
+
+(2) Obviously, one direction is trivial. For other, let \(h\!:Ix\to y\) be a left homotopy from \(f\) to \(g\). The strategy is similar to (1), except that we factorize the
+map \((i_0,i_1)\!:x \amalg x \to Ix\) to get
+\[
+	\begin{tikzcd}
+		x\amalg x \ar[r,tail,"{(i'_0,i'_1)}"] & I'x \ar[r,two heads,"\sim" labl] & Ix
+	\end{tikzcd}
+\]
+which now defines a good cylinder, where the map \(p'\!:I'x \to x\) is defined by composing \(I'x\overset{\sim}\sur Ix\overset{\sim}\to x\). One immediately
+sees that the morphism \(h'\) given by the composition \(I'x \to Ix \overset{h}\to y\) defines a good homotopy from \(f\) to \(g\). The proof for right homotopies is similar.
+\end{proof}
+
+With the given notions of homotopy, one obtains the homotopy extension property (and covering homotopy property) for free, and this
+is yet more evidence of the convenience provided by the yet ephemeral fibrations/cofibrations of a model category.
+\begin{lemma}[Homotopy extension property]
+	Let \(\calC\) be a model category, \(\iota\!:a\to x\) a cofibration, and \(y\) a fibrant object. Let \(y^I\) be a good path object.
+	Then the lifting problem
+	\[
+		\begin{tikzcd}
+			a\ar[d,tail,"\iota"']\ar[r] & y^I\ar[d,"p_0"] \\
+			x\ar[r]\ar[ur,dashed] & y
+		\end{tikzcd}
+	\]
+	has a solution.
+\end{lemma}
+\begin{proof}
+Since \(y^I\) is good, \(p_0\) is a trivial fibration, so we conclude by the factorization system \((\Cof,W\cap\Fib)\).
+\end{proof}
+Similarly, one proves
+\begin{lemma}[Covering homotopy property]
+	Let \(\calC\) be a model category, \(\pi\!:e\to b\) a fibration, and \(x\) a cofibrant object. Let \(Ix\) be a good cylinder object.
+	Then the lifting problem
+	\[
+		\begin{tikzcd}
+			x\ar[d,"i_0"']\ar[r] & e\ar[d,two heads,"\pi"] \\
+			Ix\ar[r]\ar[ur,dashed] & b
+		\end{tikzcd}
+	\]
+	has a solution.
+\end{lemma}
+\begin{remark}
+	We note that the choice of using \(i_0\) and \(p_0\) is somewhat arbitrary, as the same argument applies to \(i_1\) and \(p_1\), or even
+	\((i_0,i_1)\!:x\amalg x \to Ix\) and \((p_0,p_1)\!:y^I \to y\times y\). In this way, one can see that the definition of a good cylinder/path object
+	is exactly such that the above properties hold.
+\end{remark}
+
+\begin{proposition} % TBD
+	Let \(x\in\calC_c\). Then \(f\simh_\ell g\) if and only if there exists a left homotopy from \(f\) to \(g\).
+\end{proposition}
+
+\begin{propositiondef} % TBD
+	Let \(\calC\) be a model category, and let \(f,g\!:x\to y\) be morphisms in \(\calC\).
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(x\) is cofibrant and there is a left homotopy from \(f\) to \(g\), then there is a right homotopy from \(f\) to \(g\).
+		\item If \(y\) is fibrant and there is a right homotopy from \(f\) to \(g\), then there is a left homotopy from \(f\) to \(g\).
+	\end{enumerate}
+	In particular, if \(x\in\calC_c\) and \(y\in\calC_f\), then the equivalence relations \(\simh_\ell\) and \(\simh_r\) on \(\calC(x,y)\)
+	agree, and give an equivalence relation \(f\simeq g\). Furthermore, for the equivalence relation \(\simeq\), one may use a fixed good cylinder
+	object for \(x\) and a fixed good path object for \(y\).
+\end{propositiondef}
+
+\begin{notation}
+	Let \(\calC\) be a model category. For \(x\) cofibrant and \(y\) fibrant, we write \(\simeq\) for the equivalence relation of morphisms from \(x\) to \(y\) being homotopic.
+	We also write
+	\[ [x,y] = \calC(x,y)/\simeq \]
+	for the set of morphisms up to homotopy.
+\end{notation}
+
+\subsection{The homotopy category of bifibrant objects (TBD)}
+
+\begin{lemma}
+	If \(y\in\calC_f\), then there is a good homotopy from \(f\) to \(g\) if and only if there is a very good homotopy from \(f\) to \(g\).
+\end{lemma}
+\begin{proposition}
+	If \(y\in\calC_f\) and there is a left homotopy from \(f\) to \(g\), then there is a left homotopy from \(f\circ e\) to \(g\circ e\).
+\end{proposition}
+\begin{propositiondef}
+	Let \(\calC\) be a model category. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item If \(y\) is fibrant, then composition in \(\calC\) induceds a composition
+			\[ [x,y]_\ell \times [w,x]_\ell \to [w,y]_\ell. \]
+		\item If \(w\) is cofibrant, then composition in \(\calC\) induces a composition
+			\[ [x,y]_r \times [w,x]_r \to [w,y]_r. \]
+	\end{enumerate}
+	In particular, there is a category \(\hh{\calC_{cf}}\), the objects of which are the objects of \(\calC\), and for which the morphisms are given by
+	\[ \hh{\calC_{cf}}(x,y) = [x,y]. \]
+\end{propositiondef}
+
+\begin{terminology}
+	Let \(x,y\in\calC_{cf}\). A morphism \(f\!:x\to y\) is a \emph{homotopy equivalence} if it has an inverse up to homotopy, i.e.\ if its image in \(\hh{\calC_{cf}}\)
+	is an isomorphism.
+\end{terminology}
+
+\begin{theorem}
+	Let \(\calC\) be a model category, let \(x,y\in\calC_{cf}\), and let \(f\!:x\to y\) be a morphism. Then the following are equivalent.
+	\begin{enumerate}[label=(\arabic*)]
+		\item \(f\) is a homotopy equivalence.
+		\item \(f\) is a weak equivalence.
+	\end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+	Let \(\calC\) be a model category. Then there is a canonical equivalence of categories \(\hh{\calC_cf} \iso \ho(\calC)\), where we recall that \(\ho(\calC) = \calC[W^{-1}]\).
+\end{theorem}
+
