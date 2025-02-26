@@ -201,16 +201,16 @@ above right is induced by universal property applied to the morphisms \(w\) and 
 we deduce that \(j\) is a weak equivalence.
 
 For the final step, observe that the identity \(\id_z\!:z\to z\) together with the composition \(g\circ r\) induce, by universal property, a
-map \(\ell\!:z'\to z\) for which \(\ell\circ k = \id_z\) and \(\ell\circ i = g\circ r\). The former equation implies that \(k\) is a monomorphism,
-and so one can check that the remaining bottom right square in the diagram
+map \(\ell\!:z'\to z\) for which \(\ell\circ k = \id_z\) and \(\ell\circ i = g\circ r\). By universal property, one can check that the remaining bottom right square in the diagram
 \[
 	\begin{tikzcd}
 		x\ar[d,tail,"g"',"\sim" labl]\ar[r] & x'\ar[d,tail,"i"',"\sim" labl]\ar[r] & x\ar[d,tail,"g"',"\sim" labl] \\
-		z\ar[d,two heads,"h"']\ar[r,hook,"k"'] & z'\ar[ul,pushout]\ar[d,"j"']\ar[r,dashed,"\ell"] & z \ar[d,two heads,"h"] \\
+		z\ar[d,two heads,"h"']\ar[r,"k"'] & z'\ar[ul,pushout]\ar[d,"j"']\ar[r,dashed,"\ell"] & z \ar[d,two heads,"h"] \\
 		y\ar[r] & y'\ar[r] & y
 	\end{tikzcd}
 \]
-commutes, so the entire diagram commutes. In particular, \(h\) is a retract of the weak equivalence \(j\).
+commutes (by using that there is a unique map \(z'\to y\) which after composition with \(i\) or \(k\) yields the outer paths of the square), so the entire diagram commutes.
+In particular, \(h\) is a retract of the weak equivalence \(j\).
 \end{proof}
 
 \subsection{Cylinders, paths, and homotopies}
@@ -271,7 +271,8 @@ These two approaches can be partially employed in any relative category, and esp
 \begin{remark}
 	A warning to observe is that \(f \simh_\ell g\) (and its dual) does \emph{not} merely ask that there is a left homotopy from \(f\) to \(g\), since that is not
 	necessarily an equivalence relation. This is why we must ask for the equivalence relation \emph{generated} by that simpler relation. In general, \(f\simh_\ell g\)
-	means that there is some zigzag of left homotopies starting at \(f\) and ending with \(g\).
+	means that there is some chain of left homotopies starting at \(f\) and ending with \(g\). See the proof of Proposition \ref{prop:model-category-cofibrant-object-left-homotopy-equivalence-relation}
+	for an explanation of what properties the relation of left homotopy satisfies, and when it forms an equivalence relation.
 \end{remark}
 \begin{remark}
 	We want to emphasize that the relations \(\simh_\ell\) and \(\simh_r\) do not require a fixed choice of cylinder object or path object, and rather allow any
@@ -309,8 +310,8 @@ to make the definitions substantially more powerful.
 		We say \(x^I\) is a \emph{very good} path object if it is good, and \(i\) is a trivial cofibration. A left homotopy is (very) good if the corresponding path object is (very) good.
 	\end{enumerate}
 \end{definition}
-\begin{lemma}
-	Let \(\calC\) be a model category, let \(x\in\calC_f\) be a fibrant object, and let \((Ix,i_0,i_1,p)\) be a good cylinder object. Then \(i_0\) and \(i_1\)
+\begin{lemma}\label{lemma:model-category-good-cylinder-of-cofibrant-object-inclusions-cofibrant}
+	Let \(\calC\) be a model category, let \(x\in\calC_c\) be a cofibrant object, and let \((Ix,i_0,i_1,p)\) be a good cylinder object. Then \(i_0\) and \(i_1\)
 	are trivial cofibrations.
 \end{lemma}
 \begin{proof}
@@ -319,7 +320,7 @@ the canonical inclusions \(\iota_k\!:x\to x\amalg x\) are cofibrations (being pu
 \[ i_k = (i_0,i_1)\circ\iota_k \]
 so that \(i_k\), \(k=0,1\), are cofibrations.
 \end{proof}
-\begin{proposition}
+\begin{proposition}\label{prop:model-category-good-homotopies-are-enough}
 	Let \(\calC\) be a model category. Then the following statements hold.
 	\begin{enumerate}[label=(\arabic*)]
 		\item For any object \(x\in\calC\) there exists a very good cylinder object and a very good path object.
@@ -342,8 +343,8 @@ which now defines a good cylinder, where the map \(p'\!:I'x \to x\) is defined b
 sees that the morphism \(h'\) given by the composition \(I'x \to Ix \overset{h}\to y\) defines a good homotopy from \(f\) to \(g\). The proof for right homotopies is similar.
 \end{proof}
 
-With the given notions of homotopy, one obtains the homotopy extension property (and covering homotopy property) for free, and this
-is yet more evidence of the convenience provided by the yet ephemeral fibrations/cofibrations of a model category.
+Below, we give trivial versions of the homotopy extension and covering homotopy properties from algebraic topology in the context of model categories.
+
 \begin{lemma}[Homotopy extension property]
 	Let \(\calC\) be a model category, \(\iota\!:a\to x\) a cofibration, and \(y\) a fibrant object. Let \(y^I\) be a good path object.
 	Then the lifting problem
@@ -376,24 +377,81 @@ Similarly, one proves
 	is exactly such that the above properties hold.
 \end{remark}
 
-\begin{proposition} % TBD
-	Let \(x\in\calC_c\). Then \(f\simh_\ell g\) if and only if there exists a left homotopy from \(f\) to \(g\).
-\end{proposition}
+We remarked earlier that since the existence of a left homotopy doesn't form an equivalence relation, we are forced to consider the equivalence relation generated by the former
+to get \(\simh_\ell\). Naturally, one wonders what the obstruction is, as in standard algebraic topology, homotopy is easily seen to be an equivalence relation.
+The below proposition provides an answer.
 
-\begin{propositiondef} % TBD
+\begin{proposition}\label{prop:model-category-cofibrant-object-left-homotopy-equivalence-relation}
+	Let \(\calC\) be a model category, let \(x,y\in\calC\) and assume \(x\) is cofibrant. Then, for morphisms \(f,g\in\calC(x,y)\), we have \(f\simh_\ell g\) if and only if there exists a left homotopy
+	from \(f\) to \(g\). That is, the existence of a left homotopy forms an equivalence relation.
+\end{proposition}
+\begin{proof}
+We have three things to check: reflexivity, symmetry, and transitivity.
+\begin{enumerate}[label=(\arabic*)]
+	\item Reflexivity: let \(f\!:x\to y\) be a morphism. Note that \((x,\id_x,\id_x,\id_x)\) forms a (very good) cylinder object for \(x\), so \(f\) itself
+	determines a homotopy from \(f\) to \(f\).
+	\item Symmetry: let \(f,g\!:x\to y\) be morphisms, and \(h\!: Ix\to y\) a homotopy from \(f\) to \(g\). Note that given the cylinder \((Ix,i_0,i_1,p)\),
+	the tuple \((Ix,i_1,i_0,p)\) also defines a cylinder object for \(x\). Then the homotopy \(h\), now thought of in terms of the latter cylinder, defines a homotopy
+	from \(g\) to \(f\).
+	\item Transitivity: this is the only step where we need to use that \(x\) is cofibrant. Assume that we have \(f,g,k\!:x\to y\) and left homotopies \(h\!:Ix\to y\) from \(f\) to \(g\) and \(h'\!:I'x\to y\) from
+	\(g\) to \(k\); by Proposition \ref{prop:model-category-good-homotopies-are-enough}, we may assume that these left homotopies are good. We form a third cylinder \(Jx\)
+	as the pushout below left
+	\[
+		\begin{tikzcd}
+			& Ix\ar[dr,dashed]\ar[drr,bend left,"p"] & \\
+			x\ar[ur,"i_1"]\ar[dr,"i'_0"'] & & Jx\ar[ll,pushout]\ar[r,dashed,"q"] & x \\
+			& I'x\ar[ur,dashed]\ar[urr,bend right,"p'"] &
+		\end{tikzcd}
+		\quad\leadsto\quad
+		\begin{tikzcd}
+			& Ix\ar[dr]\ar[drr,bend left,"h"] & \\
+			x\ar[ur,"i_1"]\ar[dr,"i'_0"'] & & Jx\ar[ll,pushout]\ar[r,dashed,"h''"] & y \\
+			& I'x\ar[ur]\ar[urr,bend right,"h'"] &
+		\end{tikzcd}
+	\]
+	where, to be explicit, we set \(j_0 = x \overset{i_0}\to Ix \to Jx\) and \(j_1 = x\overset{i'_1}\to I'x\to Jx\). The cylinder is then given by \((Jx,j_0,j_1,q)\),
+	but we need to check that this is actually a cylinder object for \(x\), and this is where being cofibrant is essential. The only non-trivial aspect is checking that \(q\in W\). Here,
+	Lemma \ref{lemma:model-category-good-cylinder-of-cofibrant-object-inclusions-cofibrant} tells us that \(i_1\) and \(i'_0\) are trivial cofibrations, and thus their pushouts are
+	as well, so by the 2-out-of-3 property, \(q\) is a weak equivalence. We now get an induced left homotopy \(h''\!:Jx\to y\) from \(f\) to \(k\), as displayed above right.
+\end{enumerate}
+This concludes the proof, as \(\simh_\ell\) is the equivalence relation generated by the existence of a left homotopy.
+\end{proof}
+
+In the model categorical setting, we in principle allow any choice of cylinder object (resp.\ path object) for a left (resp.\ right) homotopy. This is
+in contrast with the classical theory in algebraic topology, where one uses an explicit choice, namely the product with the interval \([0,1]\). However,
+much like the above, where everything simplifies significantly with a (co)fibrancy assumption, the same is true with regards to this. Below, we see that
+when the domain is cofibrant and the codomain is fibrant, homotopy theory looks exactly as it does classically.
+
+\begin{propositiondef}
 	Let \(\calC\) be a model category, and let \(f,g\!:x\to y\) be morphisms in \(\calC\).
 	\begin{enumerate}[label=(\arabic*)]
-		\item If \(x\) is cofibrant and there is a left homotopy from \(f\) to \(g\), then there is a right homotopy from \(f\) to \(g\).
-		\item If \(y\) is fibrant and there is a right homotopy from \(f\) to \(g\), then there is a left homotopy from \(f\) to \(g\).
+		\item Suppose \(x\) is cofibrant. If there is a left homotopy from \(f\) to \(g\), then there is a right homotopy from \(f\) to \(g\).
+		\item Suppose \(y\) is fibrant. If there is a right homotopy from \(f\) to \(g\), then there is a left homotopy from \(f\) to \(g\).
 	\end{enumerate}
 	In particular, if \(x\in\calC_c\) and \(y\in\calC_f\), then the equivalence relations \(\simh_\ell\) and \(\simh_r\) on \(\calC(x,y)\)
 	agree, and give an equivalence relation \(f\simeq g\). Furthermore, for the equivalence relation \(\simeq\), one may use a fixed good cylinder
 	object for \(x\) and a fixed good path object for \(y\).
 \end{propositiondef}
+\begin{proof}
+Statements (1) and (2) are dual, so it suffices to prove (1). In the process, we will see that we can translate an arbitrary (good) left homotopy from \(f\) to \(g\)
+to a good right homotopy from \(f\) to \(g\) with a fixed path object for \(y\). So, assume we have a left homotopy \(h\!:Ix\to y\) from \(f\) to \(g\), where by Proposition \ref{prop:model-category-good-homotopies-are-enough}
+we may assume that \(Ix\) is good. Fix a good path object \(y^I\) for \(y\), and note that \(i_0\!:x\to Ix\) is a trivial cofibration and \((p_0,p_1)\!:y^I \to y\times y\)
+is a fibration, we have  a solution to the lifting problem
+\[
+	\begin{tikzcd}
+		x\ar[r,"f"]\ar[d,"i_0"'] & y \ar[r,"i"] & y^I\ar[d,"{(p_0,p_1)}"] \\
+		Ix\ar[r,"{(p,\id_{Ix})}"']\ar[urr,dashed,"k"] & x\times Ix \ar[r,"{f\times h}"'] & y\times y
+	\end{tikzcd}
+\]
+where we now observe that
+\[ h'\!: x \overset{i_1}\to Ix \overset{k}\to y^I \]
+is a right homotopy from \(f\) to \(g\). Indeed
+\[ p_0\circ h' = p_0\circ k\circ i_1 = f\circ p\circ i_1 = p_0\circ f\quad\text{and}\quad p_1\circ h' = h\circ i_1 = g \]
+as desired. The rest of the proposition follows.
+\end{proof}
 
 \begin{notation}
-	Let \(\calC\) be a model category. For \(x\) cofibrant and \(y\) fibrant, we write \(\simeq\) for the equivalence relation of morphisms from \(x\) to \(y\) being homotopic.
-	We also write
+	Let \(\calC\) be a model category. For \(x\) cofibrant and \(y\) fibrant, we write
 	\[ [x,y] = \calC(x,y)/\simeq \]
 	for the set of morphisms up to homotopy.
 \end{notation}
@@ -401,7 +459,7 @@ Similarly, one proves
 \subsection{The homotopy category of bifibrant objects (TBD)}
 
 \begin{lemma}
-	If \(y\in\calC_f\), then there is a good homotopy from \(f\) to \(g\) if and only if there is a very good homotopy from \(f\) to \(g\).
+	If \(y\in\calC_f\), then there is a good left homotopy from \(f\) to \(g\) if and only if there is a very good left homotopy from \(f\) to \(g\).
 \end{lemma}
 \begin{proposition}
 	If \(y\in\calC_f\) and there is a left homotopy from \(f\) to \(g\), then there is a left homotopy from \(f\circ e\) to \(g\circ e\).
@@ -432,6 +490,40 @@ Similarly, one proves
 \end{theorem}
 
 \begin{theorem}
-	Let \(\calC\) be a model category. Then there is a canonical equivalence of categories \(\hh{\calC_cf} \iso \ho(\calC)\), where we recall that \(\ho(\calC) = \calC[W^{-1}]\).
+	Let \(\calC\) be a model category. Then there is a canonical equivalence of categories \(\hh{\calC_{cf}} \iso \ho(\calC)\), where we recall that \(\ho(\calC) = \calC[W^{-1}]\).
 \end{theorem}
+
+
+% alternative crackpot approach, seems super sketchy
+
+% \begin{lemma}
+% 	Let \(\calC\) be a model category, and let \(W_{cf} = \calC_{cf}\cap W\). Then the canonical functor
+% 	\[ \calC_{cf}[W_{cf}^{-1}] \to \calC[W^{-1}] \]
+% 	is an equivalence.
+% \end{lemma}
+% \begin{proof}
+% We show that it is fully faithful and essentially surjective. To see that it is full, note that if \(x\in\calC_{cf}\), then applying the \((\Cof,\Fib\cap W)\) factorization system to a morphism
+% \(f\!:x\to y\), we get
+% \[
+% 	\begin{tikzcd}
+% 		\varnothing\ar[r,"\in\Cof"] & x \ar[dr,"\Cof\ni"']\ar[rr,"f"] & & y \ar[r,"\in\Fib"] & * \\
+% 		& & z\ar[ur,"\in\Fib\cap W"'] & &
+% 	\end{tikzcd}
+% \]
+% so that \(f\) factors through some \(z\in\calC_{cf}\). Furthermore, if \(f\in W\), then so is \(x\to z\) by the 2-out-of-3 property. In particular, any
+% zigzag starting and ending in \(\calC_{cf}\) can be replaced by one living entirely in \(\calC_{cf}\). This shows that the functor is full. To see
+% that it is faithful, note that we may always assume two zigzags have the same length and are thus related by a diagram of the form
+% \[
+% 	\begin{tikzcd}[cramped, row sep=tiny]
+% 		 & \bullet\ar[dd] & \bullet\ar[l,"\in W"']\ar[r]\ar[dd] & \cdots & \bullet\ar[l,"\in W"']\ar[dr]\ar[dd] & \\
+% 		x \ar[ur]\ar[dr] & & & & & y. \\
+% 		& \bullet & \bullet\ar[l,"\in W"']\ar[r] & \cdots & \bullet\ar[l,"\in W"']\ar[ur] &
+% 	\end{tikzcd}
+% \]
+% potentially with some arrows going in the same directions. The point is thus that if we have multiple of these, where the beginning top row and ending bottom row
+% live in \(\calC_{cf}\), then we just get a single one where every object is in \(\calC_{cf}\) by composing.
+
+% To see that the functor is essentially surjective, note that any object \(x\in\calC\) has a weak equivalence \(x'\iso x\) where \(x'\) is cofibrant and
+% a weak equivalence \(x\to x''\) where \(x''\) is fibrant.
+% \end{proof}
 
