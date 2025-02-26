@@ -1,4 +1,22 @@
+%!TEX root = ../lectures.tex
 
-\section{Model categories \& homotopy (co)limits (TBD)}
+\section{Model categories \& homotopy (co)limits (TBD)}\label{lecture:model-categories-and-homotopy-colimits}
+In Lecture \ref{lecture:model categories}, we laid out the basic theory of model categories, and indicated that their structure can be used to understand localizations
+in a very convenient way. As part of the road to formalizing this, we showed that weak equivalences between \emph{bifibrant objects} are exactly given by
+\emph{homotopy equivalences,} defined in terms of mapping cylinders (or path spaces, equivalently).
+
+The purpose of this lecture is to continue down the path started in the last lecture. We will show that the localization \(\ho(\calC) = \calC[W^{-1}]\) of
+a model category \(\calC\) at its weak equivalences \(W\) is equivalent to the homotopy category of bifibrant objects \(\hh{\calC_{cf}}\), whose objects
+are the bifibrant objects, and whose morphisms are given by homotopy-equivalence classes of maps in \(\calC_{cf}\).
+
+After doing the above, we will move to explaining some features of derived categories in the setting of model categories, and one particularly interesting example,
+namely homotopy (co)limits. In Lectures \ref{lecture:triangulated-categories} through to \ref{lecture:gluing-t-structures}, we explored topics in triangulated categories,
+and frequently made use of the intuition of \emph{cones} as ``homotopy cokernels.'' Homotopy colimits in model categories provide a refinement of this notion.
+
+\subsection{The homotopy category of a model category}
+\begin{theorem}
+	Let \(\calC\) be a model category. Then there is a canonical equivalence of categories \(\hh{\calC_{cf}} \iso \ho(\calC)\).
+\end{theorem}
+
 \subsection{Derived functors for model categories}
 \subsection{Homotopy (co)limits}
