@@ -1,7 +1,7 @@
 %!TEX root = ../lectures.tex
 
-\section{Model categories \& homotopy (co)limits (TBD)}\label{lecture:model-categories-and-homotopy-colimits}
-In Lecture \ref{lecture:model categories}, we laid out the basic theory of model categories, and indicated that their structure can be used to understand localizations
+\section{Model categories \& homotopy (co)limits (WIP)}\label{lecture:model-categories-and-homotopy-colimits}
+In Lecture \ref{lecture:model-categories}, we laid out the basic theory of model categories, and indicated that their structure can be used to understand localizations
 in a very convenient way. As part of the road to formalizing this, we showed that weak equivalences between \emph{bifibrant objects} are exactly given by
 \emph{homotopy equivalences,} defined in terms of mapping cylinders (or path spaces, equivalently).
 
@@ -13,10 +13,123 @@ After doing the above, we will move to explaining some features of derived categ
 namely homotopy (co)limits. In Lectures \ref{lecture:triangulated-categories} through to \ref{lecture:gluing-t-structures}, we explored topics in triangulated categories,
 and frequently made use of the intuition of \emph{cones} as ``homotopy cokernels.'' Homotopy colimits in model categories provide a refinement of this notion.
 
-\subsection{The homotopy category of a model category}
-\begin{theorem}
-	Let \(\calC\) be a model category. Then there is a canonical equivalence of categories \(\hh{\calC_{cf}} \iso \ho(\calC)\).
-\end{theorem}
+We will use the same notation as in Lecture \ref{lecture:model-categories}. The sources for the contents are primarily the same also, namely
+\cite{cisinski-book,riehl-categorical-homotopy-theory,may-ponto-more-concise-algebraic-topology}.
 
-\subsection{Derived functors for model categories}
-\subsection{Homotopy (co)limits}
+\subsection{The homotopy category of a model category (WIP)}
+
+We start with a construction which is integral to our interests of localization, and which are a big part of the reason model categories are useful.
+
+\begin{construction}[(Co)fibrant replacement]\label{construction:model-category-(co)fibrant-replacement}
+	Consider a model category \(\calC\), and some object \(x\in\calC\). There are two operations afforded to us for free by the factorization systems on \(\calC\),
+	namely:
+	\begin{itemize}
+		\item We can produce a \emph{fibrant replacement} of \(x\). That is, a trivial cofibration \(x \iso Rx\) where \(Rx\) is fibrant. To do this,
+		factor \(x \to *\) into a trivial cofibration followed by a fibration. Note that if \(x\) is cofibrant, then \(Rx\) is cofibrant.
+		\item We can produce a \emph{cofibrant replacement} of \(x\). That is, a trivial fibration \(Qx \iso x\), where \(Qx\) is cofibrant. To do this,
+		factor \(\varnothing\to x\) into a cofibration followed by a trivial fibration. Note that if \(x\) is fibrant, then \(Qx\) is fibrant.
+	\end{itemize}
+	When \(\calC\) has functorial factorizations, the above operations organize into deformations \(Q\To\1\) and \(\1\To R\). As we do not assume we have functorial factorizations,
+	we will not make use of this fact. On the other hand, one can still get some amount of naturality for free.
+
+	Suppose we have a morphism \(f\!:x\to x'\), and that we fix cofibrant replacements
+	\[ q\!:Qx\iso x,\quad q'\!:Qx'\iso x'\]
+	and fibrant replacements
+	\[ r\!:x\to Rx,\quad r'\!:x'\to Rx'. \]
+	By solving the below lifting problems
+	\[
+	\begin{tikzcd}
+		\varnothing\ar[d,tail]\ar[rr] & & Qx'\ar[d,two heads,"q'"',"\sim" labl] \\
+		Qx\ar[r,"q"']\ar[urr,dashed,"Qf"] & x\ar[r,"f"'] & x'
+	\end{tikzcd}
+	\quad
+	\begin{tikzcd}
+		x\ar[d,tail,"\sim" labl,"r"']\ar[r,"f"] & x'\ar[r,"r'"] & Rx'\ar[d,two heads] \\
+		Rx\ar[rr]\ar[urr,dashed,"Rf"] & & *
+	\end{tikzcd}
+	\]
+	we obtain morphisms \(Qf\!:Qx\to Qx'\) and \(Rf\!:Rx\to Rx'\). Observe that these satisfy \(q'\circ Qf = f\circ q\) and \(Rf \circ r = r'\circ f\).
+\end{construction}
+\begin{proposition}\label{prop:model-category-replacement-properties}
+	Let \(\calC\) be a model category, and let \(f\!:x\to x'\) be a morphism in \(\calC\). Consider the morphism \(Qf\!:Qx\to Qx'\) of
+	Construction \ref{construction:model-category-(co)fibrant-replacement}. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item The morphism \(f\) is a weak equivalence if and only if \(Qf\) is a weak equivalence.
+		\item The left and right homotopy classes of \(Qf\) depends only on the left homotopy class of \(f\circ q\).
+		\item If \(x'\) is fibrant, then the right homotopy class of \(Qf\) depends only on the right homotopy class of \(f\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) Apply the 2-out-of-3 property to the defining diagram of \(Qf\).
+
+(2) By Theorem \ref{thm:model-category-dual-whitehead}, we have a bijection
+\[ q'_*\!:[Qx,Qx']_\ell \iso [Qx,x']_\ell. \]
+Furthermore, by Proposition \ref{prop:model-category-left-right-homotopy-interchange}, anything in the left homotopy class of \(Qf\) is also in the right homotopy class of \(Qf\).
+
+(3) Note that \(Qx'\) is bifibrant. Applying Theorem \ref{thm:model-category-dual-whitehead} once again, along with Proposition Proposition \ref{prop:model-category-fibrant-codomain-precomposition}
+and Proposition \ref{prop:model-category-left-right-homotopy-interchange}, we have
+\[ [x,x']_r \to [x,x']_\ell \to [Qx,x'] \xleftarrow{\sim} [Qx,Qx'] \]
+which implements \(Q\), where we note that since \(Qx\) is cofibrant and \(x'\) is fibrant, all homotopy mapping spaces agree, hence why we discard the subscript.
+\end{proof}
+
+\begin{construction}[Replacement functors]
+	With the help of Proposition \ref{prop:model-category-replacement-properties}, we can construct replacement functors up to homotopy. In particular, we can construct
+	functors
+	\[ Q\!:\calC\to\hh{\calC_c},\quad R\!:\calC\to\hh{\calC_f}. \]
+	We handle the former, since the latter is suitably dual. For all \(x\in\calC\), choose cofibrant replacements \(q_x\!:Qx\iso x\), and define \(Q\) on objects by
+	\(x\mapsto Qx\). Using these cofibrant replacements, apply Construction \ref{construction:model-category-(co)fibrant-replacement} on morphisms to define \(Qf\) for all \(f\!:x\to y\).
+	On morphisms, define \(Q\) by
+	\[ \calC(x,y) \to \calC(Qx,Qy) \to [Qx,Qy]_r = \hh{\calC_c}(Qx,Qy). \]
+	We need to show that this is a functor. First of all, when \(x=y\) and \(f=\id_x\), one observes that \(Q\id_x\) only depends on the left homotopy class of \(q_x\), which corresponds to \(\id_x\),
+	so that \(Q\id_x = \id_{Qx}\).
+
+	Suppose we have morphisms \(x\overset{f}\to y\overset{g}\to z\). We need to see that \(Q(g\circ f) = Q(g)\circ Q(f)\), but for this, we note that \(Q(g\circ f)\) depends only
+	on the left homotopy class of \(g\circ f\circ q_x = g\circ q_y \circ Q(f) = q_z\circ Q(g)\circ Q(f)\) and this is uniquely determined by the left homotopy class
+	of \(Q(g)\circ Q(f)\).
+
+	Thus, we see that we have a functor \(Q\!:\calC\to\hh{\calC_{c}}\), and dually, a functor \(R\!:\calC\to\hh{\calC_{f}}\). When we restrict the former to consider
+	only fibrant objects, we can use the construction in Proposition \ref{prop:model-category-replacement-properties}(3) to see that it induces a functor
+	\[ \hh{Q}\!:\hh{\calC_f}\to\hh{\calC_{cf}}, \]
+	on morphisms given by the composition
+	\[ \hh{\calC_f}(x,y) = [x,y]_\ell \to [Qx,y] \cong [Qx,Qy] = \hh{\calC_{cf}}(x,y). \]
+	Similarly, one induces a functor \(\hh{R}\!:\hh{\calC_c}\to\hh{\calC_{cf}}\), and thus two functors
+	\[ \hh{R}\circ Q, \hh{Q}\circ R\!: \calC\to\hh{\calC_{cf}}. \]
+\end{construction}
+
+\begin{exercise}
+	Given an object \(x\in\calC\) in a model category \(\calC\) with chosen fibrant replacement \(Rx\), cofibrant replacement \(Qx\), and furthermore
+	additional replacements \(QRx\) and \(RQx\), show that there is a weak equivalence \(\xi_x\!:RQx\to QRx\) which assembles into a natural isomorphism
+	\[ \xi\!: \hh{R}\circ Q \To \hh{Q}\circ R \]
+	in the homotopy category.
+\end{exercise}
+
+% TODO: Finish the below. Just use the approach in [MP12] as it is written.
+
+\begin{proposition}
+	Let \(\calC\) be a model category, and write \(RQ\) for the functor \(\hh{R}\circ Q\) constructed above. Then the following statements hold.
+	\begin{enumerate}[label=(\arabic*)]
+		\item A morphism \(f\!:x\to y\) in \(\calC\) is a weak equivalence if and only if \(RQf\!:RQx\to RQy\) is an isomorphism.
+		\item Any map in \(\hh{\calC_{cf}}\) is a composite of morphisms in \(RQ(\calC)\) and inverses of morphisms in \(RQ(W)\).
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+(1) The morphism \(f\) is a weak equivalence if and only if the corresponding map \(RQx\to RQy\) in \(\calC\) is a weak equivalence, if and only if it is a homotopy equivalence,
+if and only if it is an isomorphism in \(\hh{\calC_{cf}}\).
+
+(2) 
+\end{proof}
+
+\begin{theorem}
+	Let \(\calC\) be a model category. Write \(RQ\) for the functor \(\hh{R}\circ Q\) constructed above. Then
+	\[ RQ\!: \calC \to \hh{\calC_{cf}} \]
+	exhibits \(\hh{\calC_{cf}}\) as a localization of \(\calC\) at the weak equivalences. In particular, there is a canonical equivalence of categories \(\hh{\calC_{cf}}\simeq\ho(\calC)\).
+\end{theorem}
+\begin{proof}
+Let \(F\!:\calC\to\calD\) be a functor inverting the weak equivalences.
+\end{proof}
+
+\subsection{Derived functors for model categories (TBD)}
+% Follow [Cis19] and [Rie13].
+
+\subsection{Homotopy (co)limits (TBD)}
+% Probably [Cis19] and [Rie13], but need to look at how [MP12] does it (if it does)
