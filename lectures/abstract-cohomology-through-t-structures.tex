@@ -312,7 +312,7 @@ where, for the left computation, we use Proposition \ref{prop:t-structure-trunca
 If such a morphism exists, it is unique by Lemma \ref{lemma:simple-uniqueness-of-cone-shift-map}, since there are no non-zero maps from \(\calT^{\leq -1}\) to \(\calT^{\geq 0}\). To see that one exists,
 pick a distinguished triangle
 \[ x \to y \to z' \to \Sigma x. \]
-We aim to show that \(z' \cong z\). We have that \(z'\in\calT^{\leq 0}\calT^{\geq -1}\), and therefore the distinguished triangle
+We aim to show that \(z' \cong z\). We have that \(z'\in\calT^{\leq 0}\cap\calT^{\geq -1}\), and therefore the distinguished triangle
 \[ \tau^{\leq -1}z' \to z' \to \tau^{\geq 0}z' \to \Sigma\tau^{\leq -1}z' \]
 turns into
 \[ \HH^{-1}(z') \to z' \to \HH^0(z') \to \Sigma \HH^{-1}(z'). \]
@@ -479,7 +479,7 @@ By assumption, the right term is thus zero, which means (ii) in the proposition 
 \end{proof}
 
 By appropriately dualizing what we have proven, we see that in a non-degenerate t-structure (for example, one which is bounded) the aisle and co-aisle are completely
-determined by the cohomology functors \(\HH^n\!:\calT^\to\calT^\heartsuit\). In this case, the cohomology functors act nicely as a family.
+determined by the cohomology functors \(\HH^n\!:\calT\to\calT^\heartsuit\). In this case, the cohomology functors act nicely as a family.
 \begin{proposition}
 	Let \((\calT^{\leq 0},\calT^{\geq 0})\) be a non-degenerate t-structure. Then \(\{\HH^n\}_{n\in\Z}\) is a conservative family of functors. That is, a morphsism \(f\!:x\to y\)
 	is an isomorphism if and only if the morphisms \(\HH^n(f)\!:\HH^n(x)\to\HH^n(y)\) are isomorphisms for all \(n\in\Z\).

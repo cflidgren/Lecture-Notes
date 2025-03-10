@@ -565,16 +565,16 @@ Kan extensions formalize the notion of a universal best approximation of an exte
 		& \calD\ar[ur,"\Lan_K{F}"'] & \ar[from=A,to=l,Rightarrow,"\eta",shorten=2mm]
 	\end{diagram*}
 	universal in the sense that any other functor with this data factors uniquely as below:
-	\begin{center}
+	\[
 	\begin{tikzcd}
 		\calC\ar[rr,"F",""{below,name=A}]\ar[dr,"K"'] & & \calE \\
 		& \calD\ar[ur,"G"'] & \ar[from=A,to=l,Rightarrow,"\sigma",shorten=2mm]
-	\end{tikzcd}\(\quad=\quad\)
+	\end{tikzcd}\quad=\quad
 	\begin{tikzcd}
 		\calC\ar[rr,"F",""{below,name=A}]\ar[dr,"K"'] & & \calE \\
-		& \calD\ar[ur,bend left,"\Lan_K{F}" description,""{right,name=B}]\ar[ur,shift right,bend right,"G"',""{right,name=C}] & \ar[from=A,to=l,Rightarrow,shift right,"\eta"',shorten=2mm]\ar[from=B,to=C,Rightarrow,"\exists!"']
+		& \calD\ar[ur,bend left,"\Lan_K{F}" description,""{right,name=B}]\ar[ur,shift right,bend right,"G"',""{right,name=C}] & \ar[from=A,to=l,Rightarrow,shift right,"\eta"',shorten=2mm]\ar[from=B,to=C,shorten=1.2mm,Rightarrow,"\exists!"']
 	\end{tikzcd}
-	\end{center}
+	\]
 	i.e.\ there is a unique natural transformation \(\sigma'\!:\Lan_K{F}\to G\) such that \(\sigma = \sigma'K\circ\eta=\sigma\).
 
 	The dual notion of a \emph{right Kan extension} \((\Ran_K{F},\varepsilon)\) of \(F\) along \(K\) is given by reversing the directions of the natural transformations.
