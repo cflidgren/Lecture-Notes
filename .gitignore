@@ -1,6 +1,13 @@
 # ignore the pdf file, make others compile it themselves
 lectures.pdf
 
+# ignore .zed config directory
+.zed
+
+# ignore latexmk config file
+.latexmkrc
+latexmkrc
+
 # weird
 *-SAVE-ERROR
 

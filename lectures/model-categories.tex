@@ -145,15 +145,15 @@ namely to prove something for the (co)fibrations, and then lift it to all morphi
 	Let \(\calC\) be a model category. If a fibration in \(\calC\) is the retract of a weak equivalence, then it is a trivial fibration.
 \end{lemma}
 \begin{proof}
-Let \(f\!:x\tailto y\) be fibration which is the retract of a weak equivalence \(w\!:x' \to y'\). First, factor \(w\) into a composition \(v\circ u\) using either factorization system,
+Let \(f\!:x\sur y\) be fibration which is the retract of a weak equivalence \(w\!:x' \to y'\). First, factor \(w\) into a composition \(v\circ u\) using either factorization system,
 and observe that by the 2-out-of-3 property, both \(u\) and \(v\) are weak equivalences (and hence a trivial cofibration and trivial fibration, respectively), so we have
 \[
 	\begin{tikzcd}
-		x\ar[d,tail,"f"']\ar[r] & x'\ar[d,"w"', "\sim" labl]\ar[r] & x\ar[d,tail,"f"] \\
+		x\ar[d,two heads,"f"']\ar[r] & x'\ar[d,"w"', "\sim" labl]\ar[r] & x\ar[d,two heads,"f"] \\
 		y\ar[r] & y'\ar[r] & y
 	\end{tikzcd}\quad\leadsto\quad
 	\begin{tikzcd}
-		x\ar[dd,tail,"f"']\ar[r] & x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[dd,tail,"f"] \\
+		x\ar[dd,two heads,"f"']\ar[r] & x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[dd,two heads,"f"] \\
 		 & z'\ar[d,two heads,"v"', "\sim" labl] & \\
 		y\ar[r] & y'\ar[r] & y
 	\end{tikzcd}.
@@ -161,11 +161,11 @@ and observe that by the 2-out-of-3 property, both \(u\) and \(v\) are weak equiv
 Composing in the obvious way, we get a morphism \(s\!:x\to z'\), and by considering the lifting problem as below left (obtained by the other obvious composition), we thus have the diagram below right:
 \[
 	\begin{tikzcd}
-		x'\ar[d,two heads,"u"', "\sim" labl]\ar[r] & x\ar[d,tail,"f"] \\
+		x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[d,two heads,"f"] \\
 		z'\ar[r]\ar[ur,dashed,"t"] & y
 	\end{tikzcd}\quad\leadsto\quad
 	\begin{tikzcd}
-		x\ar[dd,tail,"f"']\ar[r]\ar[dr,"s"'] & x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[dd,tail,"f"] \\
+		x\ar[dd,two heads,"f"']\ar[r]\ar[dr,"s"'] & x'\ar[d,tail,"u"', "\sim" labl]\ar[r] & x\ar[dd,two heads,"f"] \\
 		 & z'\ar[d,two heads,"v"', "\sim" labl]\ar[ur,"t"'] & \\
 		y\ar[r] & y'\ar[r] & y
 	\end{tikzcd}.
