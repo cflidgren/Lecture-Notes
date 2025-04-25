@@ -4,6 +4,9 @@ lectures.pdf
 # ignore .zed config directory
 .zed
 
+# ignore the texpressor auto directory
+auto
+
 # ignore latexmk config file
 .latexmkrc
 latexmkrc
