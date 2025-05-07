@@ -1,17 +1,17 @@
 \usepackage[utf8]{inputenc}
 \tracinglostchars=3
-\usepackage{amsmath, amsfonts, amssymb}
-\usepackage{mathrsfs, bm}
+\usepackage{amsmath, amsfonts, amssymb, bm}
+
 \usepackage[dvipsnames]{xcolor}
 \usepackage{listings}
 \usepackage{verbatim,mathtools,graphicx}
+
 \usepackage[T1]{fontenc}
-%\usepackage{kpfonts,newtxmath}
-\usepackage{newpxtext}
-\usepackage[varbb]{newpxmath}
-%\usepackage{libertinus}
-%\usepackage[urw-garamond]{mathdesign}
-%\usepackage{garamondx}
+\usepackage[scaled=.97,helvratio=.93,p,theoremfont]{newpxtext}
+\usepackage[varbb,smallerops,bigdelims]{newpxmath}
+\usepackage[scaled=.85]{beramono}
+\usepackage[scr=rsfso,cal=euler]{mathalfa}
+
 \usepackage{tikz, tikz-cd}
 \usepackage{enumitem,xparse,url}
 \usepackage[most]{tcolorbox}
@@ -19,6 +19,7 @@
 \usepackage{hyperref,bookmark}
 \usepackage{stmaryrd}
 \usepackage{fontspec}
+\usepackage{microtype}
 
 % Renewed commands
 \renewcommand{\injlim}{\varinjlim}
@@ -27,8 +28,30 @@
 % Column stuff
 \newcolumntype{x}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 
-% set graphicx directory
-\graphicspath{{./img/}}
+% TikZ stuff
+\tikzset{
+    labl/.style={anchor=north, rotate=90},
+    pullback/.style={commutative diagrams/phantom, "\usebox\pullback" , very near start},
+  pushout/.style={commutative diagrams/phantom, "\usebox\pushout" , very near start},
+  symbol/.style={%
+    draw=none,
+    every to/.append style={edge node={node [sloped, allow upside down, auto=false]{$#1$}}}
+  }
+}
+
+\newsavebox{\pullback}
+\sbox\pullback{%
+\begin{tikzpicture}%
+\draw (0,0) -- (1ex,0ex);%
+\draw (1ex,0ex) -- (1ex,1ex);%
+\end{tikzpicture}}
+
+\newsavebox{\pushout}
+\sbox\pushout{%
+\begin{tikzpicture}%
+\draw (0,0) -- (0ex,1ex);%
+\draw (0ex,1ex) -- (1ex,1ex);%
+\end{tikzpicture}}
 
 % Environments
 % warning box

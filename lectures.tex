@@ -1,7 +1,7 @@
 \documentclass[a4paper, 11pt]{article}
 \newcommand\hmmax{0}
 \newcommand\bmmax{0}
-\input{preamble-fancy-very-minimal-newpxtext}
+\input{preamble-fancy-very-minimal-newpxtext2}
 %\input{preamble}
 \usepackage[textwidth=15.5cm,top=2.5cm,bottom=2.5cm]{geometry}
 \usepackage{comment}
@@ -37,35 +37,8 @@
 \newcommand{\cof}{\operatorname{cof}}
 \newcommand{\cofib}{\operatorname{cofib}}
 
-
 \newcommand{\bp}[1]{\prescript{p}{}{#1}}
 \newcommand{\bperp}[1]{\prescript{\perp}{}{#1}}
-
-\tikzset{
-    labl/.style={anchor=north, rotate=90},
-    pullback/.style={commutative diagrams/phantom, "\usebox\pullback" , very near start},
-	pushout/.style={commutative diagrams/phantom, "\usebox\pushout" , very near start},
-	symbol/.style={%
-		draw=none,
-		every to/.append style={edge node={node [sloped, allow upside down, auto=false]{$#1$}}}
-	}
-}
-
-
-\newsavebox{\pullback}
-\sbox\pullback{%
-\begin{tikzpicture}%
-\draw (0,0) -- (1ex,0ex);%
-\draw (1ex,0ex) -- (1ex,1ex);%
-\end{tikzpicture}}
-
-\newsavebox{\pushout}
-\sbox\pushout{%
-\begin{tikzpicture}%
-\draw (0,0) -- (0ex,1ex);%
-\draw (0ex,1ex) -- (1ex,1ex);%
-\end{tikzpicture}}
-
 
 \usepackage[backend=biber, style=alphabetic]{biblatex}
 \addbibresource{bibliography.bib}
@@ -89,7 +62,7 @@ topology, and so on. There is no overarching goal, other than to cover
 interesting topics in and around category theory, homological algebra, geometry,
 higher category theory, and higher algebra.
 
-Very often, the notes have been prepared without too much care, and so one should expect mistakes, occasional hand-waving, and suboptimal approaches. Hopefully, all the essential ideas
+Very often, the notes have been prepared without too much care, and so one should expect mistakes, occasional hand-waving, and sub-optimal approaches. Hopefully, all the essential ideas
 remain correct. On a related note, while there has been some effort put into making the exposition clear, we are sometimes rather terse as it makes it easier to use the notes
 for lectures, where the exposition may be expanded upon in any case.
 
