@@ -199,7 +199,7 @@ On the other hand, by (1), \(Q\) is homotopical and so induces a functor
 \[ Q'\!:\ho(\calC)\to\ho(\calC_Q). \]
 Now, observe that both the composites
 \[ \calC_Q\inj\calC\overset{Q}\to\calC_Q,\quad \calC\overset{Q}\to\calC_Q\inj\calC \]
-have natural weak equivalences to \(\1_{\calC_Q}\) and \(\1_\calC\), respectively, formed from the natural weak equivalence \(q\!:Q\To\1\). On the level of the homotopy categories,
+have natural weak equivalences to \(\1_{\calC_Q}\) and \(\1_{\calC}\), respectively, formed from the natural weak equivalence \(q\!:Q\To\1\). On the level of the homotopy categories,
 these give rise to the desired natural isomorphisms
 \[ Q'I\cong\1_{\ho(\calC_Q)},\quad IQ'\cong\1_{\ho(\calC)} \]
 which yields the result.
@@ -342,18 +342,18 @@ all the other data implicit. We have to give natural isomorphisms
 	\end{tikzcd}
 \end{center}
 and on components, these will be of the form
-\[ \bfL G \circ \bfL F \To \bfL(G\circ F),\quad \1_{\ho(\calC)} \To \bfL\1_\calC \]
+\[ \bfL G \circ \bfL F \To \bfL(G\circ F),\quad \1_{\ho(\calC)} \To \bfL\1_{\calC} \]
 where \(F\!:\calC\to\calC'\) and \(G\!:\calC'\to\calC''\). Note that we have a natural transformation
 \[ \bbL G \bbL F = GQ'FQ \overset{Gq'FQ}\Longrightarrow GFQ = \bbL (GF). \]
 This is a natural weak equivalence since \(F\) maps \(\calC_Q\) to \(\calC'_{Q'}\), which \(G\) acts homotopically on; similarly, this is why \(GFQ = \bbL(GF)\). Secondly, note
 that
-\[ \bbL\1_{\calC} = Q \overset{q}\To \1_\calC \]
+\[ \bbL\1_{\calC} = Q \overset{q}\To \1_{\calC} \]
 is a natural weak equivalence. These two natural weak equivalences descend to the components
-\[ \mu_{G,F}\!:\bfL G \circ \bfL F \cong \bfL(G\circ F),\quad \alpha_\calC\!:\1_{\ho(\calC)} \cong \bfL\1_\calC \]
+\[ \mu_{G,F}\!:\bfL G \circ \bfL F \cong \bfL(G\circ F),\quad \alpha_{\calC}\!:\1_{\ho(\calC)} \cong \bfL\1_{\calC} \]
 that we want. We leave it to the reader to check that these components form natural isomorphisms.
 
-We now prove (4). For the left diagram, it suffices to check that \( q \bbL F = \1_\calC q FQ \), but this holds by definition. For the right diagram, we are comparing
-\(\bbL Fq\) and \(Fq\1_\calC Q\). That is, the natural transformations \(FQq\) and \(FqQ\). By naturality, \(q\circ qQ = q\circ Qq\), so for all \(x\in\calC\), we have
+We now prove (4). For the left diagram, it suffices to check that \( q \bbL F = \1_{\calC} q FQ \), but this holds by definition. For the right diagram, we are comparing
+\(\bbL Fq\) and \(Fq\1_{\calC} Q\). That is, the natural transformations \(FQq\) and \(FqQ\). By naturality, \(q\circ qQ = q\circ Qq\), so for all \(x\in\calC\), we have
 \[ F(q)\circ F(q_{Qx}) = F(q)\circ F(Qq_x) \]
 which, if \(x\in\calC_Q\), implies that \(F(q_{Qx}) = F(Qq_x)\). In \(\ho(\calC)\), \(q\) provides an isomorphism between any object and a \(Q\)-cofibrant one, so this extends to everything in \(\ho(\calC)\).
 

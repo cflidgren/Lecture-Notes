@@ -1,25 +1,29 @@
-\usepackage[utf8]{inputenc}
-\tracinglostchars=3
+%\usepackage[utf8]{inputenc}
+%\tracinglostchars=3
 \usepackage{amsmath, amsfonts, amssymb, bm}
-
 \usepackage[dvipsnames]{xcolor}
-\usepackage{listings}
 \usepackage{verbatim,mathtools,graphicx}
-
-\usepackage[T1]{fontenc}
-\usepackage[scaled=.97,helvratio=.93,p,theoremfont]{newpxtext}
-\usepackage[varbb,smallerops,bigdelims]{newpxmath}
-\usepackage[scaled=.85]{beramono}
-\usepackage[scr=rsfso,cal=euler]{mathalfa}
-
 \usepackage{tikz, tikz-cd}
 \usepackage{enumitem,xparse,url}
 \usepackage[most]{tcolorbox}
 \usepackage{multirow,array}
 \usepackage{hyperref,bookmark}
 \usepackage{stmaryrd}
-\usepackage{fontspec}
 \usepackage{microtype}
+
+% font stuff, taken from Kaobook, but with a different caligraphic font
+\usepackage{unicode-math}
+\setromanfont[
+  Scale=1.04
+]{Libertinus Serif}
+\setsansfont[
+  Scale=1
+]{Libertinus Sans}
+\setmonofont[
+  Scale=.89
+]{Liberation Mono}
+\setmathfont{Libertinus Math}
+\setmathfont{Euler Math}[range=cal]
 
 % Renewed commands
 \renewcommand{\injlim}{\varinjlim}
@@ -30,15 +34,15 @@
 
 
 % TikZ stuff
-\newsavebox{\pullback}
-\sbox\pullback{%
+\newsavebox{\pullbacksq}
+\sbox\pullbacksq{%
 \begin{tikzpicture}%
-\draw (0,0) -- (1ex,0ex);%
-\draw (1ex,0ex) -- (1ex,1ex);%
+\draw ({0ex},{0ex}) -- ({1ex},{0ex});%
+\draw ({1ex},{0ex}) -- ({1ex},{1ex});%
 \end{tikzpicture}}
 
-\newsavebox{\pushout}
-\sbox\pushout{%
+\newsavebox{\pushoutsq}
+\sbox\pushoutsq{%
 \begin{tikzpicture}%
 \draw (0,0) -- (0ex,1ex);%
 \draw (0ex,1ex) -- (1ex,1ex);%
@@ -46,13 +50,14 @@
 
 \tikzset{
     labl/.style={anchor=north, rotate=90},
-    pullback/.style={commutative diagrams/phantom, "\usebox\pullback" , very near start},
-    pushout/.style={commutative diagrams/phantom, "\usebox\pushout" , very near start},
+    pullback/.style={commutative diagrams/phantom, "\usebox\pullbacksq" , very near start},
+    pushout/.style={commutative diagrams/phantom, "\usebox\pushoutsq" , very near start},
     symbol/.style={%
       draw=none,
       every to/.append style={edge node={node [sloped, allow upside down, auto=false]{$#1$}}}
     }
 }
+
 
 % Environments
 % warning box
@@ -200,36 +205,6 @@
   }
 }
 
-% fix the newtcbtheorem command to be more useful (broken, don't know how to fix this)
-\ExplSyntaxOn
-
-\NewDocumentCommand{\betternewtcbtheorem}{O{}mmmm}
- {
-  \newtcbtheorem[#1]{#2inner}{#3}{#4}{#5}
-  \NewDocumentEnvironment{#2}{O{}}
-   {
-    \keys_set:nn { hushus/tcb } { ##1 }
-    \hushus_tcb_begin:nVV {#2inner} \l__hushus_tcb_title_tl \l__hushus_tcb_label_tl
-   }
-   {
-    \end{#2inner}
-   }
-  \cs_if_exist:cF { c@#5} { \newcounter{#5} }
- }
-
-\cs_new_protected:Nn \hushus_tcb_begin:nnn
- {
-  \begin{#1}{#2}{#3}
- }
-\cs_generate_variant:Nn \hushus_tcb_begin:nnn { nVV }
-\keys_define:nn { hushus/tcb }
- {
-  title .tl_set:N = \l__hushus_tcb_title_tl,
-  label .tl_set:N = \l__hushus_tcb_label_tl,
- }
-
-\ExplSyntaxOff
-
 % Command for creating fancy theorem-like environments
 % Creates the title format for some parts.
 % args: display name, thesection, number (& added text for optional)
@@ -338,9 +313,9 @@
 \newcommand{\rdsq}{\rrbracket}
 \newcommand{\dashto}{\dashrightarrow}
 
-\newcommand{\vecb}{\mathbf}
 \newcommand{\lcm}{\operatorname{lcm}}
-\newcommand{\divides}{\mid}
+
+% arrows
 \newcommand{\longto}{\longrightarrow}
 \newcommand{\ot}{\leftarrow}
 \newcommand{\xto}{\xrightarrow}
@@ -351,177 +326,178 @@
 \newcommand{\To}{\Rightarrow}
 \newcommand{\longoT}{\Longleftarrow}
 
+% useful
 \newcommand{\fd}{\textup{f.d.}}
 \newcommand{\ev}{\operatorname{ev}}
 
 % mathbf
-\newcommand{\bfA}{\ensuremath{\mathbf{A}}}
-\newcommand{\bfB}{\ensuremath{\mathbf{B}}}
-\newcommand{\bfC}{\ensuremath{\mathbf{C}}}
-\newcommand{\bfD}{\ensuremath{\mathbf{D}}}
-\newcommand{\bfE}{\ensuremath{\mathbf{E}}}
-\newcommand{\bfF}{\ensuremath{\mathbf{F}}}
-\newcommand{\bfG}{\ensuremath{\mathbf{G}}}
-\newcommand{\bfH}{\ensuremath{\mathbf{H}}}
-\newcommand{\bfI}{\ensuremath{\mathbf{I}}}
-\newcommand{\bfJ}{\ensuremath{\mathbf{J}}}
-\newcommand{\bfK}{\ensuremath{\mathbf{K}}}
-\newcommand{\bfL}{\ensuremath{\mathbf{L}}}
-\newcommand{\bfM}{\ensuremath{\mathbf{M}}}
-\newcommand{\bfN}{\ensuremath{\mathbf{N}}}
-\newcommand{\bfO}{\ensuremath{\mathbf{O}}}
-\newcommand{\bfP}{\ensuremath{\mathbf{P}}}
-\newcommand{\bfQ}{\ensuremath{\mathbf{Q}}}
-\newcommand{\bfR}{\ensuremath{\mathbf{R}}}
-\newcommand{\bfS}{\ensuremath{\mathbf{S}}}
-\newcommand{\bfT}{\ensuremath{\mathbf{T}}}
-\newcommand{\bfU}{\ensuremath{\mathbf{U}}}
-\newcommand{\bfV}{\ensuremath{\mathbf{V}}}
-\newcommand{\bfW}{\ensuremath{\mathbf{W}}}
-\newcommand{\bfX}{\ensuremath{\mathbf{X}}}
-\newcommand{\bfY}{\ensuremath{\mathbf{Y}}}
-\newcommand{\bfZ}{\ensuremath{\mathbf{Z}}}
-\newcommand{\bfDelta}{\ensuremath{\mathbf{\Delta}}}
+\newcommand{\bfA}{\ensuremath{\symbf{A}}}
+\newcommand{\bfB}{\ensuremath{\symbf{B}}}
+\newcommand{\bfC}{\ensuremath{\symbf{C}}}
+\newcommand{\bfD}{\ensuremath{\symbf{D}}}
+\newcommand{\bfE}{\ensuremath{\symbf{E}}}
+\newcommand{\bfF}{\ensuremath{\symbf{F}}}
+\newcommand{\bfG}{\ensuremath{\symbf{G}}}
+\newcommand{\bfH}{\ensuremath{\symbf{H}}}
+\newcommand{\bfI}{\ensuremath{\symbf{I}}}
+\newcommand{\bfJ}{\ensuremath{\symbf{J}}}
+\newcommand{\bfK}{\ensuremath{\symbf{K}}}
+\newcommand{\bfL}{\ensuremath{\symbf{L}}}
+\newcommand{\bfM}{\ensuremath{\symbf{M}}}
+\newcommand{\bfN}{\ensuremath{\symbf{N}}}
+\newcommand{\bfO}{\ensuremath{\symbf{O}}}
+\newcommand{\bfP}{\ensuremath{\symbf{P}}}
+\newcommand{\bfQ}{\ensuremath{\symbf{Q}}}
+\newcommand{\bfR}{\ensuremath{\symbf{R}}}
+\newcommand{\bfS}{\ensuremath{\symbf{S}}}
+\newcommand{\bfT}{\ensuremath{\symbf{T}}}
+\newcommand{\bfU}{\ensuremath{\symbf{U}}}
+\newcommand{\bfV}{\ensuremath{\symbf{V}}}
+\newcommand{\bfW}{\ensuremath{\symbf{W}}}
+\newcommand{\bfX}{\ensuremath{\symbf{X}}}
+\newcommand{\bfY}{\ensuremath{\symbf{Y}}}
+\newcommand{\bfZ}{\ensuremath{\symbf{Z}}}
+\newcommand{\bfDelta}{\ensuremath{\symbf{\Delta}}}
 
 % mathsf
-\newcommand{\sfA}{\ensuremath{\mathsf{A}}}
-\newcommand{\sfB}{\ensuremath{\mathsf{B}}}
-\newcommand{\sfC}{\ensuremath{\mathsf{C}}}
-\newcommand{\sfD}{\ensuremath{\mathsf{D}}}
-\newcommand{\sfE}{\ensuremath{\mathsf{E}}}
-\newcommand{\sfF}{\ensuremath{\mathsf{F}}}
-\newcommand{\sfG}{\ensuremath{\mathsf{G}}}
-\newcommand{\sfH}{\ensuremath{\mathsf{H}}}
-\newcommand{\sfI}{\ensuremath{\mathsf{I}}}
-\newcommand{\sfJ}{\ensuremath{\mathsf{J}}}
-\newcommand{\sfK}{\ensuremath{\mathsf{K}}}
-\newcommand{\sfL}{\ensuremath{\mathsf{L}}}
-\newcommand{\sfM}{\ensuremath{\mathsf{M}}}
-\newcommand{\sfN}{\ensuremath{\mathsf{N}}}
-\newcommand{\sfO}{\ensuremath{\mathsf{O}}}
-\newcommand{\sfP}{\ensuremath{\mathsf{P}}}
-\newcommand{\sfQ}{\ensuremath{\mathsf{Q}}}
-\newcommand{\sfR}{\ensuremath{\mathsf{R}}}
-\newcommand{\sfS}{\ensuremath{\mathsf{S}}}
-\newcommand{\sfT}{\ensuremath{\mathsf{T}}}
-\newcommand{\sfU}{\ensuremath{\mathsf{U}}}
-\newcommand{\sfV}{\ensuremath{\mathsf{V}}}
-\newcommand{\sfW}{\ensuremath{\mathsf{W}}}
-\newcommand{\sfX}{\ensuremath{\mathsf{X}}}
-\newcommand{\sfY}{\ensuremath{\mathsf{Y}}}
-\newcommand{\sfZ}{\ensuremath{\mathsf{Z}}}
+\newcommand{\sfA}{\ensuremath{\symsf{A}}}
+\newcommand{\sfB}{\ensuremath{\symsf{B}}}
+\newcommand{\sfC}{\ensuremath{\symsf{C}}}
+\newcommand{\sfD}{\ensuremath{\symsf{D}}}
+\newcommand{\sfE}{\ensuremath{\symsf{E}}}
+\newcommand{\sfF}{\ensuremath{\symsf{F}}}
+\newcommand{\sfG}{\ensuremath{\symsf{G}}}
+\newcommand{\sfH}{\ensuremath{\symsf{H}}}
+\newcommand{\sfI}{\ensuremath{\symsf{I}}}
+\newcommand{\sfJ}{\ensuremath{\symsf{J}}}
+\newcommand{\sfK}{\ensuremath{\symsf{K}}}
+\newcommand{\sfL}{\ensuremath{\symsf{L}}}
+\newcommand{\sfM}{\ensuremath{\symsf{M}}}
+\newcommand{\sfN}{\ensuremath{\symsf{N}}}
+\newcommand{\sfO}{\ensuremath{\symsf{O}}}
+\newcommand{\sfP}{\ensuremath{\symsf{P}}}
+\newcommand{\sfQ}{\ensuremath{\symsf{Q}}}
+\newcommand{\sfR}{\ensuremath{\symsf{R}}}
+\newcommand{\sfS}{\ensuremath{\symsf{S}}}
+\newcommand{\sfT}{\ensuremath{\symsf{T}}}
+\newcommand{\sfU}{\ensuremath{\symsf{U}}}
+\newcommand{\sfV}{\ensuremath{\symsf{V}}}
+\newcommand{\sfW}{\ensuremath{\symsf{W}}}
+\newcommand{\sfX}{\ensuremath{\symsf{X}}}
+\newcommand{\sfY}{\ensuremath{\symsf{Y}}}
+\newcommand{\sfZ}{\ensuremath{\symsf{Z}}}
 
 % mathbb
-\newcommand{\bbA}{\ensuremath{\mathbb{A}}}
-\newcommand{\bbB}{\ensuremath{\mathbb{B}}}
-\newcommand{\bbC}{\ensuremath{\mathbb{C}}}
-\newcommand{\bbD}{\ensuremath{\mathbb{D}}}
-\newcommand{\bbE}{\ensuremath{\mathbb{E}}}
-\newcommand{\bbF}{\ensuremath{\mathbb{F}}}
-\newcommand{\bbG}{\ensuremath{\mathbb{G}}}
-\newcommand{\bbH}{\ensuremath{\mathbb{H}}}
-\newcommand{\bbI}{\ensuremath{\mathbb{I}}}
-\newcommand{\bbJ}{\ensuremath{\mathbb{J}}}
-\newcommand{\bbK}{\ensuremath{\mathbb{K}}}
-\newcommand{\bbL}{\ensuremath{\mathbb{L}}}
-\newcommand{\bbM}{\ensuremath{\mathbb{M}}}
-\newcommand{\bbN}{\ensuremath{\mathbb{N}}}
-\newcommand{\bbO}{\ensuremath{\mathbb{O}}}
-\newcommand{\bbP}{\ensuremath{\mathbb{P}}}
-\newcommand{\bbQ}{\ensuremath{\mathbb{Q}}}
-\newcommand{\bbR}{\ensuremath{\mathbb{R}}}
-\newcommand{\bbS}{\ensuremath{\mathbb{S}}}
-\newcommand{\bbT}{\ensuremath{\mathbb{T}}}
-\newcommand{\bbU}{\ensuremath{\mathbb{U}}}
-\newcommand{\bbV}{\ensuremath{\mathbb{V}}}
-\newcommand{\bbW}{\ensuremath{\mathbb{W}}}
-\newcommand{\bbX}{\ensuremath{\mathbb{X}}}
-\newcommand{\bbY}{\ensuremath{\mathbb{Y}}}
-\newcommand{\bbZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\bbA}{\ensuremath{\symbb{A}}}
+\newcommand{\bbB}{\ensuremath{\symbb{B}}}
+\newcommand{\bbC}{\ensuremath{\symbb{C}}}
+\newcommand{\bbD}{\ensuremath{\symbb{D}}}
+\newcommand{\bbE}{\ensuremath{\symbb{E}}}
+\newcommand{\bbF}{\ensuremath{\symbb{F}}}
+\newcommand{\bbG}{\ensuremath{\symbb{G}}}
+\newcommand{\bbH}{\ensuremath{\symbb{H}}}
+\newcommand{\bbI}{\ensuremath{\symbb{I}}}
+\newcommand{\bbJ}{\ensuremath{\symbb{J}}}
+\newcommand{\bbK}{\ensuremath{\symbb{K}}}
+\newcommand{\bbL}{\ensuremath{\symbb{L}}}
+\newcommand{\bbM}{\ensuremath{\symbb{M}}}
+\newcommand{\bbN}{\ensuremath{\symbb{N}}}
+\newcommand{\bbO}{\ensuremath{\symbb{O}}}
+\newcommand{\bbP}{\ensuremath{\symbb{P}}}
+\newcommand{\bbQ}{\ensuremath{\symbb{Q}}}
+\newcommand{\bbR}{\ensuremath{\symbb{R}}}
+\newcommand{\bbS}{\ensuremath{\symbb{S}}}
+\newcommand{\bbT}{\ensuremath{\symbb{T}}}
+\newcommand{\bbU}{\ensuremath{\symbb{U}}}
+\newcommand{\bbV}{\ensuremath{\symbb{V}}}
+\newcommand{\bbW}{\ensuremath{\symbb{W}}}
+\newcommand{\bbX}{\ensuremath{\symbb{X}}}
+\newcommand{\bbY}{\ensuremath{\symbb{Y}}}
+\newcommand{\bbZ}{\ensuremath{\symbb{Z}}}
 
 % mathcal
-\newcommand{\calA}{\ensuremath{\mathcal{A}}}
-\newcommand{\calB}{\ensuremath{\mathcal{B}}}
-\newcommand{\calC}{\ensuremath{\mathcal{C}}}
-\newcommand{\calD}{\ensuremath{\mathcal{D}}}
-\newcommand{\calE}{\ensuremath{\mathcal{E}}}
-\newcommand{\calF}{\ensuremath{\mathcal{F}}}
-\newcommand{\calG}{\ensuremath{\mathcal{G}}}
-\newcommand{\calH}{\ensuremath{\mathcal{H}}}
-\newcommand{\calI}{\ensuremath{\mathcal{I}}}
-\newcommand{\calJ}{\ensuremath{\mathcal{J}}}
-\newcommand{\calK}{\ensuremath{\mathcal{K}}}
-\newcommand{\calL}{\ensuremath{\mathcal{L}}}
-\newcommand{\calM}{\ensuremath{\mathcal{M}}}
-\newcommand{\calN}{\ensuremath{\mathcal{N}}}
-\newcommand{\calO}{\ensuremath{\mathcal{O}}}
-\newcommand{\calP}{\ensuremath{\mathcal{P}}}
-\newcommand{\calQ}{\ensuremath{\mathcal{Q}}}
-\newcommand{\calR}{\ensuremath{\mathcal{R}}}
-\newcommand{\calS}{\ensuremath{\mathcal{S}}}
-\newcommand{\calT}{\ensuremath{\mathcal{T}}}
-\newcommand{\calU}{\ensuremath{\mathcal{U}}}
-\newcommand{\calV}{\ensuremath{\mathcal{V}}}
-\newcommand{\calW}{\ensuremath{\mathcal{W}}}
-\newcommand{\calX}{\ensuremath{\mathcal{X}}}
-\newcommand{\calY}{\ensuremath{\mathcal{Y}}}
-\newcommand{\calZ}{\ensuremath{\mathcal{Z}}}
+\newcommand{\calA}{\ensuremath{\symcal{A}}}
+\newcommand{\calB}{\ensuremath{\symcal{B}}}
+\newcommand{\calC}{\ensuremath{\symcal{C}}}
+\newcommand{\calD}{\ensuremath{\symcal{D}}}
+\newcommand{\calE}{\ensuremath{\symcal{E}}}
+\newcommand{\calF}{\ensuremath{\symcal{F}}}
+\newcommand{\calG}{\ensuremath{\symcal{G}}}
+\newcommand{\calH}{\ensuremath{\symcal{H}}}
+\newcommand{\calI}{\ensuremath{\symcal{I}}}
+\newcommand{\calJ}{\ensuremath{\symcal{J}}}
+\newcommand{\calK}{\ensuremath{\symcal{K}}}
+\newcommand{\calL}{\ensuremath{\symcal{L}}}
+\newcommand{\calM}{\ensuremath{\symcal{M}}}
+\newcommand{\calN}{\ensuremath{\symcal{N}}}
+\newcommand{\calO}{\ensuremath{\symcal{O}}}
+\newcommand{\calP}{\ensuremath{\symcal{P}}}
+\newcommand{\calQ}{\ensuremath{\symcal{Q}}}
+\newcommand{\calR}{\ensuremath{\symcal{R}}}
+\newcommand{\calS}{\ensuremath{\symcal{S}}}
+\newcommand{\calT}{\ensuremath{\symcal{T}}}
+\newcommand{\calU}{\ensuremath{\symcal{U}}}
+\newcommand{\calV}{\ensuremath{\symcal{V}}}
+\newcommand{\calW}{\ensuremath{\symcal{W}}}
+\newcommand{\calX}{\ensuremath{\symcal{X}}}
+\newcommand{\calY}{\ensuremath{\symcal{Y}}}
+\newcommand{\calZ}{\ensuremath{\symcal{Z}}}
 
 % mathscr
-\newcommand{\scrA}{\ensuremath{\mathscr{A}}}
-\newcommand{\scrB}{\ensuremath{\mathscr{B}}}
-\newcommand{\scrC}{\ensuremath{\mathscr{C}}}
-\newcommand{\scrD}{\ensuremath{\mathscr{D}}}
-\newcommand{\scrE}{\ensuremath{\mathscr{E}}}
-\newcommand{\scrF}{\ensuremath{\mathscr{F}}}
-\newcommand{\scrG}{\ensuremath{\mathscr{G}}}
-\newcommand{\scrH}{\ensuremath{\mathscr{H}}}
-\newcommand{\scrI}{\ensuremath{\mathscr{I}}}
-\newcommand{\scrJ}{\ensuremath{\mathscr{J}}}
-\newcommand{\scrK}{\ensuremath{\mathscr{K}}}
-\newcommand{\scrL}{\ensuremath{\mathscr{L}}}
-\newcommand{\scrM}{\ensuremath{\mathscr{M}}}
-\newcommand{\scrN}{\ensuremath{\mathscr{N}}}
-\newcommand{\scrO}{\ensuremath{\mathscr{O}}}
-\newcommand{\scrP}{\ensuremath{\mathscr{P}}}
-\newcommand{\scrQ}{\ensuremath{\mathscr{Q}}}
-\newcommand{\scrR}{\ensuremath{\mathscr{R}}}
-\newcommand{\scrS}{\ensuremath{\mathscr{S}}}
-\newcommand{\scrT}{\ensuremath{\mathscr{T}}}
-\newcommand{\scrU}{\ensuremath{\mathscr{U}}}
-\newcommand{\scrV}{\ensuremath{\mathscr{V}}}
-\newcommand{\scrW}{\ensuremath{\mathscr{W}}}
-\newcommand{\scrX}{\ensuremath{\mathscr{X}}}
-\newcommand{\scrY}{\ensuremath{\mathscr{Y}}}
-\newcommand{\scrZ}{\ensuremath{\mathscr{Z}}}
+\newcommand{\scrA}{\ensuremath{\symscr{A}}}
+\newcommand{\scrB}{\ensuremath{\symscr{B}}}
+\newcommand{\scrC}{\ensuremath{\symscr{C}}}
+\newcommand{\scrD}{\ensuremath{\symscr{D}}}
+\newcommand{\scrE}{\ensuremath{\symscr{E}}}
+\newcommand{\scrF}{\ensuremath{\symscr{F}}}
+\newcommand{\scrG}{\ensuremath{\symscr{G}}}
+\newcommand{\scrH}{\ensuremath{\symscr{H}}}
+\newcommand{\scrI}{\ensuremath{\symscr{I}}}
+\newcommand{\scrJ}{\ensuremath{\symscr{J}}}
+\newcommand{\scrK}{\ensuremath{\symscr{K}}}
+\newcommand{\scrL}{\ensuremath{\symscr{L}}}
+\newcommand{\scrM}{\ensuremath{\symscr{M}}}
+\newcommand{\scrN}{\ensuremath{\symscr{N}}}
+\newcommand{\scrO}{\ensuremath{\symscr{O}}}
+\newcommand{\scrP}{\ensuremath{\symscr{P}}}
+\newcommand{\scrQ}{\ensuremath{\symscr{Q}}}
+\newcommand{\scrR}{\ensuremath{\symscr{R}}}
+\newcommand{\scrS}{\ensuremath{\symscr{S}}}
+\newcommand{\scrT}{\ensuremath{\symscr{T}}}
+\newcommand{\scrU}{\ensuremath{\symscr{U}}}
+\newcommand{\scrV}{\ensuremath{\symscr{V}}}
+\newcommand{\scrW}{\ensuremath{\symscr{W}}}
+\newcommand{\scrX}{\ensuremath{\symscr{X}}}
+\newcommand{\scrY}{\ensuremath{\symscr{Y}}}
+\newcommand{\scrZ}{\ensuremath{\symscr{Z}}}
 
 % mathfrak
-\newcommand{\frakA}{\ensuremath{\mathfrak{A}}}
-\newcommand{\frakB}{\ensuremath{\mathfrak{B}}}
-\newcommand{\frakC}{\ensuremath{\mathfrak{C}}}
-\newcommand{\frakD}{\ensuremath{\mathfrak{D}}}
-\newcommand{\frakE}{\ensuremath{\mathfrak{E}}}
-\newcommand{\frakF}{\ensuremath{\mathfrak{F}}}
-\newcommand{\frakG}{\ensuremath{\mathfrak{G}}}
-\newcommand{\frakH}{\ensuremath{\mathfrak{H}}}
-\newcommand{\frakI}{\ensuremath{\mathfrak{I}}}
-\newcommand{\frakJ}{\ensuremath{\mathfrak{J}}}
-\newcommand{\frakK}{\ensuremath{\mathfrak{K}}}
-\newcommand{\frakL}{\ensuremath{\mathfrak{L}}}
-\newcommand{\frakM}{\ensuremath{\mathfrak{M}}}
-\newcommand{\frakN}{\ensuremath{\mathfrak{N}}}
-\newcommand{\frakO}{\ensuremath{\mathfrak{O}}}
-\newcommand{\frakP}{\ensuremath{\mathfrak{P}}}
-\newcommand{\frakQ}{\ensuremath{\mathfrak{Q}}}
-\newcommand{\frakR}{\ensuremath{\mathfrak{R}}}
-\newcommand{\frakS}{\ensuremath{\mathfrak{S}}}
-\newcommand{\frakT}{\ensuremath{\mathfrak{T}}}
-\newcommand{\frakU}{\ensuremath{\mathfrak{U}}}
-\newcommand{\frakV}{\ensuremath{\mathfrak{V}}}
-\newcommand{\frakW}{\ensuremath{\mathfrak{W}}}
-\newcommand{\frakX}{\ensuremath{\mathfrak{X}}}
-\newcommand{\frakY}{\ensuremath{\mathfrak{Y}}}
-\newcommand{\frakZ}{\ensuremath{\mathfrak{Z}}}
+\newcommand{\frakA}{\ensuremath{\symfrak{A}}}
+\newcommand{\frakB}{\ensuremath{\symfrak{B}}}
+\newcommand{\frakC}{\ensuremath{\symfrak{C}}}
+\newcommand{\frakD}{\ensuremath{\symfrak{D}}}
+\newcommand{\frakE}{\ensuremath{\symfrak{E}}}
+\newcommand{\frakF}{\ensuremath{\symfrak{F}}}
+\newcommand{\frakG}{\ensuremath{\symfrak{G}}}
+\newcommand{\frakH}{\ensuremath{\symfrak{H}}}
+\newcommand{\frakI}{\ensuremath{\symfrak{I}}}
+\newcommand{\frakJ}{\ensuremath{\symfrak{J}}}
+\newcommand{\frakK}{\ensuremath{\symfrak{K}}}
+\newcommand{\frakL}{\ensuremath{\symfrak{L}}}
+\newcommand{\frakM}{\ensuremath{\symfrak{M}}}
+\newcommand{\frakN}{\ensuremath{\symfrak{N}}}
+\newcommand{\frakO}{\ensuremath{\symfrak{O}}}
+\newcommand{\frakP}{\ensuremath{\symfrak{P}}}
+\newcommand{\frakQ}{\ensuremath{\symfrak{Q}}}
+\newcommand{\frakR}{\ensuremath{\symfrak{R}}}
+\newcommand{\frakS}{\ensuremath{\symfrak{S}}}
+\newcommand{\frakT}{\ensuremath{\symfrak{T}}}
+\newcommand{\frakU}{\ensuremath{\symfrak{U}}}
+\newcommand{\frakV}{\ensuremath{\symfrak{V}}}
+\newcommand{\frakW}{\ensuremath{\symfrak{W}}}
+\newcommand{\frakX}{\ensuremath{\symfrak{X}}}
+\newcommand{\frakY}{\ensuremath{\symfrak{Y}}}
+\newcommand{\frakZ}{\ensuremath{\symfrak{Z}}}
 
 
 % Calculus, transforms, and other stuff
@@ -534,20 +510,20 @@
 \newcommand{\sinc}{\mathrm{sinc}}
 
 % Common Sets
-\newcommand{\Z}{\mathbb{Z}}
-\newcommand{\Q}{\mathbb{Q}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\D}{\mathbb{D}}
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\E}{\mathbb{E}}
-\newcommand{\F}{\mathbb{F}}
-\newcommand{\G}{\mathbb{G}}
-\newcommand{\A}{\mathbb{A}}
-\newcommand{\TT}{\mathbb{T}}
-\newcommand{\PP}{\mathbb{P}}
+\newcommand{\Z}{\symbb{Z}}
+\newcommand{\Q}{\symbb{Q}}
+\newcommand{\R}{\symbb{R}}
+\newcommand{\C}{\symbb{C}}
+\newcommand{\D}{\symbb{D}}
+\newcommand{\N}{\symbb{N}}
+\newcommand{\E}{\symbb{E}}
+\newcommand{\F}{\symbb{F}}
+\newcommand{\G}{\symbb{G}}
+\newcommand{\A}{\symbb{A}}
+\newcommand{\TT}{\symbb{T}}
+\newcommand{\PP}{\symbb{P}}
 \newcommand{\pow}{
-  \mathcal{P}
+  \symcal{P}
 }
 
 % Algebra
@@ -559,7 +535,7 @@
 \newcommand{\nor}{\text{nor}}
 \newcommand{\red}{\mathrm{red}}
 \newcommand{\gal}{\text{gal}}
-\newcommand{\ideal}{\mathfrak}
+\newcommand{\ideal}{\symfrak}
 \newcommand{\GL}{\operatorname{GL}}
 \newcommand{\SL}{\operatorname{SL}}
 \newcommand{\M}{\operatorname{M}}
@@ -581,11 +557,11 @@
 \newcommand{\spec}{\operatorname{Spec}}
 \newcommand{\Spec}{\operatorname{Spec}}
 \newcommand{\Proj}{\operatorname{Proj}}
-\newcommand{\Ox}{\mathcal{O}}
+\newcommand{\Ox}{\symcal{O}}
 \newcommand{\Open}{\operatorname{Open}}
 \newcommand{\Char}{\operatorname{char}}
 \newcommand{\Span}{\operatorname{Span}}
-\newcommand{\intO}{\mathscr{O}}
+\newcommand{\intO}{\symscr{O}}
 \newcommand{\Pic}{\operatorname{Pic}}
 \newcommand{\Ext}{\operatorname{Ext}}
 \newcommand{\KProj}{\operatorname{KProj}}
@@ -616,9 +592,6 @@
 \newcommand{\hh}{\operatorname{h}}
 \newcommand{\mult}{\operatorname{mult}}
 \newcommand{\codim}{\operatorname{codim}}
-\newcommand{\model}{\mathcal}
-\newcommand{\Gm}[1][]{\mathbf{G}_{\mathrm{m} #1}}
-\newcommand{\Ga}[1][]{\mathbf{G}_{\mathrm{a} #1}}
 \newcommand{\Sp}{\mathrm{Sp}}
 \newcommand{\Sk}{\operatorname{Sk}}
 \newcommand{\Sing}{\operatorname{Sing}}
@@ -637,16 +610,16 @@
 \newcommand{\Hom}{\operatorname{Hom}}
 \newcommand{\Map}{\operatorname{Map}}
 \newcommand{\iHom}{\underline{\Hom}}
-\newcommand{\SHom}{\mathcal{H}\hspace{-0.0833em}om}
+\newcommand{\SHom}{\symcal{H}\hspace{-0.0833em}om}
 \newcommand{\Mor}{\operatorname{Mor}}
 \newcommand{\Fun}{\operatorname{Fun}}
 \newcommand{\Nat}{\operatorname{Nat}}
 \newcommand{\Der}{\operatorname{Der}}
 \newcommand{\hocolim}{\operatorname{hocolim}}
-\newcommand{\sheaf}{\mathscr}
+\newcommand{\sheaf}{\symscr}
 \newcommand{\sh}{\text{sh}}
-\newcommand{\cat}{\mathbf}
-\newcommand{\natcat}[1]{ \mathbf{[#1]} }
+\newcommand{\cat}{\symbf}
+\newcommand{\natcat}[1]{ \symbf{[#1]} }
 \newcommand{\dom}{\operatorname{dom}}
 \newcommand{\cod}{\operatorname{cod}}
 \newcommand{\id}{\mathrm{id}}
@@ -683,7 +656,7 @@
 \newcommand{\RMod}[1][R]{#1\text{-}\cat{Mod}}
 \newcommand{\ModR}[1][R]{\cat{Mod}\text{-}#1}
 \newcommand{\RAlg}[1][R]{#1\text{-}\cat{Alg}}
-\renewcommand{\Top}{\cat{Top}}
+\newcommand{\Top}{\cat{Top}}
 %\@ifundefined{Top}{\newcommand{\Top}{\cat{Top}}}{\renewcommand{\Top}{\cat{Top}}}
 \newcommand{\SMan}{\cat{SMan}}
 \newcommand{\SmMan}{\cat{SmMan}}
@@ -700,25 +673,3 @@
 \newcommand{\AffSch}{\cat{AffSch}}
 \newcommand{\sSet}{\cat{sSet}}
 \newcommand{\Ch}{\cat{Ch}}
-
-% Python Code Highlighting Style
-\definecolor{codebg}{rgb}{0.9,0.9,0.9}
-\lstdefinestyle{pythoncode}{
-  backgroundcolor=\color{codebg},
-  commentstyle=\color{Green},
-  keywordstyle=\color{Magenta},
-  numberstyle=\tiny\color{Gray},
-  stringstyle=\color{ForestGreen},
-  basicstyle=\footnotesize,
-  breakatwhitespace=false,
-  breaklines=true,
-  captionpos=b,
-  keepspaces=true,
-  numbers=left,
-  numbersep=5pt,
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  tabsize=3
-}
-\lstset{style=pythoncode}

@@ -294,10 +294,12 @@ We provide a few arguments to give a taste of the kinds of proofs that are invol
 \end{proposition}
 \begin{proof}
 We have a pushout square
-\begin{diagram*}
+\[
+\begin{tikzcd}
 	0 \ar[r]\ar[d] & y\ar[d] \\
 	x \ar[r,"\iota"] & x\oplus y\ar[ul,pushout]
-\end{diagram*}
+\end{tikzcd}
+\]
 and since \(0\to y\) is an inflation, it follows that \(\iota\) is an inflation. Since \(\pi\) is the cokernel of \(\iota\), it is a deflation and
 \begin{diagram*}
 	x\ar[r,"\iota"] & x \oplus y\ar[r,"\pi"] & y
@@ -312,7 +314,7 @@ One can prove various additional results, but since we do not aim to give an act
 
 
 
-\subsection{Appendix: An aside on stable \(\infty\)-categories}
+\subsection{Appendix: An aside on stable ∞-categories}
 Abelian categories form a convenient setting to formalize the properties of categories like \(\Ab\), and with which to develop homological algebra. However,
 it has certain deficiencies. The most natural way to formalize homological algebra is through the use of \emph{derived categories} \(\sfD(\calA)\) of Abelian
 categories \(\calA\). The way to understand these is as follows: in homological algebra, one studies properties of chain complexes that only depend on the cohomologies

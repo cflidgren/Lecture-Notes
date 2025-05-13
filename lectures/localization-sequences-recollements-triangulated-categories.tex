@@ -138,7 +138,7 @@ We will be interested in exact sequences with nice properties.
 \end{theorem}
 \begin{proof}
 The statements (1) and (2) are dual, so it suffices to prove (1). By Lemma \ref{lemma:fully-faithful-adjoint}, we know that \(R\) is fully faithful if and only if the counit
-\(\varepsilon\!:LR\To\1_\calD\) is a natural isomorphism, so we must show that this occurs if and only if \(L'\) is an equivalence. Let \(\eta\!:\1_\calC\To RL\) be the unit,
+\(\varepsilon\!:LR\To\1_{\calD}\) is a natural isomorphism, so we must show that this occurs if and only if \(L'\) is an equivalence. Let \(\eta\!:\1_{\calC}\To RL\) be the unit,
 and let \(\gamma_L\!:\calC\to\calC[W_L^{-1}]\) be the localization functor.
 
 Assume that \(\varepsilon\) is a natural isomorphism. We show that \(\gamma_L R\) is an inverse to \(L'\). One composition is easy:
@@ -149,14 +149,14 @@ One deduces that \(\gamma_L\eta\!:\gamma_L\To\gamma_L RL\) is a natural isomorph
 \[ \gamma_L RL'\gamma_L \cong \gamma_L RL \cong \gamma_L \]
 which by universal property implies that \(\gamma_L R L'\cong\1\).
 
-Conversely, assume that \(L'\!:\calC[W_L^{-1}]\simeq\calD\). We show that \(\1_\calD\) is left adjoint to \(LR\) with counit \(\varepsilon\); in that case, the adjunction map \(\calD(x,y)\cong\calD(x,LRy)\)
+Conversely, assume that \(L'\!:\calC[W_L^{-1}]\simeq\calD\). We show that \(\1_{\calD}\) is left adjoint to \(LR\) with counit \(\varepsilon\); in that case, the adjunction map \(\calD(x,y)\cong\calD(x,LRy)\)
 tells us that the counit components \(\varepsilon_y\!: LRy\to y\) are isomorphisms. So, to this end, note that for any category \(\calD'\), composition with \(L\)
 gives a fully faithful functor \(L^*\!:\Fun(\calD,\calD')\to\Fun(\calC,\calD')\), as it is naturally isomorphic to the composite
 \begin{diagram*}
 	\Fun(\calD,\calD') \ar[r,"\sim","(\circ L')"'] & \Fun(\calC[W_L^{-1}],\calD') \ar[r,"\sim","(\circ\gamma_L)"'] & \Fun_{W_L}(\calC,\calD') \ar[r,hook] & \Fun(\calC,\calD').
 \end{diagram*}
 Choosing \(\calD' = \calD\), composition with \(L\) gives a fully faithful functor \(\Fun(\calD,\calD)\to\Fun(\calC,\calD)\), and in particular, we may find a natural
-transformation \(\eta'\!:\1_\calD\To LR\) in the preimage of \(L\eta\!:L\To LRL\), so that \(L\eta = \eta'L\). This \(\eta'\) will be our unit. It remains
+transformation \(\eta'\!:\1_{\calD}\To LR\) in the preimage of \(L\eta\!:L\To LRL\), so that \(L\eta = \eta'L\). This \(\eta'\) will be our unit. It remains
 to check the triangle identities; from the ones for the adjunction \(L \ladj R\), we have
 \[ \id_L = \varepsilon L\circ L\eta = \varepsilon L \circ \eta'L = (\varepsilon\circ\eta')L \]
 which provides one of the triangle identities. For the other, note that we have
@@ -352,7 +352,7 @@ In a recollement
 the functor \(i_R\circ p_L\) is sometimes referred to as the \emph{gluing functor.} This can be made sense of using the above example of sheaves: the functor \(j_!\) is given
 by ``extending by zero'' while \(i^!\) considers those sections with support in \(Z\).
 
-\subsection{Appendix: Verdier quotients of stable \(\infty\)-categories as cofibers}
+\subsection{Appendix: Verdier quotients of stable ∞-categories as cofibers}
 The appropriate \(\infty\)-categorical version of triangulated categories is given by stable \(\infty\)-categories. A natural question is thus to ask in
 what form the Verdier quotient construction appears in the theory of stable \(\infty\)-categories. There is one evident approach: do the same thing as we did
 for triangulated categories. That is, given a stable \(\infty\)-category \(\calD\), we consider a stable subcategory \(\calC\inj\calD\), and form

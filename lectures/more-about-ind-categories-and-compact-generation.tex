@@ -48,25 +48,25 @@ the intuitive sense) can be written as the Ind-category of those compact objects
 \end{remark}
 \begin{notation}
 	Let \(\calC\) be a category. We denote by
-	\[ \yo = \yo_\calC\!:\calC\inj\PSh(\calC),\quad x\mapsto \yo(x) := h_x \]
+	\[ \yo = \yo_{\calC}\!:\calC\inj\PSh(\calC),\quad x\mapsto \yo(x) := h_x \]
 	the Yoneda embedding.
 \end{notation}
 \begin{lemma}\label{lemma:presheaves-are-colimits-of-representable-functors}
 	Let \(\calC\) be a category, and let \(A\) be a presheaf on \(\calC\). Then
-	\[ A = \injlim(\yo_\calC\circ\pi_A). \]
+	\[ A = \injlim(\yo_{\calC}\circ\pi_A). \]
 	Colloquially,
 	\[ A = \injlim_{h_x\to A}h_x. \]
 \end{lemma}
 \begin{proof}
 Observe that we trivially have a collection of morphisms \(\{a\!:h_x\to A\}_{(x,a)\in\calC/A}\) compatible with the morphisms in \(\calC/A\). In other words,
-we have a cone under \(\yo_\calC\circ\pi_A\) with tip \(A\). Suppose we have another such cone \(\{b_{x,a}\!:h_x\to B\}_{(x,a)\in\calC/A}\). By the Yoneda lemma,
+we have a cone under \(\yo_{\calC}\circ\pi_A\) with tip \(A\). Suppose we have another such cone \(\{b_{x,a}\!:h_x\to B\}_{(x,a)\in\calC/A}\). By the Yoneda lemma,
 this uniquely induces a morphism \(\alpha\!:A\to B\) for which the diagram
 \begin{diagram*}[cramped, column sep=small]
 	& h_x\ar[dl,"a"']\ar[dr,"b_{x,a}"] & \\
 	A\ar[rr,"\alpha"] & & B
 \end{diagram*}
 commutes. In particular, the natural transformation \(\alpha\) is given by \(\alpha_x(a) := b_{x,a}\), where we identify the morphisms with their
-corresponding elements under the Yoneda lemma. It follows that \(A\) forms a colimit of \(\yo_\calC\circ\pi_A\), as desired.
+corresponding elements under the Yoneda lemma. It follows that \(A\) forms a colimit of \(\yo_{\calC}\circ\pi_A\), as desired.
 \end{proof}
 \begin{corollary}
 	Let \(\calC\) be a category, and let \(x\in\calC\). Then, for all \(z\in\calC\), we have a natural isomorphism
@@ -78,7 +78,7 @@ corresponding elements under the Yoneda lemma. It follows that \(A\) forms a col
 		\calC/A\ar[r]\ar[dr,hook,"\yo"'] & \PSh(\calC)/A\ar[d,"\sim" labl] \\
 		& \PSh(\calC/A)
 	\end{diagram*}
-	commutes, where the functor \(\calC/A\to\PSh(\calC)/A\) is the canonical inclusion induced by the Yoneda embedding \(\yo_\calC\!:\calC\inj\PSh(\calC)\).
+	commutes, where the functor \(\calC/A\to\PSh(\calC)/A\) is the canonical inclusion induced by the Yoneda embedding \(\yo_{\calC}\!:\calC\inj\PSh(\calC)\).
 \end{exercise}
 
 \begin{lemma}\label{lemma:category-of-elements-induced-colimits}
@@ -106,7 +106,7 @@ One easily sees that this is a colimit of \(D\).
 \begin{proof}
 Assume (1), and let \(D\!:I\to\calC\) be a \(\kappa\)-small diagram. Then
 \begin{align*}
-	A(\injlim{D}) &= \injlim(\yo_\calC\circ\pi_A)(\injlim{D})\\
+	A(\injlim{D}) &= \injlim(\yo_{\calC}\circ\pi_A)(\injlim{D})\\
 	&= \injlim_{h_x\to A}\calC(\injlim_{i\in I}{D(i)},x)\\
 	&= \injlim_{h_x\to A}\projlim_{i\in I}\calC(D(i),x)\\
 	&\cong \projlim_{i\in I}\injlim_{h_x\to A}\calC(D(i),x) = \projlim_{i\in I}A(D(i))
@@ -146,7 +146,7 @@ See \cite[Prop.\ 2.5.2]{kashiwara-schapira-book}.
 
 \begin{construction}
 	Consider a locally small category \(\calC\) and a small diagram \(D\!:I\to\calC\). We can form the formal colimit of \(D\) by taking the colimit
-	\[ A := \injlim(\yo_\calC\circ D) \]
+	\[ A := \injlim(\yo_{\calC}\circ D) \]
 	in the category of presheaves. Let \(h_i\!:h_{D(i)}\to A\) be the canonical morphism. This induces a new diagram
 	\[ \tilde{D}\!:I\to\calC/A \]
 	given by \(i\mapsto (D(i), h_i)\) on objects, and \((t\!:i\to i')\mapsto Dt\) on morphisms.
@@ -197,14 +197,14 @@ We will use condition (2) in Theorem \ref{thm:ind-equivalent-characterizations} 
 cofinally small, as it requires a very technical argument about the interplay between cofinality and \(\kappa\)-filteredness. A proof can be found in \cite[Thm.\ 6.1.8]{kashiwara-schapira-book}.
 
 To see that \(\calC/A\) is \(\kappa\)-filtered, consider a diagram \(K\!:J\to\calC/A\) where \(J\) is \(\kappa\)-small. We need to find a cone under \(K\).
-Let \(u_i\!:h_{D(i)}\to A\) be the canonical maps, and write \(\widehat\calC := \PSh(\calC)\). For any \((x,a)\in\calC/A\), we have
+Let \(u_i\!:h_{D(i)}\to A\) be the canonical maps, and write \(\widehat{\calC} := \PSh(\calC)\). For any \((x,a)\in\calC/A\), we have
 \begin{align*}
-	(\widehat\calC/A)(h_x\to A,A\overset{\id}\to A)) &\cong \injlim_{i\in I}(\widehat\calC/A)(h_x\to A,h_{D(i)}\overset{u_i}\to A))\\
+	(\widehat{\calC}/A)(h_x\to A,A\overset{\id}\to A)) &\cong \injlim_{i\in I}(\widehat{\calC}/A)(h_x\to A,h_{D(i)}\overset{u_i}\to A))\\
 	&\cong \injlim_{i\in I}\injlim_{(y\to D(i))\in\calC/D(i)}\calC(x,y).
 \end{align*}
 Now, \(I\) is \(\kappa\)-filtered by assumption, and \(\calC/D(i)\) has a terminal object and in hence \(\kappa\)-filtered, and therefore
 \begin{align*}
-	\{*\} &\cong \projlim_{j\in J}(\widehat\calC/A)(K(j),A\overset{\id}\to A) \\
+	\{*\} &\cong \projlim_{j\in J}(\widehat{\calC}/A)(K(j),A\overset{\id}\to A) \\
 	&\cong \projlim_{j\in J}\injlim_{i\in I}\injlim_{(y\to D(i))\in\calC/D(i)}\calC(K(j),y) \\
 	&\cong \injlim_{i\in I}\injlim_{(y\to D(i))\in\calC/D(i)}\projlim_{j\in J}\calC(K(j),y) \\
 \end{align*}
@@ -220,18 +220,18 @@ otherwise the technical details riks obscuring the fundamental ideas, which are 
 	Let \(\calC\) be a small category, \(\calD\) a locally small category, and let \(\kappa\) be an infinite regular cardinal. Consider a functor \(F\!:\calC\to\calD\). Then
 	there is a unique functor \(\Ind_\kappa(F)\!:\Ind_\kappa(\calC)\to\Ind_\kappa(\calD)\) commuting with small \(\kappa\)-filtered colimits and for which the diagram
 	\begin{diagram*}
-		\calC\ar[r,"F"]\ar[d,hook,"\yo_\calC"'] & \calD \ar[d,hook,"\yo_\calD"] \\
+		\calC\ar[r,"F"]\ar[d,hook,"\yo_{\calC}"'] & \calD \ar[d,hook,"\yo_{\calD}"] \\
 		\Ind_\kappa(\calC)\ar[r,"\Ind_\kappa(F)"] & \Ind_\kappa(\calD)
 	\end{diagram*}
 	commutes.
 \end{proposition}
 \begin{proof}
 Let \(A\in\Ind_\kappa(\calC)\). Then we have
-\[  A = \injlim(\calC/A\overset{\pi_A}\longto\calC\overset{\yo_\calC}\longto\Ind_\kappa(\calC)). \]
+\[  A = \injlim(\calC/A\overset{\pi_A}\longto\calC\overset{\yo_{\calC}}\longto\Ind_\kappa(\calC)). \]
 Since \(\calC\) is small, \(\calC/A\) is also small. In particular, for \(\Ind_\kappa(F)\) to commute with small \(\kappa\)-filtered colimits and for the diagram to commute, we must have
-\[ \Ind_\kappa(F)(A) = \injlim(\yo_\calD\circ F\circ\pi_A) \]
+\[ \Ind_\kappa(F)(A) = \injlim(\yo_{\calD}\circ F\circ\pi_A) \]
 and for a morphism \(A\to B\) in \(\Ind_\kappa(\calC)\), the morphism \(\Ind_\kappa(F)(A)\to\Ind_\kappa(F)(B)\) must be the canonical morphism
-\[ \injlim(\yo_\calD\circ F\circ\pi_A) \to \injlim(\yo_\calD\circ F\circ\pi_B). \]
+\[ \injlim(\yo_{\calD}\circ F\circ\pi_A) \to \injlim(\yo_{\calD}\circ F\circ\pi_B). \]
 So we define a unique functor by these requirements.
 \end{proof}
 
@@ -241,14 +241,14 @@ formal cocompletion of \(\calC\) with respect to \(\kappa\)-filtered colimits.
 \begin{lemma}
 	Let \(\calC\) be a locally small category admitting small \(\kappa\)-filtered colimits for some infinite regular cardinal \(\kappa\).
 	\begin{enumerate}[label=(\arabic*)]
-	\item The functor \(\yo_\calC\!:\calC\to\Ind_\kappa(\calC)\) admits a left adjoint \(\sigma_\calC\!:\Ind_\kappa(\calC)\to\calC\), taking a ``formal'' \(\kappa\)-filtered
+	\item The functor \(\yo_{\calC}\!:\calC\to\Ind_\kappa(\calC)\) admits a left adjoint \(\sigma_{\calC}\!:\Ind_\kappa(\calC)\to\calC\), taking a ``formal'' \(\kappa\)-filtered
 	colimit to its actual colimit object in \(\calC\).
-	\item The functors compose to give \(\sigma_\calC\circ\yo_\calC \cong \1_\calC\).
+	\item The functors compose to give \(\sigma_{\calC}\circ\yo_{\calC} \cong \1_{\calC}\).
 	\end{enumerate}
 \end{lemma}
 \begin{proof}
 Given the construction below (2) is clear, so we do not prove it explicitly. For (1), let \(A\in\Ind_\kappa(\calC)\), \(x\in\calC\). Then we have natural isomorphisms
-\[ \Ind_\kappa(\calC)(A,\yo_\calC(x)) \cong \projlim\Ind_\kappa(\calC)(\yo_\calC\circ\pi_A,\yo_\calC(x)) \cong \projlim\calC(\pi_A,x) \cong \calC(\injlim\pi_A,x)  \]
+\[ \Ind_\kappa(\calC)(A,\yo_{\calC}(x)) \cong \projlim\Ind_\kappa(\calC)(\yo_{\calC}\circ\pi_A,\yo_{\calC}(x)) \cong \projlim\calC(\pi_A,x) \cong \calC(\injlim\pi_A,x)  \]
 so we are done, since the colimit \(\injlim\pi_A\) exists on account of \(\calC/A\) being cofinally small and \(\kappa\)-filtered.
 \end{proof}
 \begin{theorem}
@@ -263,7 +263,7 @@ so we are done, since the colimit \(\injlim\pi_A\) exists on account of \(\calC/
 \end{theorem}
 \begin{proof}
 The functor \(F'\) is given by the composition
-\[ \Ind_\kappa(\calC)\overset{\Ind_\kappa(F)}\longto\Ind_\kappa(\calD)\overset{\sigma_\calD}\longto\calD. \]
+\[ \Ind_\kappa(\calC)\overset{\Ind_\kappa(F)}\longto\Ind_\kappa(\calD)\overset{\sigma_{\calD}}\longto\calD. \]
 One easily sees that this choice is unique from the uniqueness of \(\Ind_\kappa(F)\).
 \end{proof}
 
@@ -280,7 +280,7 @@ One easily sees that this choice is unique from the uniqueness of \(\Ind_\kappa(
 \begin{proof}
 This is a computation. Let \(A,B\in\Ind_\kappa(\calC)\). Then
 \begin{align*}
-	\Ind_\kappa(\calC)(A,B) &\cong \projlim\injlim\Ind_\kappa(\calC)(\yo_\calC\circ\pi_A,\yo_\calC\circ\pi_B) \\
+	\Ind_\kappa(\calC)(A,B) &\cong \projlim\injlim\Ind_\kappa(\calC)(\yo_{\calC}\circ\pi_A,\yo_{\calC}\circ\pi_B) \\
 	&\cong \projlim\injlim\calC(\pi_A,\pi_B) \\
 	&\cong \projlim\injlim\calD(F\circ\pi_A,F\circ\pi_B) \\
 	&\cong \projlim\calD(F\circ\pi_A,\injlim(F\circ\pi_B)) \\

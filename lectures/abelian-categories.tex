@@ -136,15 +136,19 @@ we can form a kernel, cokernel, image, etc., and these behave well (e.g.\ in tha
 in a general form.
 \begin{definition}
 	Let \(\calC\) be a category with a zero object, and let \(f\!:x\to y\) be a morphism in \(\calC\). The \emph{kernel} of \(f\) is the pullback
-	\begin{diagram*}
+	\[
+	\begin{tikzcd}
 		\ker{f}\ar[r,dashed]\ar[d,dashed]\ar[dr, pullback] & x\ar[d,"f"] \\
 		0\ar[r] & y
-	\end{diagram*}
+	\end{tikzcd}
+	\]
 	in \(\calC\). Dually, the \emph{cokernel} of \(f\) is the pushout
-	\begin{diagram*}
+	\[
+	\begin{tikzcd}
 		x\ar[r,"f"]\ar[d] & y \ar[d,dashed] \\
 		0\ar[r,dashed] & \coker{f}\ar[ul,pushout]
-	\end{diagram*}
+	\end{tikzcd}
+	\]
 	in \(\calC\).
 \end{definition}
 \begin{exercise}
@@ -305,7 +309,7 @@ an object in some category, called the \emph{enrichment base.} The first order o
 	A 2-category is a category enriched over \((\Cat,\times,[0])\).
 \end{example}
 \begin{example}
-	A pre-additive category is a category enriched over \((\Ab,\otimes_\Z,\Z)\).
+	A pre-additive category is a category enriched over \((\Ab,\otimes_{\Z},\Z)\).
 \end{example}
 \begin{example}
 	A \emph{dg-category} over a commutative ring \(R\) is a category enriched over \((\Ch(R),\otimes_R,R)\). These play a particularly important role in homological algebra,
