@@ -1,0 +1,225 @@
+%!TEX root = ../lectures.tex
+
+\section{Graded modules and algebras}\label{lecture:graded-algebra}
+In areas incorporating homological algebra, including homological algebra itself, one is commonly concerned with chain complexes of modules over a ring.
+However, often these chain complexes admit a bit more structure than merely being chain complexes: they can in many cases admit a kind of multiplication.
+
+\subsection{Graded objects}
+Let us fix a commutative ring \(\Bbbk\). Here, we use \(\Bbbk\) to denote a \emph{ring} instead of a \emph{field} for historical reasons.
+Commonly, a (\(\Z\)-)\emph{graded} \(\Bbbk\)\emph{-module} is said to be a \(\Bbbk\)-module \(M\) together with a decomposition
+\[ M \cong \coprod_{i\in\Z}M^i \]
+of \(M\) as a \(\Z\)-indexed coproduct of \(\Bbbk\)-modules---the \emph{grading} on \(M\). It is not hard to see that this datum is really equivalent to \(M\), and
+in particular, it makes sense to make the following definition.
+\begin{definition}
+	Let \(\calC\) be a category. The category of \(\Z\)-graded objects in \(\calC\) is the functor category
+	\[ \Fun(\Z,\calC) \cong \prod_{\Z}\calC, \]
+	where \(\Z\) is regarded as a discrete category. In particular, we obtain the category \(\gMod_\Bbbk\) of \emph{graded} \(\Bbbk\)\emph{-modules}
+	\[ \gMod_{\Bbbk} \coloneq \prod_{\Z}\Mod_{\Bbbk}. \]
+	For \(x\in\Fun(\Z,\calC)\), we call \(x^i\) the \emph{degree \(i\) piece of \(x\).} For \(M\in\gMod_\Bbbk\), we say that an element
+	of \(M^i\) is \emph{homogeneous of degree \(i\).}
+\end{definition}
+\begin{remark}
+	We will essentially always be working with \(\Z\)-graded objects, so henceforth we will drop bothering to specify that.
+\end{remark}
+\begin{remark}
+	One could have defined graded \(\Bbbk\)-modules as being pairs \((M,(M^i)_{i\in\Z})\), with morphisms being the \(\Bbbk\)-linear maps
+	which preserve the grading. It is easily seen that this results in an equivalent category.
+\end{remark}
+
+\begin{terminology}
+	Let \(M,N\in\gMod_\Bbbk\). A morphism \(M\to N\) in \(\gMod_\Bbbk\) is said to be a \emph{graded morphism of degree \(0\),}
+	or otherwise a \emph{strict morphism.}
+\end{terminology}
+
+Let us translate some of the terminology standard to graded objects to our setting. In particular, let us detail how one encodes morphisms
+of non-zero degree in this formalism.
+
+\begin{definition}
+	Let \(\calC\) be a category. The automorphism \(k\mapsto k+1\) of \(\Z\) induces the automorphism
+	\[ (1)\!:\Fun(\Z,\calC)\to\Fun(\Z,\calC),\quad x = (x^i)_{i\in\Z} \mapsto (x^{i+1})_{i\in\Z} \eqcolon x(1). \]
+	of categories of graded objects in \(\calC\). We denote by \((-1)\) the inverse of this functor, and thus produce functors
+	\((i)\) for all \(i\in\Z\) by repeated application of either \((1)\) or \((-1)\).
+\end{definition}
+\begin{terminology}
+	Let \(M,N\in\gMod_\Bbbk\), and let \(i\in\Z\). A \emph{morphism of degree \(i\)} from \(M\) to \(N\) is a strict morphism
+	\(M \to N(i)\).
+\end{terminology}
+\begin{remark}
+	This definition makes sense: a morphism of degree \(i\) should send a degree \(n\) homogeneous element of \(M\) to a degree \(n+i\) homogeneous element
+	of \(N\), and indeed, the above definition yields
+	\[ M^n \to N^{n+i}. \]
+	Given a morphism \(M\to N(i)\) and a morphism \(N\to L(j)\), one can ``compose'' these by forming
+	\[ M \to N(i) \to L(i+j), \]
+	thus obtaining a morphism from \(M\) to \(L\) of degree \(i+j\).
+\end{remark}
+\begin{remark}
+	Note that since \((i)\) is an automorphism for all \(i\in\Z\), we have that
+	\[ \gMod_\Bbbk(M,N) \cong \gMod_{\Bbbk}(M(i),N(i)). \]
+	In particular, we get no value from considering maps of the form \(M(i)\to N(j)\), as we can always assume \(i=0\).
+\end{remark}
+
+\subsection{Tensor products and Hom in the graded world}
+We will now turn to discussing a little bit of actual algebra, in contrast to the above entirely pure definitions. We will define the \emph{tensor product}
+of two graded modules in such a way that it is a graded module itself, and similarly produce a graded version of \(\Hom\). For the purposes of the former,
+it is useful to introduce \emph{bigraded} modules. These are just modules graded over \(\Z\times\Z\), defined just as one does for \(\Z\).
+\begin{definition}
+	Let \(\calC\) be a category. The category of \emph{bigraded objects} in \(\calC\) is the functor category
+	\[ \Fun(\Z\times\Z,\calC) \cong \prod_{\Z\times\Z}\calC. \]
+	In particular, we obtain the category
+	\[ \bgMod_{\Bbbk} \coloneq \prod_{\Z\times\Z}\Mod_{\Bbbk}. \]
+\end{definition}
+The reason we introduce this is because given two graded modules \(M,N\), the most natural way to form a tensor product is to form the
+\emph{bigraded} module
+\[ (M^i\otimes_\Bbbk N^j), \quad {(i,j)\in\Z\times\Z}. \]
+A problem with this, of course, is that we are interested in the world of \emph{graded} modules, not \emph{bigraded} modules. The solution is:
+\begin{definition}
+	Let \(\calC\) be a category. We define the functor
+	\[ \Tot\!:\Fun(\Z\times\Z,\calC)\to\Fun(\Z,\calC),\quad (x^{i,j})_{(i,j)\in\Z\times\Z} \mapsto \left(\coprod_{i+j=n}x^{i,j}\right)_{n\in\Z}.  \]
+\end{definition}
+The way to visualize this functor is by picturing the bigraded object as lying in a grid, then taking the coproduct of the diagonal lines:
+\[
+	\begin{tikzcd}
+		x^{-1,2}\ar[dr,no head] & x^{0,2}\ar[dr,no head] & x^{1,2}\ar[dr,no head] & x^{2,2} \\
+		x^{-1,1}\ar[dr,no head] & x^{0,1}\ar[dr,no head] & x^{1,1}\ar[dr,no head] & x^{2,1} \\
+		x^{-1,0}\ar[dr,no head] & x^{0,0}\ar[dr,no head] & x^{1,0}\ar[dr,no head] & x^{2,0} \\
+		x^{-1,-1} & x^{0,-1} & x^{1,-1} & x^{2,-1}
+	\end{tikzcd}
+\]
+\begin{proposition}\label{prop:graded-Tot-adjunction}
+	Let \(\calC\) be a category admitting countable coproducts. Consider the functor
+	\[ G\!: \Fun(\Z,\calC) \to \Fun(\Z\times\Z,\calC),\quad (x^i)_{i\in\Z} \mapsto (x^{i+j})_{(i,j)\in\Z\times\Z}. \]
+	Then \(\Tot\ladj G\).
+\end{proposition}
+\begin{proof}
+For \(x\in\Fun(\Z\times\Z,\calC)\) and \(y\in\Fun(\Z,\calC)\), we have
+\begin{align*}
+	\Hom(\Tot(x),y) &= \prod_{n\in\Z}\Hom(\Tot(x)^n,y^n) \\
+	&= \prod_{n\in\Z}\Hom(\coprod_{i+j=n}x^{i,j},y^n) \\
+	&\cong \prod_{n\in\Z}\prod_{i+j=n}\Hom(x^{i,j},y^n) \\
+	&= \prod_{n\in\Z}\prod_{i+j=n}\Hom(x^{i,j},G(y)^{i,j}) \\
+	&= \prod_{(i,j)\in\Z\times\Z}\Hom(x^{i,j},G(y)^{i,j}) = \Hom(x,G(y))
+\end{align*}
+as desired.
+\end{proof}
+
+\begin{definition}
+	Let \(M,N\in\gMod_\Bbbk\). Temporarily, let us denote the bigraded \(\Bbbk\)-module \((M^i\otimes_\Bbbk N^j)_{(i,j)\in\Z\times\Z}\) by \(M\otimes_\Bbbk^b N\).
+	We define the graded modules
+	\begin{align*}
+		M\otimes_\Bbbk N &\coloneq \Tot(M\otimes_\Bbbk^b N), \\
+		\ugMod_\Bbbk(M,N) &\coloneq (\gMod_\Bbbk(M,N(i)))_{i\in \Z}.
+	\end{align*}
+	We will also write \(\iHom(M,N) \coloneq \ugMod_\Bbbk(M,N)\) if the context makes it clear what this means. These clearly organize into functors.
+\end{definition}
+
+\begin{proposition}
+	Let \(M,N,L\in\gMod_\Bbbk\). There is a natural isomorphism
+	\[ \gMod_\Bbbk(M\otimes_\Bbbk N, L) \cong \gMod_\Bbbk(M,\ugMod_\Bbbk(N,L)). \]
+	In particular, we have an adjunction \(-\otimes_\Bbbk N \ladj \ugMod_\Bbbk(N,-)\).
+\end{proposition}
+\begin{proof}
+Recall the adjunction \(\Tot\ladj G\) from Proposition \ref{prop:graded-Tot-adjunction}. Then
+\begin{align*}
+	\gMod_\Bbbk(M\otimes_\Bbbk N, L) &= \gMod_{\Bbbk}(\Tot(M\otimes_\Bbbk^b N),L) \\
+	&\cong \bgMod_{\Bbbk}(M\otimes_\Bbbk^b N,G(L)) \\
+	&= \prod_{(i,j)\in\Z\times\Z}\Mod_{\Bbbk}(M^i\otimes_\Bbbk N^j,L^{i+j}) \\
+	&\cong \prod_{(i,j)\in\Z\times\Z}\Mod_{\Bbbk}(M^i,\Mod_\Bbbk(N^j,L^{i+j})) \\
+	&= \prod_{i\in\Z}\prod_{j\in\Z}\Mod_{\Bbbk}(M^i,\Mod_\Bbbk(N^j,L^{i+j})) \\
+	&\cong \prod_{i\in\Z}\Mod_{\Bbbk}(M^i, \prod_{j\in\Z}\Mod_\Bbbk(N^j,L^{i+j})) \\
+	&= \prod_{i\in\Z}\Mod_{\Bbbk}(M^i, \gMod_\Bbbk(N,L(i))) = \gMod_\Bbbk(M,\ugMod_\Bbbk(N,L))
+\end{align*}
+as desired.
+\end{proof}
+\begin{remark}
+	Note that the foregoing proof and definition goes through in the generality of a closed symmetric monoidal Abelian category. That is,
+	an Abelian category \(\calA\) admitting a symmetric monoidal structure \(\otimes\) such that \(-\otimes x\) has a right adjoint for all \(x\in\calA\).
+\end{remark}
+
+\begin{remark}
+	It is perhaps useful, for purposes of intuition, to observe that the elements homogeneous of degree \(i\) in \(\ugMod_\Bbbk(M,N)\) are exactly the degree \(i\) maps from \(M\) to \(N\).
+\end{remark}
+
+\begin{remark}
+	By Proposition \ref{prop:graded-Tot-adjunction}, to describe a map \(f\!:M\otimes_\Bbbk N \to L\), it suffices to say how \(f\) acts on elementary tensors
+	\[ x\otimes y,\quad x\in M^i,\, y\in N^j, \]
+	where one must ensure that \(f(x\otimes y) \in L^{i+j}\).
+\end{remark}
+
+The tensor product \(-\otimes_\Bbbk-\!:\gMod_\Bbbk\times\gMod_\Bbbk\to\gMod_\Bbbk\) endows \(\gMod_\Bbbk\) with the structure
+of a (closed) symmetric monoidal category. In particular, it is clear that one has natural isomorphisms \(M\otimes_\Bbbk \Bbbk \cong M\),
+and that one has associativity isomorphisms
+\[ (M\otimes_\Bbbk N)\otimes_\Bbbk L \cong M\otimes_\Bbbk (N\otimes_\Bbbk L). \]
+It is maybe a \emph{little} less clear that these satisfy the various coherences required of a monoidal category, but the idea is that
+they are inherited from the ones on \(\Mod_\Bbbk\). This justifies the assertion that we have a \emph{monoidal} structure.
+
+There is a slight complication in how we make the monoidal structure \emph{symmetric.} In particular, the natural isomorphisms
+\[ \tau_{M,N}\!: M\otimes_\Bbbk N \iso N\otimes_\Bbbk M \]
+are chosen to act by the \emph{Koszul sign rule,}
+\[ \tau(x\otimes y) = (-1)^{ij} y\otimes x, \quad x\in M^i,\, y\in N^j. \]
+This sign convention is the fundamental reason that graded commutativity is different from ordinary commutativity. The reason one is
+interested in this form of commutativity is that one would like objects like the exterior algebra \(\bigwedge^\bullet M\) of a module
+\(M\) to be examples of \emph{graded (commutative) algebras,} since these arise often in e.g.\ algebraic geometry and topology. These
+exterior algebras satisfy \(x\wedge y = (-1)^{ij}y\wedge x\).
+
+\begin{exercise}
+	Show that there is a natural isomorphism
+	\[ \ugMod_\Bbbk(M\otimes N,L) \cong \ugMod_\Bbbk(M,\ugMod_\Bbbk(N,L)). \]
+	Hint: this is purely formal, and holds in any closed monoidal category.
+\end{exercise}
+
+\subsection{Graded algebras}
+In the context of any symmetric monoidal category, one can define \emph{monoid} objects. Applying that to our situation, we end up with
+\begin{definition}
+	A \emph{graded \(\Bbbk\)-algebra} is a pair \((A,\mu)\) of a graded \(\Bbbk\)-module \(A\) and a multiplication map
+	\[ \mu\!: A\otimes_\Bbbk A\to A \]
+	which is associative and unital. That is, there is an element \(1 = 1_A \in A^0\) such that for all \(x\in A^i\), we have \(\mu(1\otimes x) = x = \mu(x\otimes 1)\),
+	and one should have \(\mu(\mu(x\otimes y)\otimes z) = \mu(x\otimes\mu(y\otimes z))\). We write \(xy \coloneq \mu(x\otimes y)\).
+\end{definition}
+\begin{remark}
+	As before, it is helpful to note that a map \(A\otimes_\Bbbk A \to A\) consists of the data of maps
+	\[ A^i\otimes_\Bbbk A^j \to A^{i+j},\quad \forall i,j\in\Z. \]
+	The conditions we require on \(\mu\) are just such that
+	\[ 1\cdot x = x = x\cdot 1,\quad (xy)z = x(yz). \]
+	That is, the expected axioms.
+\end{remark}
+\begin{definition}
+	We say that a graded algebra \(A\) is \emph{(graded) commutative} if the diagram
+	\[
+	\begin{tikzcd}
+		A\otimes A \ar[r,"\mu"]\ar[d,"\tau","\cong"'] & A \ar[d,equal] \\
+		A\otimes A \ar[r,"\mu"] & A
+	\end{tikzcd}
+	\]
+	commutes. Concretely, this means that
+	\[ xy = (-1)^{ij}yx,\quad x\in A^i,\, y\in A^j. \]
+\end{definition}
+\begin{remark}
+	Note that the Koszul sign rule means that commutativity, in characteristic not equal to \(2\), necessarily means that
+	\[ y^2 = 0 \]
+	whenever \(y\) is homogeneous of odd degree. Indeed,
+	\[ y^2 = (-1)^{\deg(y)\deg(y)}y^2 = -y^2 \implies 2y^2 = 0. \]
+	For this reason, one often \emph{requires} that this holds as part of the definition in the even characteristic case. We will not make
+	this distinction here, because we will often implicitly assume we are not working in a context where there will be problems.
+\end{remark}
+\begin{example}
+	We now make precise the example from earlier. Let \(M\) be a \(\Bbbk\)-module. We define \(M\wedge_\Bbbk M\) to be the
+	\(\Bbbk\)-module quotient
+	\[ M\wedge_\Bbbk M \coloneq (M\otimes_\Bbbk M)/(x\otimes y + y\otimes x)_{x,y\in M}. \]
+	We denote the image of \(x\otimes y\) in \(M\wedge_\Bbbk M\) by \(x\wedge y\). The definition is such that \(x\wedge y = -y\wedge x\).
+
+	Now, for all \(k\geq 0\), we define
+	\[ \bigwedge^kM \coloneq \underbrace{M\wedge_\Bbbk \cdots \wedge_\Bbbk M}_{k\text{ copies}}, \]
+	and set \(\bigwedge^0M \coloneq \Bbbk\). We then have a graded \(\Bbbk\)-module defined by
+	\[ \left(\bigwedge M\right)^i = \begin{cases}
+		\bigwedge^i M & \text{if }i\geq 0, \\
+		0 & \text{if }i \leq 0.
+	\end{cases} \]
+	This graded module can be endowed with the structure of a graded \(\Bbbk\)-algebra, which is furthermore commutative. In particular, given
+	elementary generators \(x = x_1\wedge \cdots \wedge x_i\) and \(y = y_1\wedge \cdots \wedge y_j\), one defines
+	\[ x\wedge y = x_1\wedge \cdots \wedge x_i \wedge y_1 \wedge \cdots \wedge y_j \]
+	and one easily sees that this extends to maps
+	\[ \wedge\!: \left(\bigwedge M\right)^i \otimes_\Bbbk \left(\bigwedge M\right)^j \to \left(\bigwedge M\right)^{i+j} \]
+	and thus to yields a map
+	\[ \bigwedge M \otimes_\Bbbk \bigwedge M \to \bigwedge M. \]
+	It is left as an exercise to check that this is associative and unital. That it is graded commutative comes from the definition of the wedge.
+\end{example}

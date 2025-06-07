@@ -33,10 +33,16 @@
 \newcommand{\Prob}{\operatorname{Prob}}
 \newcommand{\Aff}{\operatorname{Aff}}
 
+\newcommand{\gMod}{\cat{gMod}}
+\newcommand{\ugMod}{\underline{\gMod}}
+\newcommand{\bgMod}{\cat{bgMod}}
+\newcommand{\dgMod}{\cat{dgMod}}
+
 \newcommand{\ladj}{\vdash}
 \newcommand{\fib}{\operatorname{fib}}
 \newcommand{\cof}{\operatorname{cof}}
 \newcommand{\cofib}{\operatorname{cofib}}
+\newcommand{\Tot}{\operatorname{Tot}}
 
 \newcommand{\bp}[1]{\prescript{p}{}{#1}}
 \newcommand{\bperp}[1]{\prescript{\perp}{}{#1}}
@@ -44,7 +50,7 @@
 \usepackage[backend=biber, style=alphabetic]{biblatex}
 \addbibresource{bibliography.bib}
 
-
+\includeonly{lectures/dg-algebras}
 
 \begin{document}
 \maketitle
@@ -137,6 +143,8 @@ in terms of the Hom-sets in the ambient triangulated category.
 \include{lectures/model-categories-and-homotopy-(co)limits}
 
 \include{lectures/grothendieck-categories-freyd-mitchell}
+
+\include{lectures/graded-algebras}
 
 \begin{comment}
 \include{lectures/metric-infinity-categories}
