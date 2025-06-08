@@ -1,8 +1,9 @@
 %!TEX root = ../lectures.tex
 
-\section{Graded modules and algebras}\label{lecture:graded-algebra}
+\section{Graded modules \& algebras}\label{lecture:graded-algebra}
 In areas incorporating homological algebra, including homological algebra itself, one is commonly concerned with chain complexes of modules over a ring.
 However, often these chain complexes admit a bit more structure than merely being chain complexes: they can in many cases admit a kind of multiplication.
+Forgetting the differential, one has merely \emph{graded} modules.
 
 \subsection{Graded objects}
 Let us fix a commutative ring \(\Bbbk\). Here, we use \(\Bbbk\) to denote a \emph{ring} instead of a \emph{field} for historical reasons.
@@ -112,7 +113,7 @@ as desired.
 	We will also write \(\iHom(M,N) \coloneq \ugMod_\Bbbk(M,N)\) if the context makes it clear what this means. These clearly organize into functors.
 \end{definition}
 
-\begin{proposition}
+\begin{proposition}\label{prop:graded-tensor-hom-adjunction}
 	Let \(M,N,L\in\gMod_\Bbbk\). There is a natural isomorphism
 	\[ \gMod_\Bbbk(M\otimes_\Bbbk N, L) \cong \gMod_\Bbbk(M,\ugMod_\Bbbk(N,L)). \]
 	In particular, we have an adjunction \(-\otimes_\Bbbk N \ladj \ugMod_\Bbbk(N,-)\).
@@ -145,6 +146,14 @@ as desired.
 	where one must ensure that \(f(x\otimes y) \in L^{i+j}\).
 \end{remark}
 
+\begin{remark}
+	The isomorphism \(\gMod_\Bbbk(M\otimes_\Bbbk N,L) \cong \gMod_\Bbbk(M,\ugMod_\Bbbk(N,L))\) is given explicitly by \emph{currying.} That is,
+	given a map \(f\!:M\otimes_\Bbbk N \to L\), the corresponding map \(M \to \ugMod_\Bbbk(N,L)\) is defined by the formula
+	\[ x \mapsto f(x\otimes-). \]
+	Note that if \(x\in M^i\) and \(y\in N^j\), then \(x\otimes y \in (M\otimes_\Bbbk N)^{i+j}\), so \(f(x\otimes y) \in L^{i+j}\), so the morphism
+	\(f(x\otimes-)\) does indeed have the expected type \(N \to L(i)\).
+\end{remark}
+
 The tensor product \(-\otimes_\Bbbk-\!:\gMod_\Bbbk\times\gMod_\Bbbk\to\gMod_\Bbbk\) endows \(\gMod_\Bbbk\) with the structure
 of a (closed) symmetric monoidal category. In particular, it is clear that one has natural isomorphisms \(M\otimes_\Bbbk \Bbbk \cong M\),
 and that one has associativity isomorphisms
@@ -166,6 +175,44 @@ exterior algebras satisfy \(x\wedge y = (-1)^{ij}y\wedge x\).
 	\[ \ugMod_\Bbbk(M\otimes N,L) \cong \ugMod_\Bbbk(M,\ugMod_\Bbbk(N,L)). \]
 	Hint: this is purely formal, and holds in any closed monoidal category.
 \end{exercise}
+
+\subsection{Tensor products of morphisms}
+We finish our present discussion of the tensor product by explaining how the Koszul sign rule affects \emph{evaluation} of tensor products of morphisms.
+The adjunction from Proposition \ref{prop:graded-tensor-hom-adjunction} induces a counit, and it is the \emph{evaluation map}
+\[ \ev\!:\ugMod_{\Bbbk}(M,N)\otimes_\Bbbk M \to N,\quad \ev(f\otimes x) = f(x). \]
+Note that the formula on the right is slightly more subtle than it may first appear: the evaluation map is a map of \emph{graded modules,} and so
+applies to morphisms of non-zero degree as well. More precisely, if \(f\in\ugMod_\Bbbk(M,N)^i\) and \(x\in M^j\), then \(\ev(f\otimes x) = f(x)\in N^{i+j}\),
+as expected, since \(f\) is the same as a degree zero map \(M \to N(i)\).
+
+When we have two strict morphisms \(f\!:M \to L\), \(g\!:N\to K\), the morphism \(f\otimes g\) we obtain is simply given by
+\[ (f\otimes g)(x\otimes y) = f(x)\otimes g(y). \]
+However, what we would like is a way to take tensor products of morphisms of non-zero degree---this does not come for free. Sure, we can
+regard a degree \(i\) morphism \(M \to L\) as a strict morphism \(M \to L(i)\) and take the tensor product that way, but this produces something
+of the wrong type (at least visually). What we want is a morphism
+\[ \ugMod_\Bbbk(M,L) \otimes_\Bbbk \ugMod_\Bbbk(N,K) \to \ugMod_\Bbbk(M\otimes_\Bbbk N, L\otimes_\Bbbk K) \]
+taking the ``formal'' tensor product of two arbitrary degree maps to its ``realization'' as an actual morphism. Furthermore, we want this
+to be suitably compatible with the evaluation; to be more precise, using the associativity and symmetry isomorphisms together with the evaluation, we can produce
+the composite
+\[
+	\begin{tikzcd}
+		(\ugMod_\Bbbk(M,L) \otimes_\Bbbk \ugMod_\Bbbk(N,K))\otimes_\Bbbk (M\otimes_\Bbbk N) \ar[d,"\cong"] \\
+		\ugMod_\Bbbk(M,L) \otimes_\Bbbk (\ugMod_\Bbbk(N,K) \otimes_\Bbbk M) \otimes_\Bbbk N \ar[d,"1\otimes\tau\otimes 1"',"\cong"] \\
+		\ugMod_\Bbbk(M,L) \otimes_\Bbbk ( M\otimes_\Bbbk \ugMod_\Bbbk(N,K)) \otimes_\Bbbk N \ar[d,"\cong"] \\
+		(\ugMod_\Bbbk(M,L) \otimes_\Bbbk M) \otimes_\Bbbk (\ugMod_\Bbbk(N,K) \otimes_\Bbbk N)\ar[d,"\ev\otimes\ev"'] \\
+		L\otimes_\Bbbk K
+	\end{tikzcd}
+\]
+and we would like for this to be the map which transposes, via currying, to the ``realization'' morphism
+\[ \ugMod_\Bbbk(M,L) \otimes_\Bbbk \ugMod_\Bbbk(N,K) \to \ugMod_\Bbbk(M\otimes_\Bbbk N, L\otimes_\Bbbk K). \]
+In the end, this means that we are forced to make the following definition:
+\begin{definition}
+	Let \(f\in\ugMod_\Bbbk(M,L)\) and let \(g\in\ugMod_\Bbbk(N,K)^i\). We define their tensor product \(f\otimes g\) to be the morphism given by
+	\[ (f\otimes g)(x\otimes y) = (-1)^{ij}f(x)\otimes g(y),\quad x\in M^j. \]
+\end{definition}
+\begin{remark}
+	The sign depending on the degrees of \(g\) and \(x\) appearing in the definition comes directly from the Koszul sign rule, since we apply the isomorphism \(\tau\)
+	in the above composite.
+\end{remark}
 
 \subsection{Graded algebras}
 In the context of any symmetric monoidal category, one can define \emph{monoid} objects. Applying that to our situation, we end up with
@@ -223,3 +270,44 @@ In the context of any symmetric monoidal category, one can define \emph{monoid} 
 	\[ \bigwedge M \otimes_\Bbbk \bigwedge M \to \bigwedge M. \]
 	It is left as an exercise to check that this is associative and unital. That it is graded commutative comes from the definition of the wedge.
 \end{example}
+
+\begin{example}
+	Standard examples of commutative \(\Bbbk\)-algebras are polynomial rings over \(\Bbbk\), i.e.\ the \emph{free} commutative algebras over \(\Bbbk\).
+	In the graded world, there are similar equivalents, but with the grading comes the freedom to choose what \emph{cohomological degree}---i.e.\ what degree in the grading---the generators
+	have.
+
+	Let us first consider the case of a single generator \(x\), yielding a commutative graded \(\Bbbk\)-algebra \(\Bbbk[x]\). If we decide that \(x\) is to be of degree zero,
+	then this is just the ordinary polynomial ring in one variable over \(\Bbbk\). Otherwise, the description of \(\Bbbk[x]\) splits into two cases depending on whether the
+	degree \(\ell\) of \(x\) is even or odd, and positive or negative. Since the difference between negative and positive isn't very interesting, let us consider
+	the case when \(\ell < 0\).
+
+	If \(\ell\) is even, then \(\Bbbk[x]\) as a graded \(\Bbbk\)-module looks like this:
+	\[
+	\begin{tikzcd}
+		\cdots & \Bbbk \cdot x^{k} & 0 & \cdots & \Bbbk \cdot x & 0 & \cdots & \Bbbk & 0 & \cdots
+	\end{tikzcd}
+	\]
+	where a copy of \(\Bbbk\) is placed in positions \(k\ell\) for all \(k \leq 0\), and everything else is zero. The multiplication is such that \(x^{i}x^j = x^{i+j}\).
+	In particular, \(\Bbbk[x]\) has an infinite number of copies of \(\Bbbk\) in it.
+
+	If \(\ell\) is odd, then \(\Bbbk[x]\) is considerably simpler. It has the following form:
+	\[
+	\begin{tikzcd}
+		\cdots & 0 & \Bbbk\cdot x & 0 & \cdots & 0 & \Bbbk & 0 & \cdots
+	\end{tikzcd}
+	\]
+	where there is a copy of \(\Bbbk\) placed in degree 0 and degree \(\ell\). This is because we necessarily have \(x^2 = 0\), so all other copies of \(\Bbbk\) die.
+\end{example}
+\begin{exercise}
+	Investigate the commutative graded algebra \(\Bbbk[x,y]\), where we set \(\deg(x) = 0\) and \(\deg(y)=-1\). More precisely, consider the following approaches:
+	\begin{enumerate}[label=(\arabic*)]
+		\item Describe \(\Bbbk[x,y]\) by hand first, as is done in the above example.
+		\item Show that if \(M\) is a graded module concentrated in degree zero (i.e.\ just an ordinary module) and \(N\) is a graded
+		module, then \(M\otimes_\Bbbk N\) is the graded module \((M^0\otimes_\Bbbk N^i)_{i\in\Z}\).
+		\item Reason that \(\Bbbk[x,y] \cong \Bbbk[x]\otimes_\Bbbk\Bbbk[y]\) in order to describe \(\Bbbk[x,y]\).
+		\item Reason that \(\Bbbk[x,y] \cong \Bbbk[x][y]\) in order to describe \(\Bbbk[x,y]\).
+	\end{enumerate}
+\end{exercise}
+
+\subsection{Tensor products over graded algebras (TBD)}
+See \cite[Lemma 3.1.30]{doi:10.1017/9781108292825}.

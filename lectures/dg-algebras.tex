@@ -1,0 +1,82 @@
+%!TEX root = ../lectures.tex
+
+\section{Differential graded modules \& algebras}\label{lecture:dg-algebra}
+In Lecture \ref{lecture:graded-algebra}, we discussed algebra in the world of graded objects. The motivation is that if we forget the differential on a
+chain complex of modules, the structure you have is that of a \emph{graded} module. In this lecture, we will reintroduce the differential to talk about
+differential graded modules and algebras.
+
+\subsection{Differential graded modules}
+As in Lecture \ref{lecture:graded-algebra}, we will fix a commutative ring \(\Bbbk\). Recall that a graded \(\Bbbk\)-module is an object of the category
+\[ \gMod_\Bbbk = \prod_{\Z}\Mod_\Bbbk. \]
+We may picture some \(M\in\gMod_\Bbbk\) as a sequence
+\[
+	\begin{tikzcd}
+		\cdots & M^{i-1} & M^i & M^{i+1} & \cdots
+	\end{tikzcd}
+\]
+and this makes it fairly clear where to go next. The category \(\gMod_\Bbbk\) is equipped with a \emph{shift} functor
+\[ (1)\!: (M^i)_{i\in\Z}\mapsto (M^{i+1})_{i\in\Z}. \]
+Composing this with itself (or the inverse) iteratively allowed us to define morphisms of degree \(i\) between graded modules.
+For simplicity, we now introduce some notation.
+\begin{notation}
+	Writing ``a morphism \(M\to N\) of degree \(i\)'' will mean a morphism \(M\to N(i)\). Given a morphism \(f\!:M\to N\) of degree
+	\(i\) and a morphism \(g\!:N\to L\) of degree \(j\), we let the composite \(g\circ f\) be the morphism \(M\to L\) of degree \(i+j\) given by
+	\[ M \overset{f}\to N(i) \overset{g(i)}\to L(i+j). \]
+	The same thing can be done for graded objects in any category \(\calC\), and we adopt the same convention there.
+\end{notation}
+\begin{remark}
+	The above notational convention makes it clear that \(\ugMod_\Bbbk(M,M)\) is a graded \(\Bbbk\)-algebra for any \(M\in\gMod_\Bbbk\).
+\end{remark}
+\begin{definition}
+	Let \(\calC\) be a category with a zero object. A \emph{differential graded object,} or \emph{dg-object,} in \(\calC\) is a pair \((x,d)\) consisting of a graded object \(x\) in \(\calC\)
+	and a morphism \(d\!:x\to x\) of degree one such that \(d^2 = 0\). A morphism \((x,d_x)\to (y,d_y)\) of dg-objects is a morphism \(x\to y\)
+	of the underlying graded objects such that
+	\[
+	\begin{tikzcd}
+		x \ar[r,"d_x"]\ar[d] & x\ar[d] \\
+		y \ar[r,"d_y"] & y
+	\end{tikzcd}
+	\]
+	commutes. Letting \(\calC = \Mod_\Bbbk\), we obtain the category \(\dgMod_\Bbbk\) of \emph{dg-modules} over \(\Bbbk\). If the context is clear,
+	we will omit the differential in a dg-object.
+\end{definition}
+\begin{remark}
+	The category of dg-objects in an Abelian category \(\calA\) is either definitionally the same as, or in any case easily isomorphic to, the category of chain complexes \(\Ch(\calA)\).
+	In particular, \(\dgMod_\Bbbk \cong \Ch(\Bbbk)\). Thus, we can view dg-objects/dg-modules as just another way to encode the same data we are used to. As a consequence, we also
+	see that \(\dgMod_\Bbbk\) is a \(\Bbbk\)-linear (i.e.\ enriched in \(\Bbbk\)-modules) Abelian category admitting small products and coproducts, though this is also
+	very easy to check independently.
+\end{remark}
+\begin{remark}
+	We may identify \(\gMod_\Bbbk\) with a full subcategory of \(\dgMod_\Bbbk\), namely as those dg-modules with zero differential.
+\end{remark}
+
+The shift \((1)\) on \(\gMod_\Bbbk\) induces a shift \([1]\) on \(\dgMod_\Bbbk\). It is given as follows:
+\begin{definition}
+	We define the \emph{shift functor}
+	\[ [1]\!:\dgMod_{\Bbbk} \to \dgMod_\Bbbk,\quad (M,d_M)\mapsto (M(1),-d_M(1)). \]
+	That is, \(d_{M[1]} = -d_M(1)\), so that \(d_{M[1]}^i = -d_M^{i+1}\). As with the functor \((1)\), this is an automorphism of \(\dgMod_{\Bbbk}\),
+	and we iteratively define \([i]\) for any \(i\in\Z\).
+\end{definition}
+
+\subsection{Tensor products and Hom in the differential graded world}
+We know how to take tensor products of graded modules, namely: apply the functor \(\Tot\) to the obvious \emph{bigraded} object.
+If we now have dg-modules, all we are missing is a differential.
+\begin{remark}
+	Before jumping into defining a differential on the tensor product of two dg-modules, let us briefly discuss the Koszul sign rule and its
+	effect on tensor products of graded modules.
+\end{remark}
+\begin{definition}
+	Let \((M,d_M),(N,d_N)\in\dgMod_\Bbbk\). We define
+	\[ (M,d_M) \otimes_\Bbbk (N,d_N) \coloneq (M\otimes_\Bbbk N, d_{M\otimes_\Bbbk N}), \]
+	where \(d_{M\otimes_\Bbbk N} = d_M\otimes 1_N + 1_M\otimes d_N\). By the Koszul sign rule, this acts on elementary tensors by
+	\[ d_{M\otimes_\Bbbk N}(x\otimes y) = d_M(x)\otimes y + (-1)^i x\otimes d_N(y),\quad x\in M^i. \]
+\end{definition}
+\begin{exercise}
+	Verify that \(d_{M\otimes_\Bbbk N}^2 = 0\).
+\end{exercise}
+\begin{remark}
+	There is a notion of \emph{differential bigraded objects,} or more commonly \emph{double complexes.} Just as we did with the \(\Tot\)-construction
+	from Lecture \ref{lecture:graded-algebra}, one can take the total complex of a double complex and obtain a dg-object. There is an obvious way
+	to form a "bigraded" version of the tensor product of two dg-modules, and the above-defined dg-module tensor product can be recovered through applying the total
+	complex construction to this bigraded version.
+\end{remark}
