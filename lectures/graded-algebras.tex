@@ -175,6 +175,9 @@ exterior algebras satisfy \(x\wedge y = (-1)^{ij}y\wedge x\).
 	\[ \ugMod_\Bbbk(M\otimes N,L) \cong \ugMod_\Bbbk(M,\ugMod_\Bbbk(N,L)). \]
 	Hint: this is purely formal, and holds in any closed monoidal category.
 \end{exercise}
+\begin{exercise}
+	Check that \(\gMod_\Bbbk\) is an Abelian category.
+\end{exercise}
 
 \subsection{Tensor products of morphisms}
 We finish our present discussion of the tensor product by explaining how the Koszul sign rule affects \emph{evaluation} of tensor products of morphisms.
@@ -206,7 +209,8 @@ and we would like for this to be the map which transposes, via currying, to the 
 \[ \ugMod_\Bbbk(M,L) \otimes_\Bbbk \ugMod_\Bbbk(N,K) \to \ugMod_\Bbbk(M\otimes_\Bbbk N, L\otimes_\Bbbk K). \]
 In the end, this means that we are forced to make the following definition:
 \begin{definition}
-	Let \(f\in\ugMod_\Bbbk(M,L)\) and let \(g\in\ugMod_\Bbbk(N,K)^i\). We define their tensor product \(f\otimes g\) to be the morphism given by
+	Let \(f\in\ugMod_\Bbbk(M,L)\) and let \(g\in\ugMod_\Bbbk(N,K)^i\). We define their tensor product \(f\otimes g\) to be the
+	degree \(\deg(f) + i\) morphism \(M\otimes_\Bbbk N \to L\otimes_\Bbbk K\) given by
 	\[ (f\otimes g)(x\otimes y) = (-1)^{ij}f(x)\otimes g(y),\quad x\in M^j. \]
 \end{definition}
 \begin{remark}
@@ -309,5 +313,98 @@ In the context of any symmetric monoidal category, one can define \emph{monoid} 
 	\end{enumerate}
 \end{exercise}
 
-\subsection{Tensor products over graded algebras (TBD)}
+\subsection{Appendix: Modules over graded algebras (TBD)}
 See \cite[Lemma 3.1.30]{doi:10.1017/9781108292825}.
+
+Recall that we have fixed a commutative ring \(\Bbbk\). Now, let us fix a graded \(\Bbbk\)-algebra \(A\). What does it mean to have a graded \(A\)-module?
+\begin{definition}
+	A \emph{graded left \(A\)-module} is a graded \(\Bbbk\)-module \(M\) together with a left action of \(A\)
+	\[ A\otimes_\Bbbk M \to M,\quad a\otimes m \mapsto am, \]
+	which is unital and associative. Dually, a \emph{graded right \(A\)-module} is a graded \(\Bbbk\)-module \(M\) together with a \emph{right} action of \(A\)
+	\[ M\otimes_\Bbbk A \to M, \quad m\otimes a \mapsto ma. \]
+	Let \(M,N\) be graded left \(A\)-modules. A morphism \(f\!:M\to N\) of graded \(\Bbbk\)-modules is \emph{\(A\)-linear} if
+	\[
+	\begin{tikzcd}
+		A\otimes_\Bbbk M \ar[d]\ar[r,"1\otimes f"] & A\otimes_\Bbbk N\ar[d] \\
+		M \ar[r,"f"] & N
+	\end{tikzcd}
+	\]
+	commutes. The definition for graded right \(A\)-modules is similar. We obtain the categories \(\prescript{}{A}{\gMod}\) and \(\gMod_A\).
+\end{definition}
+\begin{remark}
+	Let \(M\) be a graded left \(A\)-module. Note that, by definition, we have
+	\[ a\in A^i,\, m\in M^j \implies am\in M^{i+j} \]
+	since the action \(A\otimes M \to M\) restricts to \(A^i \otimes_\Bbbk M^j \to M^{i+j}\). A similar statement is true for right \(A\)-modules.
+\end{remark}
+\begin{remark}
+	Note that the definition of \(A\)-linearity makes sense for a morphism of any degree. However, there is a perhaps odd technical detail here:
+	if \(f\) is a graded \(\Bbbk\)-module morphism of degree \(i\) between graded \(A\)-modules, then the concrete equations required for \(f\) to be \(A\)-linear
+	depends on whether we are working with left or right modules. The reason is the Koszul sign rule. If we are in the case of right graded \(A\)-modules,
+	then everything is easy since \((f\otimes 1)(x\otimes a) = f(x)\otimes a\), so we require that \(f(xa) = f(x)a\). On the other hand, for
+	\emph{left} graded \(A\)-modules, we are working with \(1\otimes f\), and therefore we require that
+	\[ f(ax) = (-1)^{ij}af(x),\quad a\in A^j. \]
+\end{remark}
+\begin{remark}
+	A graded \(\Bbbk\)-algebra \(A\) induces a related graded \(\Bbbk\)-algebra \(A^\op\), whose multiplication is ``opposite'' to the one in \(A\). In particular, one
+	applies the symmetry isomorphism to define a new algebra structure by
+	\[ *\!:A\otimes_\Bbbk A \overset\tau\to A\otimes_\Bbbk A \overset{\text{mult.}}\to A,\quad \text{i.e.}\quad x*y = (-1)^{ij}yx,\quad x\in A^i,\, y\in A^j. \]
+	There is an equivalence of categories \(\prescript{}{A}{\gMod} \simeq \gMod_{A^\op}\); a graded left \(A\)-module \(M\)
+	can be endowed with a right \(A^\op\) action induced by the morphism
+	\[ M \otimes_\Bbbk A \overset\tau\to A\otimes_\Bbbk M \overset{\text{act.}}\to M. \]
+	Notably, we need only ever consider graded right \(A\)-modules. Observe that if \(A\) is graded commutative then \(A=A^\op\).
+\end{remark}
+\begin{remark}
+	For a graded left \(A\)-module \(M\), the action \(A\otimes_\Bbbk M \to M\) transposes by adjunction to a morphism
+	\[ A \to \ugMod_\Bbbk(M,M) \eqcolon \underline{\End}_\Bbbk(M). \]
+	This yields an equivalent way of thinking about graded left \(A\)-modules. Similarly, a graded right \(A\)-module structure can be encoded
+	by a map \(A^\op \to \underline{\End}_\Bbbk(M)\).
+\end{remark}
+
+What we would like to do is to extend the tensor-Hom adjunction for graded \(\Bbbk\)-modules to the setting of graded \(A\)-modules. For this,
+we need to adapt both the inner Hom \(\ugMod_\Bbbk(-,-)\) and the tensor product \(-\otimes_\Bbbk-\) to their respective \(A\)-linear variants.
+The easiest is the former, as we already know what it means for a morphism to be \(A\)-linear:
+
+\begin{definition}
+	Let \(A\) be a graded \(\Bbbk\)-algebra, and let \(M,N\in\gMod_A\). We let
+	\[ \ugMod_A(M,N)^i \subseteq \ugMod_\Bbbk(M,N)^i \]
+	consist of those morphisms of degree \(i\) which are \(A\)-linear. This defines a graded \(A\)-module \(\ugMod_A(M,N)\), which we may also
+	sometimes denote \(\iHom_A(M,N)\).
+\end{definition}
+
+The tensor product is a little bit trickier, but in the end, we would basically just like to take the tensor product \(-\otimes_\Bbbk-\) we know
+about and impose some further equations on it. We may observe that if \(M\) is a right graded \(A\)-module and \(N\) is a left graded \(A\)-module, we have two maps
+\[ \ell,r\!: M\otimes_\Bbbk A\otimes_\Bbbk N \to M\otimes_\Bbbk N \]
+namely
+\[ \ell = (\text{act.})_M\otimes 1_N,\quad \text{and}\quad r=1_M\otimes(\text{act.})_N. \]
+Now, \(\gMod_\Bbbk\) is an Abelian category, as all functor categories with codomain an Abelian category are, so we can take the difference of these two maps.
+Concretely,
+\[ (\ell-r)(x\otimes a \otimes y) = xa\otimes y - x\otimes ay. \]
+With this in mind, it makes sense to make the following definition.
+\begin{definition}
+	Let \(M\) be a right graded \(A\)-module and let \(N\) be a left graded \(A\)-module. We define their tensor product \(M\otimes_A N\) over \(A\) to be
+	\[ M\otimes_A N \coloneq \coker(M\otimes_\Bbbk A\otimes_\Bbbk N \xrightarrow{\ell - r} M\otimes_\Bbbk N). \]
+	We will abusively still write \(x\otimes y\) for the equivalence class in the cokernel. This becomes a \emph{graded \(A\)-bimodule} with the action
+	\[ a(x\otimes y) = x\otimes ay = xa\otimes y = (x\otimes y)a. \]
+\end{definition}
+\begin{remark}
+	It might help to make the grading explicit. To this end, let us investigate the tensor products of the form
+	\[ M \otimes_\Bbbk A \otimes_\Bbbk N. \]
+	Arbitrarily, let us pick the bracketing \((M\otimes_\Bbbk A)\otimes_\Bbbk N\), and compute
+	\begin{align*}
+		((M\otimes_\Bbbk A)\otimes_\Bbbk N)^n &= \coprod_{i+j = n} (M\otimes_\Bbbk A)^i\otimes_\Bbbk N^j \\
+		&= \coprod_{i+j = n} \left(\coprod_{p+q=i} M^p\otimes_\Bbbk A^q \right) \otimes_\Bbbk N^j \\
+		&\cong \coprod_{i+j = n} \left(\coprod_{p+q=i} M^p\otimes_\Bbbk A^q \otimes_\Bbbk N^j \right) = \coprod_{i+t+j=n} M^i\otimes_\Bbbk A^t \otimes_\Bbbk N^j.
+	\end{align*}
+	so that the \(n\)th graded piece of \(M\otimes_\Bbbk A\otimes_\Bbbk N\) is obtained by taking the coproduct of objects
+	\[ M^i\otimes_\Bbbk A^t\otimes_\Bbbk N^j,\quad i+t+j = n. \]
+	In particular, we see that
+	\[ (M\otimes_A N)^n = \coker\left( \coprod_{i+t+j=n} M^i\otimes_\Bbbk A^t \otimes_\Bbbk N^j \to \coprod_{p+q=n} M^p\otimes_\Bbbk N^q \right) \]
+	where the map has exactly the same formula as before.
+\end{remark}
+
+For simplicity, we will now restrict to the case where \(A\) is graded commutative. This is to avoid spending time talking about bimodules.
+
+\begin{proposition}
+	We have
+	\[ \gMod_A(M\otimes_A N,L) \cong \gMod_A(M,\ugMod_A(N,L)). \]
+\end{proposition}
